@@ -681,7 +681,8 @@ let random =Math.random()*Math.random()*1;
       <input type="time" id="event_time" name="event_time" value={formData.event_time} onChange={handleInputChange} /><br />
 
       <label htmlFor="event_description">About the Event Paragraph:</label>
-      <input type="text" id="event_description" name="event_description" value={formData.event_description} onChange={handleInputChange}  /><br />
+<textarea id="event_description" name="event_description" value={formData.event_description} onChange={handleInputChange}></textarea><br />
+
 
       <input type="submit" value="Submit" style={{marginLeft:'40%'}}/>
     </form>
