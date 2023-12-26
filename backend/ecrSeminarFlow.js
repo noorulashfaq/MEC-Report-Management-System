@@ -222,7 +222,7 @@ route.get('/loadforlevel1/:tableName/:deptId/:empId',async(req,res)=>{
             res.status(404).json({error:"No matches"})
             return
         }
-        sql=`select * from ${req.params.tableName}   AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id  where report_proposal_status=0 and lvl_1_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+        sql=`select * from ${req.params.tableName} AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id  where report_proposal_status=0 and lvl_1_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=? order by report_id desc`
         base.query(sql,[dId],(err,rows)=>{
             if(err){res.status(500).json({error:err.message});return;}
             if(row.length==0){res.status(404).json({error:"Nothing to show"})}
@@ -367,7 +367,7 @@ route.get('/loadforlevel2/:tableName/:deptId/:empId',async(req,res)=>{
             res.status(404).json({error:"No matches"})
             return
         }
-        sql=`select * from ${req.params.tableName} AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id where report_proposal_status=1 and lvl_2_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=?`
+        sql=`select * from ${req.params.tableName} AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id where report_proposal_status=1 and lvl_2_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=? order by report_id desc`
         base.query(sql,[dId],(err,rows)=>{
             if(err){res.status(500).json({error:err.message});return;}
             if(row.length==0){res.status(404).json({error:"Nothing to show"})}

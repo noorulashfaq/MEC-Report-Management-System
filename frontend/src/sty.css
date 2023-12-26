@@ -465,3 +465,21 @@ button {
   background-color: green;
   color: white;
 }
+
+#event_description, #participants_box, #event_organizing_secretary, #event_date_to, #event_date_from, #event_budget_utilized{
+  width: 750px;
+}
+
+#event_coordinator{
+  width: 610px;
+  /* margin-left: -70px; */
+}
+/* 
+form div{
+  margin-left: 70px;
+} */
+
+#participants_text{
+  width: 655px;
+}
+
