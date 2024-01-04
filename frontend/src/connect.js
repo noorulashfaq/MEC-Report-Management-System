@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const url="http://localhost:1234"
 export const onLogin=async(obj)=>{
-   try{
+try{
     const returned = await axios.post(`${url}/login`,obj)
     console.log(returned)
     return returned.data
@@ -13,7 +13,7 @@ catch(error){
 }
 
 export const onProposalsLoad=async()=>{
-    
+
     // alert(dept_id)
     const returned=await axios.get(`${url}/seminar/find`)
     let ids=[]

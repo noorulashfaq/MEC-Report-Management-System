@@ -6,7 +6,7 @@ const base = require("./db")
 //////////////Dropdowns/////////////////////
 
 route.get('/dropdownMajorType',async(req,res)=>{
-    let sql="select * from data_major_report_type"
+    let sql="select * from data_major_report_type where head_report_id=1001"
     base.query(sql,(err,rows)=>{
         if(err){
             res.status(500).json({error:err.message})
@@ -21,6 +21,7 @@ route.get('/dropdownMajorType',async(req,res)=>{
 })
 
 route.get('/dropdownSubTypeWithMajor/:majorId',async(req,res)=>{
+    if(req.params.majorId!=0){
     let sql="SELECT * FROM data_sub_report_type INNER JOIN data_major_report_type ON data_sub_report_type.major_report_id = data_major_report_type.major_report_id WHERE data_sub_report_type.major_report_id = ?"
     base.query(sql,[req.params.majorId],(err,rows)=>{
         if(err){
@@ -33,6 +34,19 @@ route.get('/dropdownSubTypeWithMajor/:majorId',async(req,res)=>{
         }
         res.status(200).json({rows})
     })
+}else{
+    console.log("Cannot fetch with multiple major ids")
+    const rows=[{
+        sub_report_id:null,
+        sub_report:"None",
+        major_report_id:null,
+        head_report_id:null,
+        table_name:"",
+        acd_status:"",
+        major_report:""
+    }]
+    res.status(200).json({rows})
+}
 })
 
 

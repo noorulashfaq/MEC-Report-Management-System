@@ -81,7 +81,7 @@ const [currentPage, setCurrentPage] = useState(1);
 const[filter,setFilter]=useState({
     "acdyr_id":null,
     "sem_id":null,
-    "major_id":null,
+    "major_id":"",
     "sub_id":null,
     "dept_id":`${loggedUser.dept_id}`,
     "emp_id":`${loggedUser.faculty_id}`
@@ -108,7 +108,6 @@ const[major,setMajor]=useState([])
 const Maj=async()=>{
     const t = await Major()
     setMajor(t)
-    // alert(t)
 }
 const majors=major.map((val)=>({
     value: val.major_report_id,
@@ -123,14 +122,15 @@ const[sub,setSub]=useState([])
         setSub(t)
         // alert(t)
     }
-    const subs=sub.map((val)=>({
+    let [subs,setSubs]=useState([])
+    subs=sub.map((val)=>({
         value: val.sub_report_id,
         label: val.sub_report,
         extraInfo: "sub_id"
     }))
     // console.log(subs)
 
-// alert(JSON.stringify(currAcd))
+    // alert(JSON.stringify(currAcd))
 
     const[year,setYear]=useState([])
     const Acad=async()=>{
@@ -144,7 +144,7 @@ const[sub,setSub]=useState([])
         extraInfo: "acdyr_id"
         }));
     // console.log(years)
-    
+
     const semester = [
         {sem_id:1,sem:"Odd"},
         {sem_id:2,sem:"Even"},
@@ -155,13 +155,33 @@ const[sub,setSub]=useState([])
         label: val.sem,
         extraInfo: "sem_id"
     }))
-
+let [majorVals,setMajorVals]=useState("")
 const infoCollect=(eve)=>{
     // console.log(eve)
     const label = eve.label
     const value = eve.value
     const extraInfo = eve.extraInfo
-    // alert(extraInfo)
+    // alert(JSON.stringify(eve))
+    if(eve[0].extraInfo=="major_id"){
+        if(eve.length==1){
+            Sub(eve[0].value)
+        }
+        else if(eve.length!=1){
+            Sub(0)
+            for(let i=0;i<eve.length;i++){
+                // alert(JSON.stringify(eve[i].value))
+                majorVals+=eve[i].value
+                if(i!=eve.length-1){
+                    majorVals+=","
+                }
+                setFilter((old)=>({
+                    ...old,
+                    [eve[i].extraInfo]:majorVals
+                }))
+            }
+            // alert(majorVals)
+        }
+    }
     if(extraInfo=="acdyr_id"){
         setSelectedAcd(value)
         // handleChange(value)
@@ -176,15 +196,17 @@ const infoCollect=(eve)=>{
             ...old,
             [extraInfo]:value
         }))
-    }else if(extraInfo=="major_id"){
-        Sub(value)
-        setSelectedMajor(value)
-        // handleChange(value)
-        setFilter((old)=>({
-            ...old,
-            [extraInfo]:value
-        }))
-    }else if(extraInfo=="sub_id"){
+    }
+    // else if(extraInfo=="major_id"){
+    //     Sub(value)
+    //     setSelectedMajor(value)
+    //     // handleChange(value)
+    //     setFilter((old)=>({
+    //         ...old,
+    //         [extraInfo]:value
+    //     }))
+    // }
+    else if(extraInfo=="sub_id"){
         setSelectedSub(value)
         // handleChange(value)
         setFilter((old)=>({
@@ -1646,14 +1668,14 @@ doc.text('Principal', 155, 290);
 <label for="major_id">Major Type : </label>
 <Select
 className="form group"
-        // isMulti
+        isMulti
         name="major_id"
         options={majors}
         // value={selectedMajor}
         onChange={infoCollect}
         isSearchable
         placeholder="Select options..."
-        closeMenuOnSelect={true}
+        closeMenuOnSelect={false}
 />
 {/* <input type="" name="major_id" onChange={handleChange} value={selectedMajor} /> */}
 
