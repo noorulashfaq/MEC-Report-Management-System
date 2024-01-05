@@ -261,7 +261,7 @@ export const Add=()=>{
     <div class="report-header">
         <h1 class="recent-Articles" style={{backgroundColor:"transparent"}}>EVENT PROPOSAL</h1>
     </div>
-    <div className="form"style={{justifyContent:'center'}}>
+    <div className="form" style={{justifyContent:'center'}}>
 
     {/* <label htmlFor="event-type">Select Event Type:</label>
     <select id="event-type" onChange={handleChange} value={eventType}>
@@ -389,6 +389,7 @@ export const Add=()=>{
  <Select
  className="form-group"
         isMulti
+        id="event_coordinator"
         name="event_coordinator"
         options={options}
         value={selectedOptions}

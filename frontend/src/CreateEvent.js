@@ -1657,8 +1657,8 @@ doc.text('Principal', 155, 290);
         <div className="filter-dropdowns">
 
 <label for="acdyr_id">Academic Year : </label>
-<Select
-        className="form group"
+    <Select
+        className="form1group"
         isMulti
         name="acdyr_id"
         options={years}
@@ -1688,7 +1688,7 @@ doc.text('Principal', 155, 290);
 
 <label for="major_id">Major Type : </label>
 <Select
-        className="form group"
+        className="form1group"
         isMulti
         name="major_id"
         options={majors}
