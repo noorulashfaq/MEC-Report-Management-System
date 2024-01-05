@@ -37,6 +37,11 @@ selectedValues.map((item)=>{
   }
 })
 const Validate=()=>{
+  handleUpload1();
+  handleUpload2();
+  handleUpload3();
+  handleUpload4();
+  handleUpload5();
   result.map(item=>{
       CheckRollWithDb(item)
     })
@@ -137,8 +142,10 @@ try{
         }
       })
     }
-    console.log(formData)
+    // console.log(formData)
     const submit=async()=>{
+    
+      console.log(formData)
       sessionStorage.removeItem("report_id")
         // alert(Data.report_id)
         try{
@@ -232,26 +239,80 @@ try{
     
   
     const handleFileChange1 = (e) => {
+      // alert(JSON.stringify(e.target.files))
+      // alert(e.target.files)
       setSelectedFile1(e.target.files[0]);
+      const file = e.target.files[0];
+
+      // Check if the file size is below 2MB
+      if (file && file.size > 2 * 1024 * 1024) {
+        alert("Please choose an image with a size below 2MB.");
+        e.target.value = null; // Reset the file input
+        return;
+      }
+      else{
+      
+      // alert(selectedFile1);
+      
+      }
     };
     const handleFileChange2 = (e) => {
-        setSelectedFile2(e.target.files[0]);
+        
+        const file = e.target.files[0];
+
+      // Check if the file size is below 2MB
+      if (file && file.size > 2 * 1024 * 1024) {
+        alert("Please choose an image with a size below 2MB.");
+        e.target.value = null; // Reset the file input
+        return;
+      }
+      setSelectedFile2(e.target.files[0]);
+     
       };
       const handleFileChange3 = (e) => {
+        const file = e.target.files[0];
+
+      // Check if the file size is below 2MB
+      if (file && file.size > 2 * 1024 * 1024) {
+        alert("Please choose an image with a size below 2MB.");
+        e.target.value = null; // Reset the file input
+        return;
+      }
         setSelectedFile3(e.target.files[0]);
+      
       };
       const handleFileChange4 = (e) => {
+        const file = e.target.files[0];
+
+      // Check if the file size is below 2MB
+      if (file && file.size > 2 * 1024 * 1024) {
+        alert("Please choose an image with a size below 2MB.");
+        e.target.value = null; // Reset the file input
+        return;
+      }
         setSelectedFile4(e.target.files[0]);
+       
       };
       const handleFileChange5 = (e) => {
+        const file = e.target.files[0];
+
+      // Check if the file size is below 2MB
+      if (file && file.size > 2 * 1024 * 1024) {
+        alert("Please choose an image with a size below 2MB.");
+        e.target.value = null; // Reset the file input
+        return;
+      }
         setSelectedFile5(e.target.files[0]);
+       
+
       };
   
  
   
   
-    const handleUpload = () => {
-        if (selectedFile1 && newFileName) {
+    const handleUpload1 = () => {
+      // alert("handle upload working")
+      if (selectedFile1) {
           const formData1 = new FormData();
           const currentDate = new Date();
 
@@ -267,24 +328,30 @@ const dateTimeString = `${dd}-${mm}-${yyyy}_${hh}-${min}-${ss}`;
  // Maximum value for the random number
 let random =Math.random()*Math.random()*1;
           const name1=newFileName+'1_'+dateTimeString+'_'+random+'.png';
-          random =Math.random()*Math.random()*2;
-          const name2=newFileName+'2_'+dateTimeString+'_'+random+'.png';
-          random =Math.random()*Math.random()*3;
-          const name3=newFileName+'3_'+dateTimeString+'_'+random+'.png';
-          random =Math.random()*Math.random()*4;
-          const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
-          random =Math.random()*Math.random()*5;
-          const name5=newFileName+'5_'+dateTimeString+'_'+random+'.png';
-          formData1.append('file', selectedFile1,name1 );
-          // alert("Hello");
-          setFormData({
-            ...formData,
-            event_photo_1: name1,
-            event_photo_2: name2,
-            event_photo_3: name3,
-            event_photo_4: name4,
-            event_photo_5: name5,
+          // random =Math.random()*Math.random()*2;
+          // setTimeout(() =>  200000);
+
+          setFormData((old)=>{
+            return{
+            ...old,
+            event_photo_1: name1
+            }
+            // event_photo_2: name2,
+            // event_photo_3: name3,
+            // event_photo_4: name4,
+            // event_photo_5: name5,
           });
+          // const name2=newFileName+'2_'+dateTimeString+'_'+random+'.png';
+          // random =Math.random()*Math.random()*3;
+          // const name3=newFileName+'3_'+dateTimeString+'_'+random+'.png';
+          // random =Math.random()*Math.random()*4;
+          // const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
+          // random =Math.random()*Math.random()*5;
+          // const name5=newFileName+'5_'+dateTimeString+'_'+random+'.png';
+          formData1.append('file',selectedFile1,name1 );
+          // alert("Hello");
+          
+          
           
        
     
@@ -300,16 +367,13 @@ let random =Math.random()*Math.random()*1;
               console.error('Error uploading the file:', error);
             })
             
-           
-        }
-        console.log(formData);
-        alert("File uploaded")
-        
-        submit();
+            alert(formData.event_photo_1); 
+          }
+       
       }
       const handleUpload2 = () => {
-        if (selectedFile3 && newFileName) {
-            const formData3 = new FormData();
+        if (selectedFile2 ) {
+            const formData2 = new FormData();
             const currentDate = new Date();
 
             const dd = String(currentDate.getDate()).padStart(2, '0');
@@ -321,36 +385,36 @@ let random =Math.random()*Math.random()*1;
             const ss = String(currentDate.getSeconds()).padStart(2, '0');
             
             const dateTimeString = `${dd}-${mm}-${yyyy} ${hh}-${min}-${ss}`;
-            let random =Math.random()*Math.random()*1;
-            const name1=newFileName+'1_'+dateTimeString+'_'+random+'.png';
-            random =Math.random()*Math.random()*2;
+            // let random =Math.random()*Math.random()*1;
+            // const name1=newFileName+'1_'+dateTimeString+'_'+random+'.png';
+            let random =Math.random()*Math.random()*2;
             const name2=newFileName+'2_'+dateTimeString+'_'+random+'.png';
-            random =Math.random()*Math.random()*3;
-            const name3=newFileName+'3_'+dateTimeString+'_'+random+'.png';
-            random =Math.random()*Math.random()*4;
-            const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
-            random =Math.random()*Math.random()*5;
-            const name5=newFileName+'5_'+dateTimeString+'_'+random+'.png';
-            formData3.append('file', selectedFile1,name1 );
+            // random =Math.random()*Math.random()*3;
+            // const name3=newFileName+'3_'+dateTimeString+'_'+random+'.png';
+            // random =Math.random()*Math.random()*4;
+            // const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
+            // random =Math.random()*Math.random()*5;
+            // const name5=newFileName+'5_'+dateTimeString+'_'+random+'.png';
+            formData2.append('file', selectedFile2,name2 );
             // alert("Hello");
             setFormData({
               ...formData,
-              event_photo_1: name1,
+              // event_photo_1: name1,
               event_photo_2: name2,
-              event_photo_3: name3,
-              event_photo_4: name4,
-              event_photo_5: name5,
+              // event_photo_3: name3,
+              // event_photo_4: name4,
+              // event_photo_5: name5,
             });
             fetch('http://localhost:1234/ecr/upload1', {
                 method: 'POST',
-                body: formData3,
+                body: formData2,
               })
                 .then((response) => response.text())
                 .then((data) => {
                   console.log(data);
                 })
                 .catch((error) => {
-                  console.error('Error uploading the file 3:', error);
+                  console.error('Error uploading the file 2:', error);
                 })
           
                
@@ -358,8 +422,8 @@ let random =Math.random()*Math.random()*1;
     }
 
     const handleUpload3 = () => {
-      if (selectedFile4 && newFileName) {
-          const formData4 = new FormData();
+      if (selectedFile3) {
+          const formData3 = new FormData();
           const currentDate = new Date();
 
           const dd = String(currentDate.getDate()).padStart(2, '0');
@@ -372,24 +436,25 @@ let random =Math.random()*Math.random()*1;
           
           const dateTimeString = `${dd}-${mm}-${yyyy} ${hh}-${min}-${ss}`;
           const random =Math.random()*Math.random()*4;
-          const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
-          formData4.append('file', selectedFile4,name4 );
+          const name3=newFileName+'3_'+dateTimeString+'_'+random+'.png';
+          formData3.append('file', selectedFile3,name3 );
          
           setFormData({
               
             ...formData,
-            event_photo_4: name4,
+            event_photo_3: name3,
           })
+
           fetch('http://localhost:1234/ecr/upload1', {
               method: 'POST',
-              body: formData4,
+              body: formData3,
             })
               .then((response) => response.text())
               .then((data) => {
                 console.log(data);
               })
               .catch((error) => {
-                console.error('Error uploading the file 4:', error);
+                console.error('Error uploading the file 3:', error);
               })
         
              
@@ -397,8 +462,8 @@ let random =Math.random()*Math.random()*1;
   }
 
   const handleUpload4 = () => {
-    if (selectedFile5 && newFileName) {
-        const formData5 = new FormData();
+    if (selectedFile4 ) {
+        const formData4 = new FormData();
         const currentDate = new Date();
 
         const dd = String(currentDate.getDate()).padStart(2, '0');
@@ -411,17 +476,17 @@ let random =Math.random()*Math.random()*1;
         
         const dateTimeString = `${dd}-${mm}-${yyyy} ${hh}-${min}-${ss}`;
         const random =Math.random()*Math.random()*5;
-        const name5=newFileName+'5_'+dateTimeString+'_'+random+'.png';
-        formData5.append('file', selectedFile5,name5 );
+        const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
+        formData4.append('file', selectedFile4,name4 );
        
         setFormData({
             
           ...formData,
-          event_photo_5: name5,
+          event_photo_4: name4,
         })
         fetch('http://localhost:1234/ecr/upload1', {
             method: 'POST',
-            body: formData5,
+            body: formData4,
           })
             .then((response) => response.text())
             .then((data) => {
@@ -436,10 +501,10 @@ let random =Math.random()*Math.random()*1;
 }
 
 
-      const handleUpload1 = () => {
+      const handleUpload5 = () => {
 
-        if (selectedFile2 && newFileName) {
-            const formData2 = new FormData();
+        if (selectedFile5 ) {
+            const formData5 = new FormData();
             const currentDate = new Date();
 
             const dd = String(currentDate.getDate()).padStart(2, '0');
@@ -459,9 +524,9 @@ let random =Math.random()*Math.random()*1;
             const name3=newFileName+'3_'+dateTimeString+'_'+random+'.png';
             random =Math.random()*Math.random()*4;
             const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
-            random =Math.random()*Math.random()*5;
+            // let random = Math.random()*Math.random()*5;
             const name5=newFileName+'5_'+dateTimeString+'_'+random+'.png';
-            formData2.append('file', selectedFile1,name1 );
+            formData5.append('file', selectedFile5,name5 );
             // alert("Hello");
             setFormData({
               ...formData,
@@ -473,19 +538,16 @@ let random =Math.random()*Math.random()*1;
             });
             fetch('http://localhost:1234/ecr/upload1', {
                 method: 'POST',
-                body: formData2,
+                body: formData5,
               })
                 .then((response) => response.text())
                 .then((data) => {
                   console.log(data);
                 })
                 .catch((error) => {
-                  console.error('Error uploading the file 2:', error);
+                  console.error('Error uploading the file 5:', error);
                 })
-                handleUpload2();
-                handleUpload3();
-                handleUpload4();
-                handleUpload();
+              
                 
               
                 
@@ -499,44 +561,8 @@ let random =Math.random()*Math.random()*1;
     //   // Call the delayed action after the delay
     //   submit();
     // };
-
-        const handleSubmit = async(e) => {
-          const currentDate = new Date();
-          const dd = String(currentDate.getDate()).padStart(2, '0');
-          const mm = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so we add 1
-          const yyyy = currentDate.getFullYear();
-          
-          const hh = String(currentDate.getHours()).padStart(2, '0');
-          const min = String(currentDate.getMinutes()).padStart(2, '0');
-          const ss = String(currentDate.getSeconds()).padStart(2, '0');
-          
-          const dateTimeString = `${dd}-${mm}-${yyyy} ${hh}-${min}-${ss}`;
-          let random =Math.random()*Math.random()*1;
-          const name1=newFileName+'1_'+dateTimeString+'_'+random+'.png';
-          random =Math.random()*Math.random()*2;
-          const name2=newFileName+'2_'+dateTimeString+'_'+random+'.png';
-          random =Math.random()*Math.random()*3;
-          const name3=newFileName+'3_'+dateTimeString+'_'+random+'.png';
-          random =Math.random()*Math.random()*4;
-          const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
-          random =Math.random()*Math.random()*5;
-          const name5=newFileName+'5_'+dateTimeString+'_'+random+'.png';
-
-          setFormData({
-            ...formData,
-            event_photo_1: name1,
-            event_photo_2: name2,
-            event_photo_3: name3,
-            event_photo_4: name4,
-            event_photo_5: name5,
-          });
-         
-          console.log(formData)
-
-          handleUpload1();
-          // submit();
-        
-          };
+console.log(formData);
+      
       
   
     return (
@@ -568,23 +594,65 @@ let random =Math.random()*Math.random()*1;
         
       </div>
 
-      <form onSubmit={handleSubmit}>
+     
       
+      <div className='form'>
 
-      <label htmlFor="event_photo_1">Photo 1: (To be displayed in the front page)</label>
-      <input type="file" id="event_photo_1" name="event_photo_1" accept="image/*" onChange={handleFileChange1} /><br />
+      <label htmlFor="event_photo_1">Photo 1: (To be displayed on the front page)</label>
+<input
+  type="file"
+  id="event_photo_1"
+  name="event_photo_1"
+  accept="image/*"
+  onChange={handleFileChange1}
+  required  // Add 'required' if the image is mandatory
+  maxSize="2MB"  // Maximum allowed size (this is not standard HTML, will need custom handling)
+/><br />
+
 
       <label htmlFor="event_photo_2">Photo 2: (To be displayed in the front page)</label>
-      <input type="file" id="event_photo_2" name="event_photo_2" accept="image/*" onChange={handleFileChange2} /><br/>
+      <input
+  type="file"
+  id="event_photo_2"
+  name="event_photo_2"
+  accept="image/*"
+  onChange={handleFileChange2}
+  required  // Add 'required' if the image is mandatory
+  maxSize="2MB"  // Maximum allowed size (this is not standard HTML, will need custom handling)
+/><br />
 
       <label htmlFor="event_photo_3">Photo 3:</label>
-      <input type="file" id="event_photo_3" name="event_photo_3" accept="image/*" onChange={handleFileChange3} /><br/>
+      <input
+  type="file"
+  id="event_photo_3"
+  name="event_photo_3"
+  accept="image/*"
+  onChange={handleFileChange3}
+  required  // Add 'required' if the image is mandatory
+  maxSize="2MB"  // Maximum allowed size (this is not standard HTML, will need custom handling)
+/><br />
 
       <label htmlFor="event_photo_4">Photo 4:</label>
-      <input type="file" id="event_photo_4" name="event_photo_4" accept="image/*" onChange={handleFileChange4} /><br/>
+      <input
+  type="file"
+  id="event_photo_4"
+  name="event_photo_4"
+  accept="image/*"
+  onChange={handleFileChange4}
+  required  // Add 'required' if the image is mandatory
+  maxSize="2MB"  // Maximum allowed size (this is not standard HTML, will need custom handling)
+/><br />
 
       <label htmlFor="event_photo_5">Photo 5:</label>
-      <input type="file" id="event_photo_5" name="event_photo_5" accept="image/*" onChange={handleFileChange5} />
+      <input
+  type="file"
+  id="event_photo_5"
+  name="event_photo_5"
+  accept="image/*"
+  onChange={handleFileChange5}
+  required  // Add 'required' if the image is mandatory
+  maxSize="2MB"  // Maximum allowed size (this is not standard HTML, will need custom handling)
+/><br />
       
      
       
@@ -645,7 +713,7 @@ let random =Math.random()*Math.random()*1;
 
       <label htmlFor="event_organizing_secretary">Organizing Secretary:</label>
       <Select
-        className="form group"
+        className="form-group"
         isMulti
         id="event_organizing_secretary"
         name="event_organizing_secretary"
@@ -655,6 +723,7 @@ let random =Math.random()*Math.random()*1;
         isSearchable
         placeholder="Select options..."
         closeMenuOnSelect={false}
+       
       />
 
       <label htmlFor="participants_list">Students Participated in the event:</label>
@@ -668,7 +737,7 @@ let random =Math.random()*Math.random()*1;
     <input type='button' className='validate-btn' value="Validate" onClick={Validate}/>
       {/* dropdown that show the roll no entered like selected options */}
       <Select
-        className='form group'
+        className='form-group'
         isMulti
         id="participants_box"
         name="participants_list"
@@ -685,10 +754,9 @@ let random =Math.random()*Math.random()*1;
 
       <label htmlFor="event_description">About the Event Paragraph:</label>
 <textarea id="event_description" name="event_description" value={formData.event_description} onChange={handleInputChange}></textarea><br />
-
-
-      <input type="submit" value="Submit" style={{marginLeft:'40%'}}/>
-    </form>
+</div>
+      <input type="submit"  onClick={submit} value="Submit" style={{marginLeft:'40%'}}/>
+    
       </>
     );
   }

@@ -102,7 +102,7 @@ function FacultyEcrFilter() {
 
             <div>
             <label htmlFor="acdyr_id">Academic Year:</label>
-            <select name="acdyr_id" className="form group" onChange={infoCollect} value={filter.acdyr_id}>
+            <select name="acdyr_id" className="form-group" onChange={infoCollect} value={filter.acdyr_id}>
                         <option value="">Select Academic Year</option>
                             {
                                 year.map((val,key)=>{

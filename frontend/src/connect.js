@@ -38,34 +38,105 @@ export const onComplete=async(obj,report_id)=>{
     // alert(report_id)
     // alert(obj.event_time)
     try{
+        // alert(obj);
     const returned = await axios.put(`${url}/seminar/ecrCompletion/data_management_seminar/${report_id}`,obj)
     return returned.data
     }
     catch(error){
-        alert("Please fill all fields")
+        alert(error)
+        // alert("Please fill all fields")
     }
 }
 
 
 export const loadForLevel1=async(dept,emp)=>{
     // alert(dept)
-    const receive = await axios.get(`${url}/seminar/loadForLevel1/data_management_seminar/${dept}/${emp}`)
-    return receive.data.rows
+    try{
+    const receive = await axios.get(`${url}/seminar/loadForLevel1/${dept}/${emp}`)
+    // alert(JSON.stringify(receive.data.resultArr))
+    return receive.data.resultArr[0].resultRows
+    }
+    catch(e){
+        console.log("Error on connect.js");
+    }
+
+}
+export const loadForLevel2=async(dept,emp)=>{
+    // alert(dept)
+    const receive = await axios.get(`${url}/seminar/loadForLevel2/${dept}/${emp}`)
+    return receive.data.resultArr[0].resultRows
+
+}
+export const loadForLevel3=async(dept,emp)=>{
+    // alert(dept)
+    const receive = await axios.get(`${url}/seminar/loadForLevel3/${dept}/${emp}`)
+    return receive.data.resultArr[0].resultRows
+
+}
+export const loadForLevel4=async(dept,emp)=>{
+    // alert(dept)
+    const receive = await axios.get(`${url}/seminar/loadForLevel4/${dept}/${emp}`)
+    return receive.data.resultArr[0].resultRows
+
+}
+export const loadForLevel5=async(dept,emp)=>{
+    // alert(dept)
+    const receive = await axios.get(`${url}/seminar/loadForLevel5/${dept}/${emp}`)
+    return receive.data.resultArr[0].resultRows
 
 }
 export const loadComForLevel1=async(dept,emp)=>{
+    try{
     // alert(dept)
     const receive = await axios.get(`${url}/seminar/completionloadforlevel1/data_management_seminar/${dept}/${emp}`)
     return receive.data.rows
+    }
+    catch(e){
+        console.log("Not found");
+    }
 
 }
 
-export const approveLevel1=async(dept,emp,report_id)=>{
-    const receive = await axios.put(`${url}/seminar/acknowledgelevel1/data_management_seminar/${dept}/${emp}/${report_id}`)
+export const approveLevel1=async(tab,dept,emp,report_id)=>{
+    // ale
+    
+    const receive = await axios.put(`${url}/seminar/acknowledgelevel1/${tab}/${dept}/${emp}/${report_id}`)
     return receive.data
 }
-export const approveComLevel1=async(dept,emp,report_id)=>{
-    const receive = await axios.put(`${url}/seminar/completionacknowledgelevel1/data_management_seminar/${dept}/${emp}/${report_id}`)
+export const approveLevel2=async(tab,dept,emp,report_id)=>{
+    const receive = await axios.put(`${url}/seminar/acknowledgelevel2/${tab}/${dept}/${emp}/${report_id}`)
+    return receive.data
+}
+export const approveLevel3=async(tab,dept,emp,report_id)=>{
+    const receive = await axios.put(`${url}/seminar/acknowledgelevel3/${tab}/${dept}/${emp}/${report_id}`)
+    return receive.data
+}
+export const approveLevel4=async(tab,dept,emp,report_id)=>{
+    const receive = await axios.put(`${url}/seminar/acknowledgelevel4/${tab}/${dept}/${emp}/${report_id}`)
+    return receive.data
+}
+export const approveLevel5=async(tab,dept,emp,report_id)=>{
+    const receive = await axios.put(`${url}/seminar/acknowledgelevel5/${tab}/${dept}/${emp}/${report_id}`)
+    return receive.data
+}
+export const approveComLevel1=async(tab,dept,emp,report_id)=>{
+    const receive = await axios.put(`${url}/seminar/completionacknowledgelevel1/${tab}/${dept}/${emp}/${report_id}`)
+    return receive.data
+}
+export const approveComLevel2=async(tab,dept,emp,report_id)=>{
+    const receive = await axios.put(`${url}/seminar/completionacknowledgelevel2/${tab}/${dept}/${emp}/${report_id}`)
+    return receive.data
+}
+export const approveComLevel3=async(tab,dept,emp,report_id)=>{
+    const receive = await axios.put(`${url}/seminar/completionacknowledgelevel3/${tab}/${dept}/${emp}/${report_id}`)
+    return receive.data
+}
+export const approveComLevel4=async(tab,dept,emp,report_id)=>{
+    const receive = await axios.put(`${url}/seminar/completionacknowledgelevel4/${tab}/${dept}/${emp}/${report_id}`)
+    return receive.data
+}
+export const approveComLevel5=async(tab,dept,emp,report_id)=>{
+    const receive = await axios.put(`${url}/seminar/completionacknowledgelevel5/${tab}/${dept}/${emp}/${report_id}`)
     return receive.data
 }
 export const Table=async(empId)=>

@@ -45,11 +45,11 @@ export const Login=()=>{
                         {/* <h1 className="text-center text-info">Muthayammal Engineering College, Rasipuram</h1> */}
                     </div>
                     <div className="col-12 col-sm-12 col-md-4 col-lg-5 shadow p-5 rounded-2" style={{backgroundColor:'#f7f1d7',height:'38%'}}>
-                        <div >
-                            <label>Faculty ID</label>
+                        <div className='form-group'>
+                            <label >Faculty ID</label>
                             <input type="email" name="mail" value={logger.mail} onChange={gather} placeholder="Faculty Id to login" className="form-control" />
                         </div>
-                        <div className="form group">
+                        <div className="form-group">
                             <label>Password</label>
                             <input type="password" name="pass" value={logger.pass} onChange={gather} placeholder="Password to login" className="form-control" />
                         </div>

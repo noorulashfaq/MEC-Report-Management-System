@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { approveLevel1, loadForLevel1 ,loadComForLevel1,approveComLevel1, Table, Major, SubReport} from "./connect"
+import { approveLevel1,approveLevel2,approveLevel3,approveLevel4,approveLevel5, loadForLevel1 ,loadForLevel2,loadForLevel3,loadForLevel4,loadForLevel5,loadComForLevel1,approveComLevel1,approveComLevel2,approveComLevel3,approveComLevel4,approveComLevel5, Table, Major, SubReport} from "./connect"
 import './sty.css';
 import './facultyEcrFilter.css'
 import './hodEcrFilter.css'
@@ -358,30 +358,113 @@ doc.text('Principal', 155, 290);
     const[info,setInfo]=useState("")
 
 
-    const accept=async(dept_id,report_id,com)=>{
+    const accept=async(name,dept_id,report_id,com,report_proposal_status,report_completion_status)=>{
+        // alert(com);
         // alert(com);
         if(com===1){
-            const log=JSON.parse(sessionStorage.getItem("person"))
-        const data=await approveComLevel1(dept_id,log.faculty_id,report_id)
+
+        const log=JSON.parse(sessionStorage.getItem("person"))
+        let data;
+        if(report_completion_status===0){
+        data=await approveComLevel1(name,dept_id,log.faculty_id,report_id)
+        }
+        else if(report_completion_status===1){
+            data=await approveComLevel2(name,dept_id,log.faculty_id,report_id)
+            }
+            else if(report_completion_status===2){
+                data=await approveComLevel3(name,dept_id,log.faculty_id,report_id)
+                }
+                else if(report_completion_status===3){
+                    data=await approveComLevel4(name,dept_id,log.faculty_id,report_id)
+                    }
+                    else if(report_completion_status===4){
+                        data=await approveComLevel5(name,dept_id,log.faculty_id,report_id)
+                        }
         setInfo(data)
         window.location.assign("/")
         }
         else{
         const log=JSON.parse(sessionStorage.getItem("person"))
-        const data=await approveLevel1(dept_id,log.faculty_id,report_id)
+        let data;
+        // alert(report_proposal_status);
+        if(report_proposal_status===0){
+
+        
+        data=await approveLevel1(name,dept_id,log.faculty_id,report_id)
+        }
+        else if(report_proposal_status===1){
+            data=await approveLevel2(name,dept_id,log.faculty_id,report_id)
+        }
+        else if(report_proposal_status===2){
+            data=await approveLevel3(name,dept_id,log.faculty_id,report_id)
+        }
+        else if(report_proposal_status===3){
+            data=await approveLevel4(name,dept_id,log.faculty_id,report_id)
+        }
+        else if(report_proposal_status===4){
+            data=await approveLevel5(name,dept_id,log.faculty_id,report_id)
+        }
         setInfo(data)
         window.location.assign("/")
         }
     }
     const load=async()=>{
+        try{
         const logged=JSON.parse(sessionStorage.getItem("person"))
         const temp = await loadComForLevel1(logged.dept_id,logged.faculty_id)
         setEcrs1(temp)
+        }
+        catch(e){
+            setEcrs1({"Result":"Not found"})
+        }
     }
     const loadSeminars=async()=>{
         const logged=JSON.parse(sessionStorage.getItem("person"))
-        const temp = await loadForLevel1(logged.dept_id,logged.faculty_id)
+        let temp;
+        try{
+        temp = await loadForLevel1(logged.dept_id,logged.faculty_id)
+        
         setEcrs(temp)
+        }
+        catch(e)
+{
+    console.log("Error in loadforLevel1");
+}        try{
+        temp = await loadForLevel2(logged.dept_id,logged.faculty_id)
+        
+        setEcrs(temp)
+        }
+        catch(e)
+        {
+            console.log("Error in loadforLevel2");
+        } 
+        try{
+        temp = await loadForLevel3(logged.dept_id,logged.faculty_id)
+        
+        setEcrs(temp)
+        }       catch(e)
+        {
+            console.log("Error in loadforLevel3");
+        } 
+        try{
+        temp = await loadForLevel4(logged.dept_id,logged.faculty_id)
+        
+        setEcrs(temp)
+        }
+        catch(e)
+        {
+            console.log("Error in loadforLevel4");
+        } 
+        try{
+        temp = await loadForLevel5(logged.dept_id,logged.faculty_id)
+        
+        setEcrs(temp)
+    
+    }
+    catch(e)
+    {
+        console.log("Error in loadforLevel5");
+    } 
     }
 
     useEffect(()=>{
@@ -1562,7 +1645,7 @@ doc.text('Principal', 155, 290);
 
             <div>
             <label htmlFor="acdyr_id">Academic Year:</label>
-            <select name="acdyr_id" className="form group" onChange={infoCollect} value={filter.acdyr_id}>
+            <select name="acdyr_id" className="form-group" onChange={infoCollect} value={filter.acdyr_id}>
                         <option value="">Select Academic Year</option>
                             {
                                 year.map((val,key)=>{
@@ -1657,7 +1740,7 @@ doc.text('Principal', 155, 290);
                                                 <td className="row justify-content-evenly">
                                                 <button type="button" onClick={async()=>{
                                                
-                                                        accept(val.dept_id,val.report_id,val.completion);
+                                                        accept(val.event_name,val.dept_id,val.report_id,val.final_proposal_status,val.report_proposal_status,val.report_completion_status);
                                                     }} className="btn btn-success col-4"  >Accept</button>
                                                     <button type="button" className="btn btn-dark col-4">Reject</button>
                                                     </td>
@@ -1680,6 +1763,7 @@ doc.text('Principal', 155, 290);
                                         ))
                                     }
                                     {
+                                       
                                         ecrs1.map((val,key)=>(
                                             <tr>
                                                 <td>{val.report_id}</td>
@@ -1691,7 +1775,8 @@ doc.text('Principal', 155, 290);
                                                 <td className="row justify-content-evenly">
                                                 <button type="button" onClick={async()=>{
                                                        
-                                                        accept(val.dept_id,val.report_id,val.completion);
+                                                        accept(val.event_name,
+                                                            val.dept_id,val.report_id,val.final_proposal_status,val.report_proposal_status,val.report_completion_status);
                                                     }} className="btn btn-success col-4">Accept</button>
                                                     <button type="button" className="btn btn-dark col-4">Reject</button>
                                                     </td>
@@ -1714,6 +1799,7 @@ doc.text('Principal', 155, 290);
                                                     }} >View ECR</button></td>
                                             </tr>
                                         ))
+                                               
                                     }
                                 </tbody>
                             </table>
