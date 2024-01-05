@@ -1615,7 +1615,7 @@ doc.text('Principal', 155, 290);
 
 <label for="acdyr_id">Academic Year : </label>
 <Select
-        className="form group"
+        className="form1group"
         // isMulti
         name="acdyr_id"
         options={years}
@@ -1630,7 +1630,7 @@ doc.text('Principal', 155, 290);
 
 <label for="sem_id">Semester : </label>
 <Select
-        className="form group"
+        className="form1group"
         // isMulti
         name="sem_id"
         options={sems}
@@ -1645,7 +1645,7 @@ doc.text('Principal', 155, 290);
 
 <label for="major_id">Major Type : </label>
 <Select
-className="form group"
+className="form1group"
         // isMulti
         name="major_id"
         options={majors}
@@ -1659,7 +1659,7 @@ className="form group"
 
 <label for="sub_id">Sub Type : </label>
 <Select
-className="form group"
+className="form1group"
         // isMulti
         name="sub_id"
         options={subs}

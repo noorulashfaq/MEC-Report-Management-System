@@ -1,8 +1,3 @@
-// import { Container, Nav, Navbar } from "react-bootstrap";
-
-
-// localhost
-
 import { useEffect, useState } from "react"
 import "./sty.css";
 import { onProposalsLoad, onPropose,Venue,Major,SubReport,Academic} from "./connect"
@@ -265,18 +260,18 @@ export const Add=()=>{
     <div class="report-header">
         <h1 class="recent-Articles" style={{backgroundColor:"transparent"}}>EVENT PROPOSAL</h1>
     </div>
-    <div className="row justify-content-center"style={{justifyContent:'center'}}>
+    <div className="form"style={{justifyContent:'center'}}>
 
     {/* <label htmlFor="event-type">Select Event Type:</label>
     <select id="event-type" onChange={handleChange} value={eventType}>
         <option value="seminar">Seminar</option>
         <option value="workshop">Workshop</option>
       </select> */}
-    <Form>
+ 
 
 
 
-    <div className="form group">
+    
     <label for="major_id">Major Type :</label>
     <select name="major_id" value={seminar.major_id} onChange={infoCollect}>
     <option value="">Select Major Type .......</option>
@@ -302,27 +297,26 @@ export const Add=()=>{
 
 
     
-                    </div>
+                    
                 
-            <div className="form group">
+            
                         <label for="event_title">Title of the Event :</label>
                         <input onClick={Acad} onChange={infoCollect} value={seminar.event_title} type="text" name="event_title" placeholder="Event Title" className="form-control"/>
-                    </div>
+                  
                     
-                    <div className="form group">
+                   
                     <label for="event_organizer">Organised By:</label>
                     <input onChange={infoCollect} value={seminar.event_organizer} type="text" name="event_organizer" placeholder="Event Organizer" className="form-control" />
-                    </div>
+                   
 
-                    <div className="form group">
+                 
       <label htmlFor="event_sponsor">Colloborating/Sponsored Agency 1:</label>
       <input type="text" name="event_sponsor" value={maj} required onChange={infoCollect}placeholder="Event Sponsor" className="form-control" readOnly/><br />
-      </div>
-      <div className="form group">
+     
       <label htmlFor="event_sponsor">Colloborating/Sponsored Agency 2:</label>
       <input type="text" name="event_sponsor1"  placeholder="Event Sponsor" className="form-control" /><br />
-      </div>
-      <div className="form group">
+      
+     
       <label htmlFor="event_date">Date of The Event Planned:</label>
       <input type="date" name="event_date" value={seminar.event_date} required onChange={infoCollect} /><br />
 
@@ -380,7 +374,7 @@ export const Add=()=>{
       </select><br /> */}
 
       {/* <label>Event Coordinator</label>
-                        <select name="event_coordinator" className="form group" onChange={handleChange} value={selectedOptions}>
+                        <select name="event_coordinator" className="form-group" onChange={handleChange} value={selectedOptions}>
                         <option value="">Select Faculty</option>
                             {
                                 proposable.map((val,key)=>{
@@ -392,9 +386,9 @@ export const Add=()=>{
 
 <label for="event_coordinator">Event Co-ordinator : </label>
  <Select
- className="form group"
+ className="form-group"
         isMulti
-
+        
         name="event_coordinator"
         options={options}
         value={selectedOptions}
@@ -406,7 +400,7 @@ export const Add=()=>{
 
         
       <label htmlFor="acdyr_id">Academic Year:</label>
-      <select name="acdyr_id" className="form group" onChange={infoCollect} value={seminar.acad_yr_id}>
+      <select name="acdyr_id" className="form-group" onChange={infoCollect} value={seminar.acad_yr_id}>
                         <option value="">Select Academic Year</option>
                             {
                                 year.map((val,key)=>{
@@ -427,7 +421,7 @@ export const Add=()=>{
 
       
     </div>
-    </Form>
+    
 
     <h1 style={{color:'red'}}>{information}</h1>
          
@@ -475,7 +469,7 @@ export const Add=()=>{
          
     
       
- </div>
+
  </div>
  
  </div>

@@ -292,6 +292,8 @@ input[type="submit"]:hover {
 th, td {
   padding: 7px; /* Adjust as needed */
   text-align: center;
+  justify-content: center;
+  margin-top: 2px;
   border-bottom: 1px solid #ddd;
   font-size: 14px;
   text-decoration: none;
@@ -299,12 +301,16 @@ th, td {
 
 td h3{
   text-decoration: none;
+  justify-content: center;
+  margin-top: 2px;
   font-size: 14px;
   color:green;
   
 }
 td h2,a{
   text-decoration: none;
+  justify-content: center;
+  margin-top: 2px;
   font-size: 14px;
   color:blue;
 }
