@@ -24,16 +24,18 @@ export const CreateEvent=()=>{
     // Dept()
     // alert(JSON.stringify(currAcd.acd_yr_id))
 },[])
+
+const logged=sessionStorage.getItem("person")
+const loggedUser = JSON.parse(logged)
+
 const[allvalues,setAllvalues]=useState([]);
 
-      const doSomething = async() =>{
-        const res=await Table()
-          setAllvalues(res.data)
+    const doSomething = async() =>{
+        const res=await Table(`${loggedUser.faculty_id}`)
+            setAllvalues(res.data.recordsArr)
         }
         // console.log(allvalues)
-        // useEffect(() =>{
-         
-        // },[])
+
 const GetCurrAcd=async()=>{
     const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
     // alert(JSON.stringify(t.data.result))
@@ -56,9 +58,6 @@ const[selectedAcd,setSelectedAcd]=useState([])
 const[selectedSem,setSelectedSem]=useState([])
 const[selectedMajor,setSelectedMajor]=useState([])
 const[selectedSub,setSelectedSub]=useState([])
-
-const logged=sessionStorage.getItem("person")
-const loggedUser = JSON.parse(logged)
 
 const [currentPage, setCurrentPage] = useState(1);
       const recordsPerPage = 15;
@@ -150,18 +149,23 @@ const[sub,setSub]=useState([])
         {sem_id:2,sem:"Even"},
         {sem_id:3,sem:"Both"},
     ]
-    const sems = semester.map((val)=>({
+    let sems = semester.map((val)=>({
         value: val.sem_id,
         label: val.sem,
         extraInfo: "sem_id"
     }))
 let [majorVals,setMajorVals]=useState("")
+let [AcdVals,setAcdVals]=useState("")
+
 const infoCollect=(eve)=>{
-    // console.log(eve)
+
     const label = eve.label
     const value = eve.value
     const extraInfo = eve.extraInfo
-    // alert(JSON.stringify(eve))
+
+    let isArray = Array.isArray(eve);
+
+    if(isArray){
     if(eve[0].extraInfo=="major_id"){
         if(eve.length==1){
             Sub(eve[0].value)
@@ -169,7 +173,6 @@ const infoCollect=(eve)=>{
         else if(eve.length!=1){
             Sub(0)
             for(let i=0;i<eve.length;i++){
-                // alert(JSON.stringify(eve[i].value))
                 majorVals+=eve[i].value
                 if(i!=eve.length-1){
                     majorVals+=","
@@ -182,14 +185,32 @@ const infoCollect=(eve)=>{
             // alert(majorVals)
         }
     }
-    if(extraInfo=="acdyr_id"){
-        setSelectedAcd(value)
-        // handleChange(value)
-        setFilter((old)=>({
-            ...old,
-            [extraInfo]:value
-        }))
-    }else if(extraInfo=="sem_id"){
+    if(eve[0].extraInfo=="acdyr_id"){
+        if(eve.length!=1){
+            // alert(JSON.stringify(eve))
+            for(let i=0;i<eve.length;i++){
+                // alert(JSON.stringify(eve[i].value))
+                AcdVals+=eve[i].value
+                if(i!=eve.length-1){
+                    AcdVals+=","
+                }
+                setFilter((old)=>({
+                    ...old,
+                    [eve[i].extraInfo]:AcdVals
+                }))
+            }
+            // alert(majorVals)
+        }
+    }}
+    // if(eve.extraInfo=="acdyr_id"){
+    //     setSelectedAcd(value)
+    //     // handleChange(value)
+    //     setFilter((old)=>({
+    //         ...old,
+    //         [extraInfo]:value
+    //     }))
+    // }
+    else if(extraInfo=="sem_id"){
         setSelectedSem(value)
         // handleChange(value)
         setFilter((old)=>({
@@ -1638,7 +1659,7 @@ doc.text('Principal', 155, 290);
 <label for="acdyr_id">Academic Year : </label>
 <Select
         className="form group"
-        // isMulti
+        isMulti
         name="acdyr_id"
         options={years}
         // value={selectedAcd}

@@ -118,7 +118,7 @@ GET http://localhost:1234/seminar/supply/Cloud-2023-09-11-1694405954
 
 ###
 
-GET http://localhost:1234/seminar/dept/1
+GET http://localhost:1234/seminar/dept/6004
 
 ### HoD is receiving the requested proposal
 GET http://localhost:1234/seminar/loadforlevel1/1/6001

@@ -145,23 +145,99 @@ route.post('/report/:report_id',async(req,res)=>{
     })
 })
 
-route.get('/dept/:obj',async(req,res)=>{
-    // console.log(req.params.obj)
-    let received=req.params.obj.split("-")
-    console.log(received)
-    base.query("SELECT * FROM data_management_seminar AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id where dept_id=? order by report_id desc",[received],(err,rows)=>{
-        if(err){
-            res.status(500).json({error:err.message})
-            return
-        }
-        if(rows.length==0){
-            res.status(404).json({message:"No records matches"})
-            return
-        }
-        res.status(200).json(rows)
-    })
+// route.get('/dept/:obj',async(req,res)=>{
+//     // console.log(req.params.obj)
+//     let received=req.params.obj.split("-")
+//     console.log(received)
+//     base.query("SELECT * FROM data_management_seminar AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id where dept_id=? order by report_id desc",[received],(err,rows)=>{
+//         if(err){
+//             res.status(500).json({error:err.message})
+//             return
+//         }
+//         if(rows.length==0){
+//             res.status(404).json({message:"No records matches"})
+//             return
+//         }
+//         res.status(200).json(rows)
+//     })
 
-})
+// })
+
+// route.get('/dept/:empId',async(req,res)=>{
+//     const eId=req.params.empId
+//     let recordsArr=[]
+//     let sql=`select table_name from data_sub_report_type where head_report_id=1001`
+//     base.query(sql,(err,result)=>{
+//         if(err){
+//             console.log(err)
+//             reject(err)
+//             return
+//         }
+//         // res.status(200).json({result})
+//         for(let i=0;i<result.length;i++){
+//             console.log(result[i].table_name)
+//             let sql=`SELECT * FROM ${result[i].table_name} AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id where event_coordinator like ? order by report_id desc`
+//             base.query(sql,['%' + eId + '%'],(err,rows)=>{
+//                 if(err){
+//                     console.log(err)
+//                     reject(err)
+//                     return
+//                 }
+//                 else if(rows.length==0){
+//                     console.log(`No records in ${result[i].table_name}`)
+//                     return
+//                 }
+//                 recordsArr.push({rows})
+//             })
+//         }
+//         res.status(200).json({recordsArr})
+//     })
+// })
+
+route.get('/dept/:empId', async (req, res) => {
+    try {
+        const eId = req.params.empId;
+        let recordsArr = [];
+
+        const tableNamesQuery = 'SELECT table_name FROM data_sub_report_type WHERE head_report_id = 1001';
+        const tableNamesResult = await queryAsync(tableNamesQuery);
+
+        for (const table of tableNamesResult) {
+            const tableName = table.table_name;
+
+            const sql = `
+                SELECT * FROM ${tableName} AS seminar
+                INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
+                INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
+                WHERE event_coordinator LIKE ?
+                ORDER BY report_id DESC`;
+
+            const rows = await queryAsync(sql, [`%${eId}%`]);
+
+            if (rows.length > 0) {
+                recordsArr.push(...rows);
+            }
+        }
+
+        res.status(200).json({ recordsArr });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// Assuming you have a function to perform asynchronous database queries (e.g., using mysql2 or a similar library)
+function queryAsync(sql, params = []) {
+    return new Promise((resolve, reject) => {
+        base.query(sql, params, (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+}
 
 route.get('/find',async(req,res)=>{
     // const dId=req.params.deptId
