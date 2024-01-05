@@ -601,7 +601,7 @@ console.log(formData);
       <label htmlFor="event_photo_1">Photo 1: (To be displayed on the front page)</label>
 <input
   type="file"
-  id="event_photo_1"
+  id="event_photos"
   name="event_photo_1"
   accept="image/*"
   onChange={handleFileChange1}
@@ -613,7 +613,7 @@ console.log(formData);
       <label htmlFor="event_photo_2">Photo 2: (To be displayed in the front page)</label>
       <input
   type="file"
-  id="event_photo_2"
+  id="event_photos"
   name="event_photo_2"
   accept="image/*"
   onChange={handleFileChange2}
@@ -624,7 +624,7 @@ console.log(formData);
       <label htmlFor="event_photo_3">Photo 3:</label>
       <input
   type="file"
-  id="event_photo_3"
+  id="event_photos"
   name="event_photo_3"
   accept="image/*"
   onChange={handleFileChange3}
@@ -635,7 +635,7 @@ console.log(formData);
       <label htmlFor="event_photo_4">Photo 4:</label>
       <input
   type="file"
-  id="event_photo_4"
+  id="event_photos"
   name="event_photo_4"
   accept="image/*"
   onChange={handleFileChange4}
@@ -646,7 +646,7 @@ console.log(formData);
       <label htmlFor="event_photo_5">Photo 5:</label>
       <input
   type="file"
-  id="event_photo_5"
+  id="event_photos"
   name="event_photo_5"
   accept="image/*"
   onChange={handleFileChange5}
@@ -755,7 +755,7 @@ console.log(formData);
       <label htmlFor="event_description">About the Event Paragraph:</label>
 <textarea id="event_description" name="event_description" value={formData.event_description} onChange={handleInputChange}></textarea><br />
 </div>
-      <input type="submit"  onClick={submit} value="Submit" style={{marginLeft:'40%'}}/>
+      <input type="submit" id="ecrsubmit-btn" onClick={submit} value="Submit" style={{marginLeft:'40%'}}/>
     
       </>
     );

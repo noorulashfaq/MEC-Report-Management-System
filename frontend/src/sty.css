@@ -261,9 +261,9 @@ form {
   border-radius: 7px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
-.form {
+.form,.addform {
   background-color: #faf4f4;
-  width: 100%;
+  width: 50%;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
@@ -271,6 +271,9 @@ form {
   padding: 20px;
   border-radius: 7px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.addform{
+  width: 100%;
 }
 label {
   display: block;
@@ -501,14 +504,22 @@ button {
   color: white;
 }
 
-#event_description, #participants_box, #event_organizing_secretary, #event_date_to, #event_date_from, #event_budget_utilized{
+#event_description, #participants_box, #event_organizing_secretary, #event_date_to, #event_date_from, #event_budget_utilized, #event_photos, #event_time{
   width: 750px;
+}
+
+#event_description{
+  height: 150px;
+  border: solid black 1px;
 }
 
 #event_coordinator{
   width: 575px;
   border: solid black 1px;
   /* margin-left: -70px; */
+}
+#event_organizing_secretary,#participants_box{
+  border: solid black 1px;
 }
 /* 
 form div{
@@ -519,3 +530,9 @@ form div{
   width: 655px;
 }
 
+#ecrsubmit-btn{
+  margin-top: 30px;
+  margin-bottom: 50px;
+  position: relative;
+  left: 60px;
+}
