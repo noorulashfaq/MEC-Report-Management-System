@@ -169,6 +169,10 @@ const infoCollect=(eve)=>{
     if(eve[0].extraInfo=="major_id"){
         if(eve.length==1){
             Sub(eve[0].value)
+            setFilter((old)=>({
+                ...old,
+                [eve[0].extraInfo]:eve[0].value
+            }))
         }
         else if(eve.length!=1){
             Sub(0)
@@ -1642,23 +1646,24 @@ doc.text('Principal', 155, 290);
                        id=""
                        placeholder="Search"/>
                 <div class="searchbtn">
-                  <img src=
+                    <img src=
 "https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
                         class="icn srchicn"
                         alt="search-button"/>
-                  </div>
+                    </div>
             </div>
- <div class="sel">
-<style>  
+<div class="sel">
+<style>
     </style>
         <div class="button-container">
           {/* <FacultyEcrFilter/> */}
-          <>
+        <>
         <div className="filter-dropdowns">
 
 <label for="acdyr_id">Academic Year : </label>
     <Select
         className="form1group"
+        id="acdyr_id"
         isMulti
         name="acdyr_id"
         options={years}
