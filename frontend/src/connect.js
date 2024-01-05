@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const url="http://localhost:1234"
 export const onLogin=async(obj)=>{
-   try{
+try{
     const returned = await axios.post(`${url}/login`,obj)
     console.log(returned)
     return returned.data
@@ -13,7 +13,7 @@ catch(error){
 }
 
 export const onProposalsLoad=async()=>{
-    
+
     // alert(dept_id)
     const returned=await axios.get(`${url}/seminar/find`)
     let ids=[]
@@ -139,12 +139,12 @@ export const approveComLevel5=async(tab,dept,emp,report_id)=>{
     const receive = await axios.put(`${url}/seminar/completionacknowledgelevel5/${tab}/${dept}/${emp}/${report_id}`)
     return receive.data
 }
-export const Table=async()=>
+export const Table=async(empId)=>
 {
      // alert("axios called")
     // const url=`${url}/seminar/dept/1`;  
-    const temp=await axios.get(`${url}/seminar/dept/1`);
-    // console.log(temp.data)
+    const temp=await axios.get(`${url}/seminar/dept/${empId}`);
+    // alert(JSON.stringify(temp.data.recordsArr))
     return temp;
 }
 export const onTable=async(report_id)=>

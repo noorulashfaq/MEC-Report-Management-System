@@ -1708,7 +1708,7 @@ doc.text('Principal', 155, 290);
         </select></div>
 
         <div>
-            <input className='filter-button' type='button' value="Filter" onClick={onClickFilter}/>
+            <input className='filter-button' style={{marginTop:"35px"}} type='button' value="Filter" onClick={onClickFilter}/>
         </div>
 
             </div>

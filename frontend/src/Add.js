@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react"
 import "./sty.css";
 import { onProposalsLoad, onPropose,Venue,Major,SubReport,Academic} from "./connect"
@@ -388,7 +389,6 @@ export const Add=()=>{
  <Select
  className="form-group"
         isMulti
-        
         name="event_coordinator"
         options={options}
         value={selectedOptions}

@@ -6,6 +6,7 @@ const authorize=require('./logging')
 const seminar=require('./ecrSeminarFlow')
 const ecrFilter=require('./ecrFilter')
 const cfilter=require('./commonFilter')
+const load=require('./loadAndApprove')
 
 const app=express()
 
@@ -18,7 +19,7 @@ app.use('',authorize)
 app.use('/seminar',seminar)
 app.use('/ecrFilter',ecrFilter)
 app.use('/cfilter',cfilter)
-
+app.use('/load',load)
 
 app.listen(1234,()=>{
     console.log("App is running")

@@ -715,6 +715,7 @@ console.log(formData);
       <Select
         className="form-group"
         isMulti
+        id="event_organizing_secretary"
         name="event_organizing_secretary"
         options={eventOptions}
         value={selectedOptions}
@@ -728,6 +729,7 @@ console.log(formData);
       <label htmlFor="participants_list">Students Participated in the event:</label>
       <input
         type="text"
+        id="participants_text"
         placeholder="Enter comma-separated roll numbers"
         onChange={handleRollNo}
       />
@@ -737,6 +739,7 @@ console.log(formData);
       <Select
         className='form-group'
         isMulti
+        id="participants_box"
         name="participants_list"
         options={finalArr}
         value={finalArr}
