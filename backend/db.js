@@ -4,10 +4,15 @@ const db = mysql.createConnection({
     "host":"localhost",
     "user":"root",
     "password":"",
-    "database":"mec_report_management"
+    "database":"mec_report_management",
+    // "connectTimeout":3000000
 })
 
-db.connect(()=>{
+db.connect((err)=>{
+    if(err){
+        console.log(err)
+        return
+    }
     console.log("Database connected")
 })
 

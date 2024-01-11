@@ -408,4 +408,30 @@ route.post('/filterReportsWithParticulars/:head',async(req,res)=>{
     }
 })
 
+route.get('/deltables',async(req,res)=>{
+    let sql=`select table_name from data_sub_report_type`
+    base.query(sql,(err,rows)=>{
+        if(err){
+            console.log(err)
+            // reject(err)
+            return
+        }
+        // res.status(200).json({rows})
+        for(let i=0;i<rows.length;i++){
+            if(rows[i].table_name=="data_management" || rows[i].table_name=="data_management_seminar"){
+                continue
+            }
+            let sql=`truncate table ${rows[i].table_name}`
+            base.query(sql,(err,result)=>{
+                if(err){
+                    console.log(err)
+                    return
+                }
+                // res.status(200).json({result})
+                console.log(`${rows[i].table_name} dropped`)
+            })
+        }
+    })
+})
+
 module.exports=route

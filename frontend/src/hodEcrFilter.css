@@ -1,5 +1,30 @@
-.filter-dropdowns{
-    margin-top: 100px;
-    display: flex;
-    justify-content: center;
-}
+
+    .hodfilter-dropdowns {
+        margin-left: 70px;
+        margin-top: 100px;
+        margin-bottom: 100px;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        }
+        
+        .hodfilter-dropdowns label {
+        margin-right: 0px;
+        margin-top: 5px;
+        width: 100px;
+        }
+        
+        .hodfilter-dropdowns select {
+        width: 10px;
+        }  
+    
+        .filter-button{
+        width: 100px;
+        padding: 7px;
+        border-radius: 15%;
+        margin-top: 0px;
+        background-color: rgb(93, 201, 93);
+        color: white;
+        border: none;
+        }

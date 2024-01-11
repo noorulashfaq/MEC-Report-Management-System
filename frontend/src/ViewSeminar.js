@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { approveLevel1,approveLevel2,approveLevel3,approveLevel4,approveLevel5, loadForLevel1 ,loadForLevel2,loadForLevel3,loadForLevel4,loadForLevel5,loadComForLevel1,approveComLevel1,approveComLevel2,approveComLevel3,approveComLevel4,approveComLevel5, Table, Major, SubReport} from "./connect"
 import './sty.css';
-import './facultyEcrFilter.css'
 import './hodEcrFilter.css'
 import { onTable } from "./connect";
 import axios from 'axios'
@@ -10,8 +9,14 @@ import Image from './logo.png';
 import Image2 from './logo2.png';
 import Image3 from './logo3.jpg';
 import Image4 from './logo4.jpg';
+import Select from 'react-select';
+
 
 export const ViewSeminar=()=>{
+
+    
+    const logged=sessionStorage.getItem("person")
+    const loggedUser = JSON.parse(logged)
 
     useEffect(() =>{
         doSomething();
@@ -19,13 +24,215 @@ export const ViewSeminar=()=>{
         Acad()
         GetCurrAcd()
         // Dept()
-        Faculty(loggedUser.dept_id  )
+        Faculty(loggedUser.dept_id)
         sessionStorage.removeItem("report_id")
-       },[])
-    
-const logged=sessionStorage.getItem("person")
-const loggedUser = JSON.parse(logged)
+    },[])
 
+
+
+        const[selectedAcd,setSelectedAcd]=useState([])
+        const[selectedSem,setSelectedSem]=useState([])
+        const[selectedMajor,setSelectedMajor]=useState([])
+        const[selectedSub,setSelectedSub]=useState([])
+
+        const[filter,setFilter]=useState({
+            "acdyr_id":null,
+            "sem_id":null,
+            "major_id":null,
+            "sub_id":null,
+            "dept_id":`${loggedUser.dept_id}`,
+            "emp_id":null
+            // "dept_id":null,
+            // "emp_id":null
+        })
+    
+
+const[major,setMajor]=useState([])
+const Maj=async()=>{
+    const t = await Major()
+    // alert(JSON.stringify(t))
+    setMajor(t)
+    // alert(JSON.stringify(major))
+
+}
+const majors=major.map((val)=>({
+    value: val.major_report_id,
+    label: val.major_report,
+    extraInfo: "major_id"
+}))
+
+
+const[sub,setSub]=useState([])
+let [subs,setSubs]=useState([])
+
+    const Sub=async(mid)=>{
+        const t = await SubReport(mid)
+        // alert(t)
+        // alert(JSON.stringify(t))
+        setSub(t)
+    }
+    subs=sub.map((val)=>({
+        value: val.sub_report_id,
+        label: val.sub_report,
+        extraInfo: "sub_id"
+    }))
+
+const[year,setYear]=useState([])
+    const Acad=async()=>{
+        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+        // alert(JSON.stringify(t.data.result))
+        setYear(t.data.result)
+    }
+    const years = year.map((val) => ({
+        value: val.acd_yr_id,
+        label: val.acd_yr,
+        extraInfo: "acdyr_id"
+        }));
+
+        const semester = [
+            {sem_id:1,sem:"Odd"},
+            {sem_id:2,sem:"Even"},
+            {sem_id:3,sem:"Both"},
+        ]
+        let sems = semester.map((val)=>({
+            value: val.sem_id,
+            label: val.sem,
+            extraInfo: "sem_id"
+        }))
+
+        const[fac,setFac]=useState([])
+        let [facs,setFacs]=useState([])
+
+        const Faculty=async(fid)=>{
+            const t = await axios.get(`http://localhost:1234/ecrFilter/getFacultiesList/${fid}
+            `)
+            // alert(t)
+            // alert(JSON.stringify(t.data.result))
+            setFac(t.data.result)
+        }
+        facs=fac.map((val)=>({
+            value: val.faculty_id,
+            label: val.faculty_name,
+            extraInfo: "emp_id"
+        }))
+
+    let [majorVals,setMajorVals]=useState("")
+    let [AcdVals,setAcdVals]=useState("")
+    let [subVals,setSubVals]=useState("")
+    
+    const infoCollect=(eve)=>{
+    
+        const label = eve.label
+        const value = eve.value
+        const extraInfo = eve.extraInfo
+    
+        let isArray = Array.isArray(eve);
+        if(eve.length==1){
+            alert(JSON.stringify(eve))
+            if(eve[0].extraInfo=="major_id"){
+                // alert(eve[0].value)
+                Sub(eve[0].value)
+            }
+            setFilter((old)=>({
+                ...old,
+                [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+            }))
+        }
+        if(isArray){
+            // if(eve.length==1){
+            //     if(eve[0].extraInfo=="major_id"){
+            //         Sub(eve[0].value)
+            //     }
+            //     setFilter((old)=>({
+            //         ...old,
+            //         [eve[0].extraInfo]:eve[0].value
+            //     }))
+            // }
+            if(eve.length!=1){
+            if(eve[0].extraInfo=="major_id"){
+                Sub(0)
+                for(let i=0;i<eve.length;i++){
+                    majorVals+=eve[i].value
+                    if(i!=eve.length-1){
+                        majorVals+=","
+                    }
+                    setFilter((old)=>({
+                        ...old,
+                        [eve[i].extraInfo]:majorVals,
+                        sub_id:""
+                    }))
+                }
+                // alert(majorVals)
+            
+        }
+        if(eve[0].extraInfo=="acdyr_id"){
+            
+                // alert(JSON.stringify(eve))
+                for(let i=0;i<eve.length;i++){
+                    // alert(JSON.stringify(eve[i].value))
+                    AcdVals+=eve[i].value
+                    if(i!=eve.length-1){
+                        AcdVals+=","
+                    }
+                    setFilter((old)=>({
+                        ...old,
+                        [eve[i].extraInfo]:AcdVals
+                    }))
+                }
+                // alert(majorVals)
+            
+        }
+        if(eve[0].extraInfo=="sub_id"){
+            
+            // alert(JSON.stringify(eve))
+            for(let i=0;i<eve.length;i++){
+                // alert(JSON.stringify(eve[i].value))
+                subVals+=eve[i].value
+                if(i!=eve.length-1){
+                    subVals+=","
+                }
+                setFilter((old)=>({
+                    ...old,
+                    [eve[i].extraInfo]:subVals
+                }))
+            }
+            // alert(majorVals)
+        
+    }
+    if(eve[0].extraInfo=="emp_id"){
+        // alert(JSON.stringify(eve))
+        for(let i=0;i<eve.length;i++){
+            // alert(JSON.stringify(eve[i].value))
+            AcdVals+=eve[i].value
+            if(i!=eve.length-1){
+                AcdVals+=","
+            }
+            setFilter((old)=>({
+                ...old,
+                [eve[i].extraInfo]:AcdVals
+            }))
+        }
+}
+        }
+        }
+        if(extraInfo=="sem_id"){
+            setSelectedSem(value)
+            // handleChange(value)
+            setFilter((old)=>({
+                ...old,
+                [extraInfo]:JSON.stringify(value)
+            }))
+        }
+        else if(extraInfo=="sub_id"){
+            setSelectedSub(value)
+            // handleChange(value)
+            setFilter((old)=>({
+                ...old,
+                [extraInfo]:JSON.stringify(value)
+            }))
+        }
+    }
+    console.log(filter)
 
 const GetCurrAcd=async()=>{
     const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
@@ -54,6 +261,22 @@ const GetCurrAcd=async()=>{
     // setCurrAcd(newAcdYr)
 }
 
+
+const onClickFilter=async()=>{
+    // alert("clicked")
+    // alert(JSON.stringify(filter))
+    try{
+        // alert("hi")
+        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
+        // alert(filteredRecords.data)
+        setAllvalues(filteredRecords.data)
+    }
+    catch(err){
+        alert("No Reports in the selected filter")
+        console.log(err)
+    }
+}
+
 const[allvalues,setAllvalues]=useState([]);
 const doSomething = async() =>{
     const res=await Table()
@@ -70,95 +293,8 @@ const doSomething = async() =>{
 }
 
 
-const[filter,setFilter]=useState({
-    "acdyr_id":null,
-    "sem_id":null,
-    "major_id":null,
-    "sub_id":null,
-    "dept_id":`${loggedUser.dept_id}`,
-    "emp_id":null
-    // "dept_id":null,
-    // "emp_id":null
-})
-console.log(filter)
-const onClickFilter=async()=>{
-    // alert("clicked")
-    // console.log(filter)
-    try{
-        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
-        // alert(filteredRecords.data)
-        setAllvalues(filteredRecords.data)
-    }
-    catch(err){
-        console.log(err)
-    }
-}
 
-const[major,setMajor]=useState([])
-const Maj=async()=>{
-    const t = await Major()
-    setMajor(t)
-    // alert(t)
-}
 
-const[sub,setSub]=useState([])
-    const Sub=async(mid)=>{
-        const t = await SubReport(mid)
-        setSub(t)
-        // alert(t)
-    }
-
-// alert(JSON.stringify(currAcd))
-
-const[year,setYear]=useState([])
-   const Acad=async()=>{
-        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
-        // alert(JSON.stringify(t.data.result))
-        setYear(t.data.result)
-    }
-
-//     const[dept,setDept]=useState([])
-//    const Dept=async()=>{
-//         const t = await axios.get("http://localhost:1234/ecrFilter/getDeptList")
-//         // alert(JSON.stringify(t.data.result))
-//         setDept(t.data.result)
-//     }
-
-    const[faculty,setFaculty]=useState([])
-   const Faculty=async(did)=>{
-        const t = await axios.get(`http://localhost:1234/ecrFilter/getFacultiesList/${did}`)
-        // alert(JSON.stringify(t.data.result))
-        setFaculty(t.data.result)
-    }
-   
-const infoCollect=(eve)=>{
-    const{name,value}=eve.target
-    if(name=="major_id"){
-        Sub(value)
-        setFilter((old)=>{
-            return{
-                ...old,
-                [name]:value
-            }
-        })
-    }
-    // if(name=="dept_id"){
-    //   Faculty(value)
-    //   setFilter((old)=>{
-    //       return{
-    //           ...old,
-    //           [name]:value
-    //       }
-    //   })
-    // }
-    else{
-        setFilter((old)=>{
-        return{
-            ...old,
-            [name]:value
-        }
-    })}
-}
 
   const handleDownload = async () => {
     try {
@@ -1638,77 +1774,83 @@ doc.text('Principal', 155, 290);
 <body>
 </body>
 <div className="main">
-     
-     
 <>
-        <div className="filter-dropdowns">
+        <div className="hodfilter-dropdowns">
 
-            <div>
-            <label htmlFor="acdyr_id">Academic Year:</label>
-            <select name="acdyr_id" className="form-group" onChange={infoCollect} value={filter.acdyr_id}>
-                        <option value="">Select Academic Year</option>
-                            {
-                                year.map((val,key)=>{
-                                    return (<option key={val.acd_yr_id} value={val.acd_yr_id}>{val.acd_yr}</option>)
-                                })
-                            }
-            </select></div>
+        <label for="acdyr_id">Academic Year : </label>
+    <Select
+        className="form1group"
+        id="acdyr_id"
+        isMulti
+        name="acdyr_id"
+        options={years}
+        // value={selectedAcd}
+        onChange={infoCollect}
+        isSearchable
+        placeholder="Select options..."
+        closeMenuOnSelect={true}
+    />
+    {/* <input type="" name="acdyr_id" onChange={handleChange} value={selectedAcd} /> */}
 
-                            <div>
-            <label htmlFor="sem_id">Semester :</label>
-            <select name="sem_id" value={filter.sem} onChange={infoCollect}>
-                <option value="">Select Semester</option>
-                <option value="1">Odd Sem</option>
-                <option value="2">Even Sem</option>
-                <option value="3">Both</option>
-            </select><br /></div>
 
-                            <div>
-            <label for="major_id">Major Type :</label>
-            <select name="major_id" onChange={infoCollect} value={filter.major_id} >
-            <option value="">Select Major Type</option>
-            {
-                                major.map((val,key)=>{
-                                    return (<option key={val.major_report_id}  value={val.major_report_id}>{val.major_report}</option>)
-                                })
-                            }
-            </select></div>
+<label for="sem_id">Semester : </label>
+<Select
+        className="form1group"
+        // isMulti
+        name="sem_id"
+        options={sems}
+        // value={selectedSem}
+        onChange={infoCollect}
+        isSearchable
+        placeholder="Select options..."
+        closeMenuOnSelect={true}
+        />
+            {/* <input type="" name="sem_id" onChange={handleChange} value={selectedSem} /> */}
 
-                            <div>
-            <label for="sub_id">Sub Type :</label>
-            <select name="sub_id" value={filter.sub_id} onChange={infoCollect}>
-            <option value="">Select Sub Type </option>
-            {
-                sub.map((val,key)=>{
-                    return (<option key={val.sub_report_id} value={`${val.table_name}`}>{val.sub_report}</option>)
-                })
-            }
-        </select></div>
-{/* 
+
+<label for="major_id">Major Type : </label>
+<Select
+        className="form1group"
+        isMulti
+        name="major_id"
+        options={majors}
+        // value={selectedMajor}
+        onChange={infoCollect}
+        isSearchable
+        placeholder="Select options..."
+        closeMenuOnSelect={false}
+/>
+{/* <input type="" name="major_id" onChange={handleChange} value={selectedMajor} /> */}
+
+<label for="sub_id">Sub Type : </label>
+<Select
+className="form1group"
+        isMulti
+        name="sub_id"
+        options={subs}
+        // value={selectedSub}
+        onChange={infoCollect}
+        isSearchable
+        placeholder="Select options..."
+        closeMenuOnSelect={true}
+        />
+
+<label for="emp_id">Faculty : </label>
+<Select
+className="form1group"
+        isMulti
+        name="emp_id"
+        options={facs}
+        // value={selectedSub}
+        onChange={infoCollect}
+        isSearchable
+        placeholder="Select options..."
+        closeMenuOnSelect={true}
+        />
+
+
         <div>
-            <label for="dept_id">Department :</label>
-            <select name="dept_id" value={filter.dept_id} onChange={infoCollect}>
-            <option value="">Select Department </option>
-            {
-                dept.map((val,key)=>{
-                    return (<option key={val.dept_id} value={val.dept_id}>{val.dept}</option>)
-                })
-            }
-        </select></div> */}
-
-        <div>
-            <label for="emp_id">Faculty :</label>
-            <select name="emp_id" value={filter.emp_id} onChange={infoCollect}>
-            <option value="">Select Faculty </option>
-            {
-                faculty.map((val,key)=>{
-                    return (<option key={val.faculty_id} value={val.faculty_id}>{val.faculty_name}</option>)
-                })
-            }
-        </select></div>
-
-        <div>
-            <input className='filter-button' style={{marginTop:"35px"}} type='button' value="Filter" onClick={onClickFilter}/>
+            <input className='filter-button' type='button' value="Filter" onClick={onClickFilter}/>
         </div>
 
             </div>

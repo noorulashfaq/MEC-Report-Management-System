@@ -220,11 +220,14 @@ export const Major=async()=>{
     
 }
 export const SubReport=async(mid)=>{
-    const re=await axios.get(`${url}/seminar/dropdownSubTypeWithMajor/${mid}`)
+    
+        const re=await axios.get(`${url}/seminar/dropdownSubTypeWithMajor/${mid}`)
     let ids=[]
+    // alert(JSON.stringify(re.data.rows))
     re.data.rows.map((v)=>{
         ids.push(v)
     })
+    // alert(JSON.stringify(ids))
     return ids
     
 }

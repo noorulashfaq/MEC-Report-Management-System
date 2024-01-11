@@ -78,10 +78,10 @@ const [currentPage, setCurrentPage] = useState(1);
       };
 
 const[filter,setFilter]=useState({
-    "acdyr_id":null,
-    "sem_id":null,
+    "acdyr_id":"",
+    "sem_id":"",
     "major_id":"",
-    "sub_id":null,
+    "sub_id":"",
     "dept_id":`${loggedUser.dept_id}`,
     "emp_id":`${loggedUser.faculty_id}`
     // "dept_id":null,
@@ -106,30 +106,34 @@ const onClickFilter=async()=>{
 const[major,setMajor]=useState([])
 const Maj=async()=>{
     const t = await Major()
+    // alert(JSON.stringify(t))
     setMajor(t)
+    // alert(JSON.stringify(major))
+
 }
 const majors=major.map((val)=>({
     value: val.major_report_id,
     label: val.major_report,
     extraInfo: "major_id"
 }))
+// alert("HIII"+JSON.stringify(majors))
+
 // console.log(majors)
 
 const[sub,setSub]=useState([])
+let [subs,setSubs]=useState([])
+
     const Sub=async(mid)=>{
         const t = await SubReport(mid)
-        setSub(t)
         // alert(t)
+        // alert(JSON.stringify(t))
+        setSub(t)
     }
-    let [subs,setSubs]=useState([])
     subs=sub.map((val)=>({
         value: val.sub_report_id,
         label: val.sub_report,
         extraInfo: "sub_id"
     }))
-    // console.log(subs)
-
-    // alert(JSON.stringify(currAcd))
 
     const[year,setYear]=useState([])
     const Acad=async()=>{
@@ -143,6 +147,7 @@ const[sub,setSub]=useState([])
         extraInfo: "acdyr_id"
         }));
     // console.log(years)
+    // alert(JSON.stringify(years))
 
     const semester = [
         {sem_id:1,sem:"Odd"},
@@ -156,6 +161,7 @@ const[sub,setSub]=useState([])
     }))
 let [majorVals,setMajorVals]=useState("")
 let [AcdVals,setAcdVals]=useState("")
+let [subVals,setSubVals]=useState("")
 
 const infoCollect=(eve)=>{
 
@@ -164,17 +170,29 @@ const infoCollect=(eve)=>{
     const extraInfo = eve.extraInfo
 
     let isArray = Array.isArray(eve);
-
-    if(isArray){
-    if(eve[0].extraInfo=="major_id"){
-        if(eve.length==1){
+    // alert(JSON.stringify(eve))
+    if(eve.length==1){
+        if(eve[0].extraInfo=="major_id"){
+            // alert(eve[0].value)
             Sub(eve[0].value)
-            setFilter((old)=>({
-                ...old,
-                [eve[0].extraInfo]:eve[0].value
-            }))
         }
-        else if(eve.length!=1){
+        setFilter((old)=>({
+            ...old,
+            [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+        }))
+    }
+    if(isArray){
+        // if(eve.length==1){
+        //     if(eve[0].extraInfo=="major_id"){
+        //         Sub(eve[0].value)
+        //     }
+        //     setFilter((old)=>({
+        //         ...old,
+        //         [eve[0].extraInfo]:eve[0].value
+        //     }))
+        // }
+        if(eve.length!=1){
+        if(eve[0].extraInfo=="major_id"){
             Sub(0)
             for(let i=0;i<eve.length;i++){
                 majorVals+=eve[i].value
@@ -183,14 +201,15 @@ const infoCollect=(eve)=>{
                 }
                 setFilter((old)=>({
                     ...old,
-                    [eve[i].extraInfo]:majorVals
+                    [eve[i].extraInfo]:majorVals,
+                    sub_id:""
                 }))
             }
             // alert(majorVals)
-        }
+        
     }
     if(eve[0].extraInfo=="acdyr_id"){
-        if(eve.length!=1){
+        
             // alert(JSON.stringify(eve))
             for(let i=0;i<eve.length;i++){
                 // alert(JSON.stringify(eve[i].value))
@@ -204,39 +223,41 @@ const infoCollect=(eve)=>{
                 }))
             }
             // alert(majorVals)
+        
+    }
+    if(eve[0].extraInfo=="sub_id"){
+        
+        // alert(JSON.stringify(eve))
+        for(let i=0;i<eve.length;i++){
+            // alert(JSON.stringify(eve[i].value))
+            subVals+=eve[i].value
+            if(i!=eve.length-1){
+                subVals+=","
+            }
+            setFilter((old)=>({
+                ...old,
+                [eve[i].extraInfo]:subVals
+            }))
         }
-    }}
-    // if(eve.extraInfo=="acdyr_id"){
-    //     setSelectedAcd(value)
-    //     // handleChange(value)
-    //     setFilter((old)=>({
-    //         ...old,
-    //         [extraInfo]:value
-    //     }))
-    // }
+        // alert(majorVals)
+    
+}
+    }
+    }
     else if(extraInfo=="sem_id"){
         setSelectedSem(value)
         // handleChange(value)
         setFilter((old)=>({
             ...old,
-            [extraInfo]:value
+            [extraInfo]:JSON.stringify(value)
         }))
     }
-    // else if(extraInfo=="major_id"){
-    //     Sub(value)
-    //     setSelectedMajor(value)
-    //     // handleChange(value)
-    //     setFilter((old)=>({
-    //         ...old,
-    //         [extraInfo]:value
-    //     }))
-    // }
     else if(extraInfo=="sub_id"){
         setSelectedSub(value)
         // handleChange(value)
         setFilter((old)=>({
             ...old,
-            [extraInfo]:value
+            [extraInfo]:JSON.stringify(value)
         }))
     }
 }
@@ -1708,7 +1729,7 @@ doc.text('Principal', 155, 290);
 <label for="sub_id">Sub Type : </label>
 <Select
 className="form1group"
-        // isMulti
+        isMulti
         name="sub_id"
         options={subs}
         // value={selectedSub}
@@ -1718,7 +1739,6 @@ className="form1group"
         closeMenuOnSelect={true}
         />
                     {/* <input type="" name="sub_id" onChange={handleChange} value={selectedSub} /> */}
-
         <div>
             <input className='filter-button' type='button' value="Filter" onClick={onClickFilter}/>
         </div>

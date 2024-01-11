@@ -53,3 +53,7 @@ Content-Type: application/json
     "sem_id":"1",
     "sub_id":null
 }
+
+###
+
+get http://localhost:1234/cfilter/deltables
