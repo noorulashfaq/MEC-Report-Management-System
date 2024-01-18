@@ -130,7 +130,7 @@ let [subs,setSubs]=useState([])
         setSub(t)
     }
     subs=sub.map((val)=>({
-        value: val.sub_report_id,
+        value: val.table_name,
         label: val.sub_report,
         extraInfo: "sub_id"
     }))
@@ -176,10 +176,16 @@ const infoCollect=(eve)=>{
             // alert(eve[0].value)
             Sub(eve[0].value)
         }
+        if(typeof eve[0].value === 'string'){
+            setFilter((old)=>({
+                ...old,
+                [eve[0].extraInfo]:eve[0].value
+            }))
+        }else{
         setFilter((old)=>({
             ...old,
             [eve[0].extraInfo]:JSON.stringify(eve[0].value)
-        }))
+        }))}
     }
     if(isArray){
         // if(eve.length==1){
@@ -257,7 +263,7 @@ const infoCollect=(eve)=>{
         // handleChange(value)
         setFilter((old)=>({
             ...old,
-            [extraInfo]:JSON.stringify(value)
+            [extraInfo]:value
         }))
     }
 }
