@@ -208,3 +208,26 @@ POST http://localhost:1234/seminar/dropdownSubTypeWithMajor/2001
 ###
 
 GET http://localhost:1234/seminar/compare/21CS121
+
+
+
+##################################################
+####################################################
+#####################################################
+#####################################################
+#######################################################
+########################################################
+
+GET http://localhost:1234/load/loadforlevel1/1/6001
+
+###
+
+PUT http://localhost:1234/load/acknowledgelevel1/data_management_seminar/0/6000/5035
+
+###
+
+GET http://localhost:1234/load/loadforlevel2/1/6000
+
+###
+
+PUT http://localhost:1234/load/acknowledgelevel2/data_management_seminar/1/6000/5033
