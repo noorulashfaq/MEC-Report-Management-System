@@ -1,11 +1,9 @@
 ### Faculty proposing for an event
-POST http://localhost:1234/seminar/propose/data_ecr_workshop
+POST http://10.167.1.2:1234/seminar/ecrProposal/data_management_seminar
 Content-Type: application/json
 
 {
-  
     
-    "http://localhost:1234":"Workshop",
     "event_title":"Express",
     "event_organizer":"CSE",
     "event_sponsor":"CSI & Management",
@@ -27,7 +25,7 @@ Content-Type: application/json
   
     "coordinator_phno":9944085437,
     "coordinator_designation":406,
-    "acdyr_id":"",
+    "acdyr_id":1,
     "dept_id":1,
     "sem_id":1
 }
@@ -131,12 +129,12 @@ PUT http://localhost:1234/seminar/acknowledgelevel1/1/6001/1
 ###
 
 ### Principal is receiving the requested proposal
-GET http://localhost:1234/seminar/loadforlevel2
+GET http://localhost:1234/seminar/loadforlevel2/0/6000
 
 ###
 
 ### Principal approves the proposal
-PUT http://localhost:1234/seminar/acknowedgelevel2/1/2
+PUT http://10.167.1.2:1234/seminar/acknowledgelevel2/data_management_seminar/0/6000/5003
 
 ###
 
