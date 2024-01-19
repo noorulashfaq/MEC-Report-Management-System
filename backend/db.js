@@ -1,9 +1,10 @@
 const mysql = require("mysql2")
 
 const db = mysql.createConnection({
-    "host":"localhost",
-    "user":"root",
-    "password":"",
+    "host":"10.167.1.2",
+    "port":3306,
+    "user":"testuser",
+    "password":"testuser",
     "database":"mec_report_management",
     // "connectTimeout":3000000
 })
@@ -13,7 +14,9 @@ db.connect((err)=>{
         console.log(err)
         return
     }
+    else{
     console.log("Database connected")
+    }
 })
 
 module.exports = db

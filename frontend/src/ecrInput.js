@@ -51,7 +51,7 @@ console.log(finalArr)
 
 const CheckRollWithDb=async(roll)=>{
 try{
- const temp=await axios.get(`http://localhost:1234/seminar/compare/${roll}`)
+ const temp=await axios.get(`http://10.167.1.2:1234/seminar/compare/${roll}`)
  if((temp.data.results[0].number)!=0){
   if(!(finalArr.includes(roll))){
     setFinalArr(prevArr => [
@@ -77,7 +77,7 @@ try{
     label: val.faculty_id+'-'+val.faculty_name+'-'+val.dept,
   }));
 
-  axios.get('http://localhost:1234/seminar/find')
+  axios.get('http://10.167.1.2:1234/seminar/find')
         .then((response) => {
         //   console.log(response);
           setOptions(response.data.rows);
@@ -355,7 +355,7 @@ let random =Math.random()*Math.random()*1;
           
        
     
-          fetch('http://localhost:1234/ecr/upload1', {
+          fetch('http://10.167.1.2:1234/ecr/upload1', {
             method: 'POST',
             body: formData1,
           })
@@ -405,7 +405,7 @@ let random =Math.random()*Math.random()*1;
               // event_photo_4: name4,
               // event_photo_5: name5,
             });
-            fetch('http://localhost:1234/ecr/upload1', {
+            fetch('http://10.167.1.2:1234/ecr/upload1', {
                 method: 'POST',
                 body: formData2,
               })
@@ -445,7 +445,7 @@ let random =Math.random()*Math.random()*1;
             event_photo_3: name3,
           })
 
-          fetch('http://localhost:1234/ecr/upload1', {
+          fetch('http://10.167.1.2:1234/ecr/upload1', {
               method: 'POST',
               body: formData3,
             })
@@ -484,7 +484,7 @@ let random =Math.random()*Math.random()*1;
           ...formData,
           event_photo_4: name4,
         })
-        fetch('http://localhost:1234/ecr/upload1', {
+        fetch('http://10.167.1.2:1234/ecr/upload1', {
             method: 'POST',
             body: formData4,
           })
@@ -536,7 +536,7 @@ let random =Math.random()*Math.random()*1;
               event_photo_4: name4,
               event_photo_5: name5,
             });
-            fetch('http://localhost:1234/ecr/upload1', {
+            fetch('http://10.167.1.2:1234/ecr/upload1', {
                 method: 'POST',
                 body: formData5,
               })
@@ -646,7 +646,7 @@ console.log(formData);
       <label htmlFor="event_photo_5">Photo 5:</label>
       <input
   type="file"
-  id="event_photos"
+   id="event_photos"
   name="event_photo_5"
   accept="image/*"
   onChange={handleFileChange5}
