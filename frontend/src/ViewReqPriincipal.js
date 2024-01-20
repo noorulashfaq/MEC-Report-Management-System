@@ -544,14 +544,14 @@ doc.text('Principal', 155, 290);
 
         const logged = JSON.parse(sessionStorage.getItem("person"))
         let temp;
-        try {
+        // try {
           
-            temp = await loadComForLevel1(logged.dept_id, logged.faculty_id)
-            setEcr1(temp)
-        }
-        catch (e) {
-            console.log("Not found loadComForLevel1")
-        }
+        //     temp = await loadComForLevel1(logged.dept_id, logged.faculty_id)
+        //     setEcr1(temp)
+        // }
+        // catch (e) {
+        //     console.log("Not found loadComForLevel1")
+        // }
         try {
           
             temp = await loadComForLevel2(logged.dept_id, logged.faculty_id)
@@ -1990,7 +1990,7 @@ className="form1group"
                                 ):(
                                     <tr>
                                         <td colSpan="7" style={{textAlign: 'center' }}>
-                                            No requests Found 
+                                            No Proposal requests Found 
                                         </td>
                                     </tr>
                                 )}
@@ -2033,7 +2033,9 @@ className="form1group"
                                 ))
 ):(
     <tr>
-      
+       <td colSpan="7" style={{textAlign: 'center' }}>
+                                            No Proposal requests Found 
+                                        </td>
     </tr>
 )
 

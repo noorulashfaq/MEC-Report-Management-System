@@ -2657,7 +2657,7 @@ route.get('/completionloadforlevel2/:deptId/:empId', async (req, res) => {
     }
 });
 
-route.put('/completionacknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
+route.post('/completionacknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
     const dId=req.params.deptId
     const eId=req.params.empId
     const rId=req.params.report_id

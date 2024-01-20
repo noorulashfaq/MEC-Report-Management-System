@@ -105,8 +105,10 @@ catch(err){
 export const loadComForLevel1=async(dept,emp)=>{
     try{
     // alert(dept)
+    // alert(dept+','+emp)
     const receive = await axios.get(`${url}/seminar/completionloadforlevel1/${dept}/${emp}`)
-    return receive.data.rows
+    // alert(JSON.stringify())
+    return receive.data.resultArr[0].resultRows
     }
     catch(e){
         console.log("Not found");
@@ -117,7 +119,7 @@ export const loadComForLevel2=async(dept,emp)=>{
     try{
     // alert(dept)
     const receive = await axios.get(`${url}/seminar/completionloadforlevel2/${dept}/${emp}`)
-    return receive.data.rows
+    return receive.data.resultArr[0].resultRows
     }
     catch(e){
         console.log("Not found in loadComLevel2");
@@ -128,7 +130,7 @@ export const loadComForLevel3=async(dept,emp)=>{
     try{
     // alert(dept)
     const receive = await axios.get(`${url}/seminar/completionloadforlevel3/${dept}/${emp}`)
-    return receive.data.rows
+    return receive.data.resultArr[0].resultRows
     }
     catch(e){
         console.log("Not found in loadComLevel3");
@@ -139,7 +141,7 @@ export const loadComForLevel4=async(dept,emp)=>{
     try{
     // alert(dept)
     const receive = await axios.get(`${url}/seminar/completionloadforlevel4/${dept}/${emp}`)
-    return receive.data.rows
+    return receive.data.resultArr[0].resultRows
     }
     catch(e){
         console.log("Not found in loadComLevel4");
@@ -150,7 +152,7 @@ export const loadComForLevel5=async(dept,emp)=>{
     try{
     // alert(dept)
     const receive = await axios.get(`${url}/seminar/completionloadforlevel5/${dept}/${emp}`)
-    return receive.data.rows
+    return receive.data.resultArr[0].resultRows
     }
     catch(e){
         console.log("Not found in loadComLevel5");
@@ -183,7 +185,9 @@ export const approveComLevel1=async(tab,dept,emp,report_id)=>{
     return receive.data
 }
 export const approveComLevel2=async(tab,dept,emp,report_id)=>{
-    const receive = await axios.put(`${url}/seminar/completionacknowledgelevel2/${tab}/${dept}/${emp}/${report_id}`)
+    // alert("Work")
+    const receive = await axios.post(`${url}/seminar/completionacknowledgelevel2/${tab}/${dept}/${emp}/${report_id}`)
+    // alert(receive.data);
     return receive.data
 }
 export const approveComLevel3=async(tab,dept,emp,report_id)=>{
