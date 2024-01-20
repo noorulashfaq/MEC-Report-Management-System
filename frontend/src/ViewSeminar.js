@@ -1729,6 +1729,7 @@ doc.text('Principal', 155, 290);
                                 </thead>
                                 <tbody>
                                     {
+                                       ecrs?.length ||0 > 0 ?
                                         ecrs.map((val,key)=>(
                                             <tr>
                                                 <td>{val.report_id}</td>
@@ -1760,7 +1761,10 @@ doc.text('Principal', 155, 290);
                                                        
                                                     }} >View Proposal</button></td>
                                             </tr>
-                                        ))
+                                        )):
+                                        <tr>
+                                            No requests
+                                        </tr>
                                     }
                                     {
                                        
