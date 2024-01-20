@@ -56,4 +56,4 @@ Content-Type: application/json
 
 ###
 
-get http://localhost:1234/cfilter/deltables
+GET http://localhost:1234/cfilter/deltables

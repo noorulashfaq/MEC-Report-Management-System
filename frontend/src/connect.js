@@ -26,13 +26,14 @@ export const onProposalsLoad=async()=>{
 
 export const onPropose=async(obj)=>{
     // alert(JSON.stringify(obj))
-    try{
+    // try{
     const returned = await axios.post(`${url}/seminar/ecrProposal/${obj.event_name}`,obj)
+    alert(returned.data)
     return returned.data
-    }
-    catch(error){
-        alert("Please fill all fields")
-    }
+    // }
+    // catch(error){
+    //     alert(error)
+    // }
 }
 export const onComplete=async(obj,report_id)=>{
     // alert(report_id)
