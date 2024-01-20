@@ -28,10 +28,15 @@ export const onPropose=async(obj)=>{
     try{
     const returned = await axios.post(`${url}/seminar/ecrProposal/${obj.event_name}`,obj)
     return returned.data
+
     }
     catch(error){
         console.log(error)
     }
+    // }
+    // catch(error){
+    //     alert(error)
+    // }
 }
 export const onComplete=async(obj,report_id,table)=>{
    
