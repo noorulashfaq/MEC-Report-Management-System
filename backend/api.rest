@@ -119,7 +119,7 @@ GET http://localhost:1234/seminar/supply/Cloud-2023-09-11-1694405954
 GET http://localhost:1234/seminar/dept/6004
 
 ### HoD is receiving the requested proposal
-GET http://localhost:1234/seminar/loadforlevel1/1/6001
+GET http://localhost:1234/seminar/loadforlevel1/1/60CS01
 
 ###
 
@@ -129,7 +129,7 @@ PUT http://localhost:1234/seminar/acknowledgelevel1/1/6001/1
 ###
 
 ### Principal is receiving the requested proposal
-GET http://localhost:1234/seminar/loadforlevel2/0/6000
+GET http://10.167.1.2:1234/seminar/loadforlevel2/0/60MEC
 
 ###
 

@@ -25,21 +25,19 @@ export const onProposalsLoad=async()=>{
 }
 
 export const onPropose=async(obj)=>{
-    // alert(JSON.stringify(obj))
     try{
     const returned = await axios.post(`${url}/seminar/ecrProposal/${obj.event_name}`,obj)
     return returned.data
     }
     catch(error){
-        alert("Please fill all fields")
+        console.log(error)
     }
 }
-export const onComplete=async(obj,report_id)=>{
-    // alert(report_id)
-    // alert(obj.event_time)
+export const onComplete=async(obj,report_id,table)=>{
+   
     try{
         // alert(obj);
-    const returned = await axios.put(`${url}/seminar/ecrCompletion/data_management_seminar/${report_id}`,obj)
+    const returned = await axios.put(`${url}/seminar/ecrCompletion/${table}/${report_id}`,obj)
     return returned.data
     }
     catch(error){

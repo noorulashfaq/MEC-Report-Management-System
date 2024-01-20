@@ -2034,7 +2034,7 @@ className="form1group"
 ):(
     <tr>
        <td colSpan="7" style={{textAlign: 'center' }}>
-                                            No Proposal requests Found 
+                                            No Completion requests Found 
                                         </td>
     </tr>
 )

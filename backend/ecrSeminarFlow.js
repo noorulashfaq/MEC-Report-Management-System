@@ -297,6 +297,7 @@ route.post('/ecrProposal/:tableName',async(req,res)=>{
         base.query(sql,[proposal_date,event_name,event_title,event_organizer,event_sponsor,event_date,event_venue,guest_name,guest_designation,guest_address,guest_phone_number,guest_email,student_count,faculty_count,others_count,event_budget,event_coordinator,coordinator_emp_id,coordinator_phone_number,coordinator_designation,event_date_from,event_date_to,acdyr_id,dept_id,sem_id],(err,ack)=>{
             if(err){
                 res.status(500).json({error:err.message})
+                console.log(err.message)
                 return
             }
             res.status(200).json({message:"Workshop Proposal has sent"})
