@@ -24,7 +24,7 @@ const theme = createTheme({
 export const Login=()=>{
 
     const[logger,setLogger]=useState({
-        "mail":"",
+        "id":"",
         "pass":""
     })
 
@@ -67,7 +67,7 @@ export const Login=()=>{
 //                 <div className="shadow p-5 rounded-2" style={{ backgroundColor: '#f7f1d7' }}>
 //                     <div className='formGroup'>
 //                         <label >Faculty ID</label>
-//                         <input type="email" name="mail" value={logger.mail} onChange={gather} placeholder="Faculty Id to login" className="form-control" />
+//                         <input type="eid" name="id" value={logger.id} onChange={gather} placeholder="Faculty Id to login" className="form-control" />
 //                     </div>
 //                     <div className="formGroup">
 //                         <label>Password</label>
@@ -121,10 +121,10 @@ export const Login=()=>{
             fullWidth
             id="facultyId"
             label="Faculty ID"
-            name="mail"
-            type="email"
-            autoComplete="email"
-            value={logger.mail}
+            name="id"
+            type="id"
+            autoComplete="id"
+            value={logger.id}
             onChange={gather}
           />
           <TextField
@@ -133,7 +133,7 @@ export const Login=()=>{
             fullWidth
             name="pass"
             label="Password"
-            type={showPassword ? 'email' : 'password'}
+            type={showPassword ? 'id' : 'password'}
             id="password"
             autoComplete="current-password"
             value={logger.pass}
