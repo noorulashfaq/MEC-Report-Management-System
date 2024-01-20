@@ -24,7 +24,7 @@ const theme = createTheme({
 export const Login=()=>{
 
     const[logger,setLogger]=useState({
-        "mail":"",
+        "id":"",
         "pass":""
     })
 
@@ -67,7 +67,11 @@ export const Login=()=>{
 //                 <div className="shadow p-5 rounded-2" style={{ backgroundColor: '#f7f1d7' }}>
 //                     <div className='formGroup'>
 //                         <label >Faculty ID</label>
+<<<<<<< HEAD
 //                         <input type="email" name="mail" value={logger.mail} onChange={gather} placeholder="Faculty Id to login" className="form-control" />
+=======
+//                         <input type="eid" name="id" value={logger.id} onChange={gather} placeholder="Faculty Id to login" className="form-control" />
+>>>>>>> b3ebc5431490c62f55c9de01d3b023a3672d5db6
 //                     </div>
 //                     <div className="formGroup">
 //                         <label>Password</label>
@@ -121,10 +125,17 @@ export const Login=()=>{
             fullWidth
             id="facultyId"
             label="Faculty ID"
+<<<<<<< HEAD
             name="mail"
             type="email"
             autoComplete="email"
             value={logger.mail}
+=======
+            name="id"
+            type="id"
+            autoComplete="id"
+            value={logger.id}
+>>>>>>> b3ebc5431490c62f55c9de01d3b023a3672d5db6
             onChange={gather}
           />
           <TextField
@@ -133,7 +144,11 @@ export const Login=()=>{
             fullWidth
             name="pass"
             label="Password"
+<<<<<<< HEAD
             type={showPassword ? 'email' : 'password'}
+=======
+            type={showPassword ? 'id' : 'password'}
+>>>>>>> b3ebc5431490c62f55c9de01d3b023a3672d5db6
             id="password"
             autoComplete="current-password"
             value={logger.pass}

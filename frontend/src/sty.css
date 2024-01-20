@@ -7,6 +7,20 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
+/* Add this to your CSS file or style block */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
 :root {
   --background-color1: #fafaff;
   --background-color2: #ffffff;
@@ -259,9 +273,9 @@ form {
   margin: 0 auto;
   padding: 20px;
   border-radius: 7px;
-
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
+<<<<<<< HEAD
 .responsive-img {
   max-width: 100%;
   height: auto;
@@ -269,6 +283,9 @@ form {
   margin: auto; /* Center the image */
 }
 .form {
+=======
+.form,.addform {
+>>>>>>> b3ebc5431490c62f55c9de01d3b023a3672d5db6
   background-color: #faf4f4;
   width: 50%;
   margin: 0 auto;
@@ -278,6 +295,9 @@ form {
   padding: 20px;
   border-radius: 7px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.addform{
+  width: 100%;
 }
 label {
   display: block;
@@ -516,13 +536,22 @@ button {
   color: white;
 }
 
-#event_description, #participants_box, #event_organizing_secretary, #event_date_to, #event_date_from, #event_budget_utilized{
+#event_description, #participants_box, #event_organizing_secretary, #event_date_to, #event_date_from, #event_budget_utilized, #event_photos, #event_time{
   width: 750px;
 }
 
+#event_description{
+  height: 150px;
+  border: solid black 1px;
+}
+
 #event_coordinator{
-  width: 610px;
+  width: 575px;
+  border: solid black 1px;
   /* margin-left: -70px; */
+}
+#event_organizing_secretary,#participants_box{
+  border: solid black 1px;
 }
 /* 
 form div{
@@ -533,3 +562,9 @@ form div{
   width: 655px;
 }
 
+#ecrsubmit-btn{
+  margin-top: 30px;
+  margin-bottom: 50px;
+  position: relative;
+  left: 60px;
+}

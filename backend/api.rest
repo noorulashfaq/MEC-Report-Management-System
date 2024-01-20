@@ -1,11 +1,9 @@
 ### Faculty proposing for an event
-POST http://localhost:1234/seminar/propose/data_ecr_workshop
+POST http://10.167.1.2:1234/seminar/ecrProposal/data_management_seminar
 Content-Type: application/json
 
 {
-  
     
-    "http://localhost:1234":"Workshop",
     "event_title":"Express",
     "event_organizer":"CSE",
     "event_sponsor":"CSI & Management",
@@ -27,7 +25,7 @@ Content-Type: application/json
   
     "coordinator_phno":9944085437,
     "coordinator_designation":406,
-    "acdyr_id":"",
+    "acdyr_id":1,
     "dept_id":1,
     "sem_id":1
 }
@@ -121,7 +119,7 @@ GET http://localhost:1234/seminar/supply/Cloud-2023-09-11-1694405954
 GET http://localhost:1234/seminar/dept/6004
 
 ### HoD is receiving the requested proposal
-GET http://localhost:1234/seminar/loadforlevel1/1/6001
+GET http://localhost:1234/seminar/loadforlevel1/1/60CS01
 
 ###
 
@@ -131,12 +129,12 @@ PUT http://localhost:1234/seminar/acknowledgelevel1/1/6001/1
 ###
 
 ### Principal is receiving the requested proposal
-GET http://localhost:1234/seminar/loadforlevel2
+GET http://10.167.1.2:1234/seminar/loadforlevel2/0/60MEC
 
 ###
 
 ### Principal approves the proposal
-PUT http://localhost:1234/seminar/acknowedgelevel2/1/2
+PUT http://10.167.1.2:1234/seminar/acknowledgelevel2/data_management_seminar/0/6000/5003
 
 ###
 
@@ -208,3 +206,26 @@ POST http://localhost:1234/seminar/dropdownSubTypeWithMajor/2001
 ###
 
 GET http://localhost:1234/seminar/compare/21CS121
+
+
+
+##################################################
+####################################################
+#####################################################
+#####################################################
+#######################################################
+########################################################
+
+GET http://localhost:1234/load/loadforlevel1/1/6001
+
+###
+
+PUT http://localhost:1234/load/acknowledgelevel1/data_management_seminar/0/6000/5035
+
+###
+
+GET http://localhost:1234/load/loadforlevel2/1/6000
+
+###
+
+PUT http://localhost:1234/load/acknowledgelevel2/data_management_seminar/1/6000/5033

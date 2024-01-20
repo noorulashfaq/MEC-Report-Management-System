@@ -37,11 +37,7 @@ selectedValues.map((item)=>{
   }
 })
 const Validate=()=>{
-  handleUpload1();
-  handleUpload2();
-  handleUpload3();
-  handleUpload4();
-  handleUpload5();
+
   result.map(item=>{
       CheckRollWithDb(item)
     })
@@ -51,7 +47,7 @@ console.log(finalArr)
 
 const CheckRollWithDb=async(roll)=>{
 try{
- const temp=await axios.get(`http://localhost:1234/seminar/compare/${roll}`)
+ const temp=await axios.get(`http://10.167.1.2:1234/seminar/compare/${roll}`)
  if((temp.data.results[0].number)!=0){
   if(!(finalArr.includes(roll))){
     setFinalArr(prevArr => [
@@ -77,7 +73,7 @@ try{
     label: val.faculty_id+'-'+val.faculty_name+'-'+val.dept,
   }));
 
-  axios.get('http://localhost:1234/seminar/find')
+  axios.get('http://10.167.1.2:1234/seminar/find')
         .then((response) => {
         //   console.log(response);
           setOptions(response.data.rows);
@@ -106,16 +102,10 @@ try{
         "participants_list":"",
         "event_time":"",
         "event_description":"",
-        "event_budget_utilized":""
+        "event_budget_utilized":"",
+        "pdf":""
       });
-    //   const report=JSON.parse(sessionStorage.getItem("report_id"))
-      
-    //   console.log("report_id "+ report.report_id)
-    // const [report_id, setreport_id] = useState('');
-    // const handlereport_id = (e) => {
-    //     setreport_id(e.target.value);
-    //   };
-    
+
   const[facid,setFacid]=useState([])
 
   const handleChange = (eve) => {
@@ -145,8 +135,7 @@ try{
     // console.log(formData)
     const submit=async()=>{
     
-      console.log(formData)
-      sessionStorage.removeItem("report_id")
+     
         // alert(Data.report_id)
         try{
         const temp = await onComplete(formData,Data.report_id)
@@ -155,6 +144,8 @@ try{
         catch(err){
             alert("Error in entering data")
         }
+       
+        sessionStorage.removeItem("report_id")
         window.location.assign("/ecr")
     }
       const [Data, setData] = useState('');
@@ -172,22 +163,15 @@ try{
         // alert(report.report_id)
         const temp=await onTable(report.report_id)
         setData(temp)
-        // alert(temp.event_title)
+        
         handleNewFileNameChange();
         }
         catch(err){
-          // alert("An error Occur")
-          // window.location.assign("/ecr")
+         console.log(err)
         }
 
       }
       const report=JSON.parse(sessionStorage.getItem("report_id"))
-      // alert(report.report_id)
-      
-        
-// console.log(newFileName)
-      // console.log(formData)
-    
       const handleInputChange = (e) => {
         const { name, value, type} = e.target;
         const newValue = value;
@@ -196,9 +180,7 @@ try{
           ...formData,
           [name]: newValue,
         });
-      //  if(name=="event_description"){
-      //   handleUpload1();
-      //  }
+      
         setFormData((old) => {
           const date = new Date(); // Replace with your actual date value
           const currentDate = format(date, 'dd-MM-yyyy');
@@ -213,7 +195,7 @@ try{
             ...formData,
             event_po: arrayAsString,
           })
-          // alert(arrayAsString)
+         
         }
         catch(err){
 
@@ -239,12 +221,9 @@ try{
     
   
     const handleFileChange1 = (e) => {
-      // alert(JSON.stringify(e.target.files))
-      // alert(e.target.files)
-      setSelectedFile1(e.target.files[0]);
+      
+      
       const file = e.target.files[0];
-
-      // Check if the file size is below 2MB
       if (file && file.size > 2 * 1024 * 1024) {
         alert("Please choose an image with a size below 2MB.");
         e.target.value = null; // Reset the file input
@@ -255,12 +234,13 @@ try{
       // alert(selectedFile1);
       
       }
+      setSelectedFile1(e.target.files[0]);
     };
     const handleFileChange2 = (e) => {
         
         const file = e.target.files[0];
 
-      // Check if the file size is below 2MB
+     
       if (file && file.size > 2 * 1024 * 1024) {
         alert("Please choose an image with a size below 2MB.");
         e.target.value = null; // Reset the file input
@@ -328,34 +308,17 @@ const dateTimeString = `${dd}-${mm}-${yyyy}_${hh}-${min}-${ss}`;
  // Maximum value for the random number
 let random =Math.random()*Math.random()*1;
           const name1=newFileName+'1_'+dateTimeString+'_'+random+'.png';
-          // random =Math.random()*Math.random()*2;
-          // setTimeout(() =>  200000);
 
           setFormData((old)=>{
             return{
             ...old,
             event_photo_1: name1
             }
-            // event_photo_2: name2,
-            // event_photo_3: name3,
-            // event_photo_4: name4,
-            // event_photo_5: name5,
           });
-          // const name2=newFileName+'2_'+dateTimeString+'_'+random+'.png';
-          // random =Math.random()*Math.random()*3;
-          // const name3=newFileName+'3_'+dateTimeString+'_'+random+'.png';
-          // random =Math.random()*Math.random()*4;
-          // const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
-          // random =Math.random()*Math.random()*5;
-          // const name5=newFileName+'5_'+dateTimeString+'_'+random+'.png';
+         
           formData1.append('file',selectedFile1,name1 );
-          // alert("Hello");
-          
-          
-          
-       
     
-          fetch('http://localhost:1234/ecr/upload1', {
+          fetch('http://10.167.1.2:1234/ecr/upload1', {
             method: 'POST',
             body: formData1,
           })
@@ -385,27 +348,18 @@ let random =Math.random()*Math.random()*1;
             const ss = String(currentDate.getSeconds()).padStart(2, '0');
             
             const dateTimeString = `${dd}-${mm}-${yyyy} ${hh}-${min}-${ss}`;
-            // let random =Math.random()*Math.random()*1;
-            // const name1=newFileName+'1_'+dateTimeString+'_'+random+'.png';
+          
             let random =Math.random()*Math.random()*2;
             const name2=newFileName+'2_'+dateTimeString+'_'+random+'.png';
-            // random =Math.random()*Math.random()*3;
-            // const name3=newFileName+'3_'+dateTimeString+'_'+random+'.png';
-            // random =Math.random()*Math.random()*4;
-            // const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
-            // random =Math.random()*Math.random()*5;
-            // const name5=newFileName+'5_'+dateTimeString+'_'+random+'.png';
+           
             formData2.append('file', selectedFile2,name2 );
-            // alert("Hello");
+            
             setFormData({
               ...formData,
-              // event_photo_1: name1,
+              
               event_photo_2: name2,
-              // event_photo_3: name3,
-              // event_photo_4: name4,
-              // event_photo_5: name5,
             });
-            fetch('http://localhost:1234/ecr/upload1', {
+            fetch('http://10.167.1.2:1234/ecr/upload1', {
                 method: 'POST',
                 body: formData2,
               })
@@ -445,7 +399,7 @@ let random =Math.random()*Math.random()*1;
             event_photo_3: name3,
           })
 
-          fetch('http://localhost:1234/ecr/upload1', {
+          fetch('http://10.167.1.2:1234/ecr/upload1', {
               method: 'POST',
               body: formData3,
             })
@@ -484,7 +438,7 @@ let random =Math.random()*Math.random()*1;
           ...formData,
           event_photo_4: name4,
         })
-        fetch('http://localhost:1234/ecr/upload1', {
+        fetch('http://10.167.1.2:1234/ecr/upload1', {
             method: 'POST',
             body: formData4,
           })
@@ -517,26 +471,16 @@ let random =Math.random()*Math.random()*1;
             
             const dateTimeString = `${dd}-${mm}-${yyyy} ${hh}-${min}-${ss}`;
             let random =Math.random()*Math.random()*1;
-            const name1=newFileName+'1_'+dateTimeString+'_'+random+'.png';
-            random =Math.random()*Math.random()*2;
-            const name2=newFileName+'2_'+dateTimeString+'_'+random+'.png';
-            random =Math.random()*Math.random()*3;
-            const name3=newFileName+'3_'+dateTimeString+'_'+random+'.png';
-            random =Math.random()*Math.random()*4;
-            const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
-            // let random = Math.random()*Math.random()*5;
+           
             const name5=newFileName+'5_'+dateTimeString+'_'+random+'.png';
             formData5.append('file', selectedFile5,name5 );
-            // alert("Hello");
+           
             setFormData({
               ...formData,
-              event_photo_1: name1,
-              event_photo_2: name2,
-              event_photo_3: name3,
-              event_photo_4: name4,
+            
               event_photo_5: name5,
             });
-            fetch('http://localhost:1234/ecr/upload1', {
+            fetch('http://10.167.1.2:1234/ecr/upload1', {
                 method: 'POST',
                 body: formData5,
               })
@@ -554,13 +498,36 @@ let random =Math.random()*Math.random()*1;
 
         }
     }
+    const [loading, setLoading] = useState(true);
+
+    const pdfUpload = async () => {
+      try {
+        // Show loading screen
+        setLoading(true);
+
+        // Perform image uploads
+        await Promise.all([
+          handleUpload1(),
+          handleUpload2(),
+          handleUpload3(),
+          handleUpload4(),
+          handleUpload5()
+        ]);
+
+        // Hide loading screen after all uploads are complete
+        setLoading(false);
+      } catch (error) {
+        // Handle errors here
+        console.error('Error during image uploads:', error);
+        
+        // Hide loading screen even in case of errors
+        setLoading(false);
+      }
+    }
+  
+
    
-    // const delay = async () => {
-    //   // Introduce a 20-second delay
-    //   await new Promise(resolve => setTimeout(resolve, 20000));
-    //   // Call the delayed action after the delay
-    //   submit();
-    // };
+
 console.log(formData);
       
       
@@ -575,22 +542,7 @@ console.log(formData);
         <p>.</p>
      </div>
       <div>
-        {/* <input type="file" accept="image/*" onChange={handleFileChange1} /> */}
-        {/* <input
-          type="text"
-          placeholder="Enter new file name"
-          value={newFileName}
-          onChange={handleNewFileNameChange}
-        /> */}
         
-         {/* <input
-          type="text"
-          placeholder="Enter new file name"
-          value={report_id}
-          onChange={handlereport_id}
-        />
-     
-        <button onClick={handlereport}>send report_id</button> */}
         
       </div>
 
@@ -601,7 +553,7 @@ console.log(formData);
       <label htmlFor="event_photo_1">Photo 1: (To be displayed on the front page)</label>
 <input
   type="file"
-  id="event_photo_1"
+  id="event_photos"
   name="event_photo_1"
   accept="image/*"
   onChange={handleFileChange1}
@@ -613,7 +565,7 @@ console.log(formData);
       <label htmlFor="event_photo_2">Photo 2: (To be displayed in the front page)</label>
       <input
   type="file"
-  id="event_photo_2"
+  id="event_photos"
   name="event_photo_2"
   accept="image/*"
   onChange={handleFileChange2}
@@ -624,7 +576,7 @@ console.log(formData);
       <label htmlFor="event_photo_3">Photo 3:</label>
       <input
   type="file"
-  id="event_photo_3"
+  id="event_photos"
   name="event_photo_3"
   accept="image/*"
   onChange={handleFileChange3}
@@ -635,7 +587,7 @@ console.log(formData);
       <label htmlFor="event_photo_4">Photo 4:</label>
       <input
   type="file"
-  id="event_photo_4"
+  id="event_photos"
   name="event_photo_4"
   accept="image/*"
   onChange={handleFileChange4}
@@ -646,7 +598,7 @@ console.log(formData);
       <label htmlFor="event_photo_5">Photo 5:</label>
       <input
   type="file"
-  id="event_photo_5"
+   id="event_photos"
   name="event_photo_5"
   accept="image/*"
   onChange={handleFileChange5}
@@ -755,8 +707,19 @@ console.log(formData);
       <label htmlFor="event_description">About the Event Paragraph:</label>
 <textarea id="event_description" name="event_description" value={formData.event_description} onChange={handleInputChange}></textarea><br />
 </div>
-      <input type="submit"  onClick={submit} value="Submit" style={{marginLeft:'40%'}}/>
-    
+      <input type="submit" id="ecrsubmit-btn" onClick={submit} value="Submit" style={{marginLeft:'40%'}}/>
+      <div>
+      {loading ? (
+        // Loading screen content
+        <div>Loading...</div>
+      ) : (
+        // Render your component content here
+        <div>
+          {/* Your component content */}
+        </div>
+      )}
+    </div>
       </>
+      
     );
   }

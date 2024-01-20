@@ -408,4 +408,85 @@ route.post('/filterReportsWithParticulars/:head',async(req,res)=>{
     }
 })
 
+// route.get('/deltables',async(req,res)=>{
+//     let sql=`select table_name from data_sub_report_type`
+//     base.query(sql,(err,rows)=>{
+//         if(err){
+//             console.log(err)
+//             // reject(err)
+//             return
+//         }
+//         // res.status(200).json({rows})
+//         for(let i=0;i<rows.length;i++){
+//             if(rows[i].table_name=="data_management" || rows[i].table_name=="data_management_seminar"){
+//                 continue
+//             }
+//             // let sql=`truncate table ${rows[i].table_name}`
+//             let sql=`
+//             DELIMITER //
+//             CREATE TRIGGER update_${rows[i].table_name}
+//             BEFORE INSERT ON ${rows[i].table_name}
+//             FOR EACH ROW
+//             BEGIN
+//                 DECLARE next_rep_id varchar(100);
+//                 DECLARE unique_rep_id int;
+//                 SELECT CONCAT("RPT",COALESCE(MAX(rep_id), 5000) + 1) INTO next_rep_id FROM unique_ids;
+//                 SELECT COALESCE(MAX(rep_id),5000) + 1 INTO unique_rep_id FROM unique_ids;
+            
+//                 SET NEW.report_id = next_rep_id;
+                
+//             insert into unique_ids values(unique_rep_id);
+//             END;
+//             //`
+//             base.query(sql,(err,result)=>{
+//                 if(err){
+//                     console.log(err)
+//                     return
+//                 }
+//                 // res.status(200).json({result})
+//                 console.log(`${rows[i].table_name} dropped`)
+//             })
+//         }
+//     })
+// })
+
+route.get('/deltables', async (req, res) => {
+    let sql = `SELECT table_name FROM data_sub_report_type`;
+    base.query(sql, (err, rows) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i].table_name === 'data_management' || rows[i].table_name === 'data_management_seminar') {
+                continue;
+            }
+
+            let triggerSql = `
+                CREATE TRIGGER update_${rows[i].table_name}
+                BEFORE INSERT ON ${rows[i].table_name}
+                FOR EACH ROW
+                BEGIN
+                    DECLARE next_rep_id varchar(100);
+                    DECLARE unique_rep_id int;
+                    SELECT CONCAT("RPT", COALESCE(MAX(rep_id), 5000) + 1) INTO next_rep_id FROM unique_ids;
+                    SELECT COALESCE(MAX(rep_id), 5000) + 1 INTO unique_rep_id FROM unique_ids;
+                    SET NEW.report_id = next_rep_id;
+                    INSERT INTO unique_ids VALUES (unique_rep_id);
+                END;
+            `;
+
+            base.query(triggerSql, (err, result) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log(`${rows[i].table_name} trigger created`);
+            });
+        }
+    });
+});
+
+
 module.exports=route

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const url="http://localhost:1234"
+const url="http://10.167.1.2:1234"
 export const onLogin=async(obj)=>{
 try{
     const returned = await axios.post(`${url}/login`,obj)
@@ -25,28 +25,31 @@ export const onProposalsLoad=async()=>{
 }
 
 export const onPropose=async(obj)=>{
-    // alert(JSON.stringify(obj))
     try{
     const returned = await axios.post(`${url}/seminar/ecrProposal/${obj.event_name}`,obj)
     return returned.data
+
     }
     catch(error){
-        alert("Please fill all fields")
+        console.log(error)
     }
+    // }
+    // catch(error){
+    //     alert(error)
+    // }
 }
-export const onComplete=async(obj,report_id)=>{
-    // alert(report_id)
-    // alert(obj.event_time)
+export const onComplete=async(obj,report_id,table)=>{
+   
     try{
         // alert(obj);
-    const returned = await axios.put(`${url}/seminar/ecrCompletion/data_management_seminar/${report_id}`,obj)
+    const returned = await axios.put(`${url}/seminar/ecrCompletion/${table}/${report_id}`,obj)
     return returned.data
     }
     catch(error){
         alert(error)
         // alert("Please fill all fields")
     }
-}
+} 
 
 
 export const loadForLevel1=async(dept,emp)=>{
@@ -57,54 +60,115 @@ export const loadForLevel1=async(dept,emp)=>{
     return receive.data.resultArr[0].resultRows
     }
     catch(e){
-        console.log("Error on connect.js");
+        console.log("No request on level 1");
     }
 
 }
 export const loadForLevel2=async(dept,emp)=>{
+    try{
     // alert(dept)
     const receive = await axios.get(`${url}/seminar/loadForLevel2/${dept}/${emp}`)
     return receive.data.resultArr[0].resultRows
+    }
+    catch(err){
+        console.log("No request on level 2");
+    }
 
 }
 export const loadForLevel3=async(dept,emp)=>{
     // alert(dept)
+    try{
     const receive = await axios.get(`${url}/seminar/loadForLevel3/${dept}/${emp}`)
     return receive.data.resultArr[0].resultRows
-
+}
+catch(err){
+    console.log("No request on level 3");
+}
 }
 export const loadForLevel4=async(dept,emp)=>{
     // alert(dept)
+    try{
     const receive = await axios.get(`${url}/seminar/loadForLevel4/${dept}/${emp}`)
     return receive.data.resultArr[0].resultRows
-
+}
+catch(err){
+    console.log("No request on level 4");
+}
 }
 export const loadForLevel5=async(dept,emp)=>{
     // alert(dept)
+    try{
     const receive = await axios.get(`${url}/seminar/loadForLevel5/${dept}/${emp}`)
     return receive.data.resultArr[0].resultRows
-
+}
+catch(err){
+    console.log("No request on level 5");
+}
 }
 export const loadComForLevel1=async(dept,emp)=>{
     try{
     // alert(dept)
-    const receive = await axios.get(`${url}/seminar/completionloadforlevel1/data_management_seminar/${dept}/${emp}`)
-    return receive.data.rows
+    // alert(dept+','+emp)
+    const receive = await axios.get(`${url}/seminar/completionloadforlevel1/${dept}/${emp}`)
+    // alert(JSON.stringify())
+    return receive.data.resultArr[0].resultRows
     }
     catch(e){
         console.log("Not found");
     }
 
 }
+export const loadComForLevel2=async(dept,emp)=>{
+    try{
+    // alert(dept)
+    const receive = await axios.get(`${url}/seminar/completionloadforlevel2/${dept}/${emp}`)
+    return receive.data.resultArr[0].resultRows
+    }
+    catch(e){
+        console.log("Not found in loadComLevel2");
+    }
+
+}
+export const loadComForLevel3=async(dept,emp)=>{
+    try{
+    // alert(dept)
+    const receive = await axios.get(`${url}/seminar/completionloadforlevel3/${dept}/${emp}`)
+    return receive.data.resultArr[0].resultRows
+    }
+    catch(e){
+        console.log("Not found in loadComLevel3");
+    }
+
+}
+export const loadComForLevel4=async(dept,emp)=>{
+    try{
+    // alert(dept)
+    const receive = await axios.get(`${url}/seminar/completionloadforlevel4/${dept}/${emp}`)
+    return receive.data.resultArr[0].resultRows
+    }
+    catch(e){
+        console.log("Not found in loadComLevel4");
+    }
+
+}
+export const loadComForLevel5=async(dept,emp)=>{
+    try{
+    // alert(dept)
+    const receive = await axios.get(`${url}/seminar/completionloadforlevel5/${dept}/${emp}`)
+    return receive.data.resultArr[0].resultRows
+    }
+    catch(e){
+        console.log("Not found in loadComLevel5");
+    }
+
+}
 
 export const approveLevel1=async(tab,dept,emp,report_id)=>{
-    // ale
-    
     const receive = await axios.put(`${url}/seminar/acknowledgelevel1/${tab}/${dept}/${emp}/${report_id}`)
     return receive.data
 }
 export const approveLevel2=async(tab,dept,emp,report_id)=>{
-    const receive = await axios.put(`${url}/seminar/acknowledgelevel2/${tab}/${dept}/${emp}/${report_id}`)
+    const receive = await axios.post(`${url}/seminar/acknowledgelevel2/${tab}/${dept}/${emp}/${report_id}`)
     return receive.data
 }
 export const approveLevel3=async(tab,dept,emp,report_id)=>{
@@ -124,7 +188,9 @@ export const approveComLevel1=async(tab,dept,emp,report_id)=>{
     return receive.data
 }
 export const approveComLevel2=async(tab,dept,emp,report_id)=>{
-    const receive = await axios.put(`${url}/seminar/completionacknowledgelevel2/${tab}/${dept}/${emp}/${report_id}`)
+    // alert("Work")
+    const receive = await axios.post(`${url}/seminar/completionacknowledgelevel2/${tab}/${dept}/${emp}/${report_id}`)
+    // alert(receive.data);
     return receive.data
 }
 export const approveComLevel3=async(tab,dept,emp,report_id)=>{
@@ -220,11 +286,14 @@ export const Major=async()=>{
     
 }
 export const SubReport=async(mid)=>{
-    const re=await axios.get(`${url}/seminar/dropdownSubTypeWithMajor/${mid}`)
+    
+        const re=await axios.get(`${url}/seminar/dropdownSubTypeWithMajor/${mid}`)
     let ids=[]
+    // alert(JSON.stringify(re.data.rows))
     re.data.rows.map((v)=>{
         ids.push(v)
     })
+    // alert(JSON.stringify(ids))
     return ids
     
 }
