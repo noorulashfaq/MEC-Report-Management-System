@@ -552,6 +552,8 @@ export const ViewSeminar = () => {
         try {
             
          temp = await loadComForLevel1(logged.dept_id, logged.faculty_id)
+         
+        
             setEcr1(temp)
         }
         catch (e) {
@@ -1941,7 +1943,7 @@ export const ViewSeminar = () => {
                             ) : (
                                 <tr>
                                     <td colSpan="7" style={{ textAlign: 'center' }}>
-                                        No requests Found
+                                        No Proposal requests Found
                                     </td>
                                 </tr>
                             )}
@@ -1984,7 +1986,9 @@ export const ViewSeminar = () => {
                                 ))
                             ) : (
                                 <tr>
-
+                                    <td colSpan="7" style={{ textAlign: 'center' }}>
+                         No Completion requests Found
+                         </td>
                                 </tr>
                             )
 

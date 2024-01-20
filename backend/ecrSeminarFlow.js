@@ -2107,9 +2107,9 @@ route.get('/loadecrCompletion/:deptId/:tableName',async(req,res)=>{
 
 route.put('/ecrCompletion/:tableName/:report_id',async(req,res)=>{
     // receive the request from client
-    const{event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized}=req.body
-    sql=`update ${req.params.tableName} set event_photo_1=?, event_photo_2=?, event_po=?, pdf=?, event_date_from=?, event_date_to=?, event_organizing_secretary=?, event_time=?, event_description=?, event_budget_utilized=? where report_id=? and final_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0`
-        base.query(sql,[event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,req.params.report_id],(err,ack)=>{
+    const{event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date}=req.body
+    sql=`update ${req.params.tableName} set event_photo_1=?, event_photo_2=?, event_po=?, pdf=?, event_date_from=?, event_date_to=?, event_organizing_secretary=?, event_time=?, event_description=?, event_budget_utilized=? , completion_date=? where report_id=? and final_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0`
+        base.query(sql,[event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date,req.params.report_id],(err,ack)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
@@ -2657,7 +2657,7 @@ route.get('/completionloadforlevel2/:deptId/:empId', async (req, res) => {
     }
 });
 
-route.put('/completionacknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
+route.post('/completionacknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,res)=>{
     const dId=req.params.deptId
     const eId=req.params.empId
     const rId=req.params.report_id
