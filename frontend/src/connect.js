@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const url="http://10.167.1.2:1234"
+const url="http://localhost:1234"
 export const onLogin=async(obj)=>{
 try{
     const returned = await axios.post(`${url}/login`,obj)
@@ -46,7 +46,7 @@ export const onComplete=async(obj,report_id,table)=>{
     return returned.data
     }
     catch(error){
-        alert(error)
+        alert("OnComplete"+error)
         // alert("Please fill all fields")
     }
 } 
@@ -213,9 +213,9 @@ export const Table=async(empId)=>
     // alert(JSON.stringify(temp.data.recordsArr))
     return temp;
 }
-export const onTable=async(report_id)=>
+export const onTable=async(report_id,table)=>
 {
-    const temp=await axios.post(`${url}/seminar/report/${report_id}`);
+    const temp=await axios.post(`${url}/seminar/report/${report_id}/${table}`);
     // alert(temp.rows)
     return temp.data;
    

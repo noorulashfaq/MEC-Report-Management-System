@@ -81,7 +81,7 @@ export const ViewSeminar = () => {
 
     const [year, setYear] = useState([])
     const Acad = async () => {
-        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -106,7 +106,7 @@ export const ViewSeminar = () => {
     let [facs, setFacs] = useState([])
 
     const Faculty = async (fid) => {
-        const t = await axios.get(`http://10.167.1.2:1234/ecrFilter/getFacultiesList/${fid}
+        const t = await axios.get(`http://localhost:1234/ecrFilter/getFacultiesList/${fid}
             `)
         // alert(t)
         // alert(JSON.stringify(t.data.result))
@@ -237,7 +237,7 @@ export const ViewSeminar = () => {
     console.log(filter)
 
     const GetCurrAcd = async () => {
-        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         const temp = t.data.result
         let valueYr = 0
@@ -269,7 +269,7 @@ export const ViewSeminar = () => {
         // alert(JSON.stringify(filter))
         try {
             // alert("hi")
-            const filteredRecords = await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001", filter)
+            const filteredRecords = await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001", filter)
             // alert(filteredRecords.data)
             setAllvalues(filteredRecords.data)
         }
@@ -302,7 +302,7 @@ export const ViewSeminar = () => {
         try {
 
 
-            const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}`);
+            const res = await axios.get(`http://localhost:1234/seminar/data/${id}`);
             // console.log("hai");
             const data = res.data;
 
@@ -649,8 +649,8 @@ export const ViewSeminar = () => {
         // alert("view Working")
         handleDownload1();
     }
-    const ecrs = async (report_id) => {
-        const temp = await onTable(report_id)
+    const ecrs = async (report_id,table) => {
+        const temp = await onTable(report_id,table)
         if (temp.report_id) {
             sessionStorage.setItem("report_id", JSON.stringify(temp))
 
@@ -664,7 +664,7 @@ export const ViewSeminar = () => {
         try {
 
 
-            const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}`);
+            const res = await axios.get(`http://localhost:1234/seminar/data/${id1}`);
             // console.log("hai");
             const data = res.data;
 
@@ -1792,8 +1792,8 @@ export const ViewSeminar = () => {
     //     const temp = await approveLevel1(logged.dept_id,logged.faculty_id)
     //     setInfo(temp)
     // }
-    const pdfAccept = async (report_id) => {
-        const temp = await onTable(report_id)
+    const pdfAccept = async (report_id,table) => {
+        const temp = await onTable(report_id,table)
         if (temp.report_id) {
             sessionStorage.setItem("report_id", JSON.stringify(temp))
 
@@ -1935,86 +1935,18 @@ export const ViewSeminar = () => {
                                                 border: 'none',
                                             }} type="button" onClick={async () => {
 
-                                                pdfAccept(val.report_id);
+                                                pdfAccept(val.report_id,val.event_name);
 
                                             }} >View Proposal</button></td>
                                     </tr>
-<<<<<<< HEAD
-                                </thead>
-                                <tbody>
-                                    {
-                                       ecrs?.length ||0 > 0 ?
-                                        ecrs.map((val,key)=>(
-                                            <tr>
-                                                <td>{val.report_id}</td>
-                                                <td>{val.event_title}</td>
-                                                <td>{val.major_report}</td>
-                                                <td>{val.sub_report}</td>
-                                                
-                                                <td>{val.event_coordinator}</td>
-                                                <td className="row justify-content-evenly">
-                                                <button type="button" onClick={async()=>{
-                                               
-                                                        accept(val.event_name,val.dept_id,val.report_id,val.final_proposal_status,val.report_proposal_status,val.report_completion_status);
-                                                    }} className="btn btn-success col-4"  >Accept</button>
-                                                    <button type="button" className="btn btn-dark col-4">Reject</button>
-                                                    </td>
-                                                    <td><button className="btn btn-dark col-4"
-                                                    style={{
-                                                        backgroundColor: '#0000ff', 
-                                                        color: 'white', 
-                                                        width: '90%', 
-                                                        
-                                                        padding: '10px', 
-                                                        borderRadius: '5px', 
-                                                        cursor: 'pointer', 
-                                                        border: 'none', 
-                                                    }} type="button" onClick={async()=>{
-                                                       
-                                                        pdfAccept(val.report_id);
-                                                       
-                                                    }} >View Proposal</button></td>
-                                            </tr>
-                                        )):
-                                        <tr>
-                                            No requests
-                                        </tr>
-                                    }
-                                    {
-                                       
-                                        ecrs1.map((val,key)=>(
-                                            <tr>
-                                                <td>{val.report_id}</td>
-                                                <td>{val.event_title}</td>
-                                                <td>{val.major_report}</td>
-                                                <td>{val.sub_report}</td>
-                                                
-                                                <td>{val.event_coordinator}</td>
-                                                <td className="row justify-content-evenly">
-                                                <button type="button" onClick={async()=>{
-                                                       
-                                                        accept(val.event_name,
-                                                            val.dept_id,val.report_id,val.final_proposal_status,val.report_proposal_status,val.report_completion_status);
-                                                    }} className="btn btn-success col-4">Accept</button>
-                                                    <button type="button" className="btn btn-dark col-4">Reject</button>
-                                                    </td>
-                                                    <td><button className="btn btn-dark col-4"
-  style={{
-    backgroundColor: '#f29b44', // Background color
-    color: 'white', 
-    // size:'10px',// Text color
-    // height:'4 px',
-    width: '90%', // Button width
-=======
-                                ))
-                            ) : (
-                                <tr>
+                                
+                              
+                                ))):( <tr>
                                     <td colSpan="7" style={{ textAlign: 'center' }}>
-                                        No Proposal requests Found
-                                    </td>
-                                </tr>
-                            )}
-
+                         No Proposal requests Found
+                         </td>
+                                </tr>)
+                                        }
                             {ecr1?.length ||0  > 0 ? (
                                 ecr1.map((val, key) => (
                                     <tr>
@@ -2047,7 +1979,7 @@ export const ViewSeminar = () => {
                                             }}
                                             type="button" onClick={async () => {
                                                 // alert(val.workshop_id+" "+val.dept_id)
-                                                ecrs(val.report_id);
+                                                ecrs(val.report_id,val.event_name);
                                             }} >View ECR</button></td>
                                     </tr>
                                 ))
@@ -2066,7 +1998,7 @@ export const ViewSeminar = () => {
 
                 </div>
             </div>
->>>>>>> b3ebc5431490c62f55c9de01d3b023a3672d5db6
+
 
 
         </>

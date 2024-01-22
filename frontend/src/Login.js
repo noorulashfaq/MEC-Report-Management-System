@@ -7,6 +7,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 
+
 import "./sty.css"
 
 const theme = createTheme({
@@ -67,12 +68,6 @@ export const Login=()=>{
 //                 <div className="shadow p-5 rounded-2" style={{ backgroundColor: '#f7f1d7' }}>
 //                     <div className='formGroup'>
 //                         <label >Faculty ID</label>
-<<<<<<< HEAD
-//                         <input type="email" name="mail" value={logger.mail} onChange={gather} placeholder="Faculty Id to login" className="form-control" />
-=======
-//                         <input type="eid" name="id" value={logger.id} onChange={gather} placeholder="Faculty Id to login" className="form-control" />
->>>>>>> b3ebc5431490c62f55c9de01d3b023a3672d5db6
-//                     </div>
 //                     <div className="formGroup">
 //                         <label>Password</label>
 //                         <input type="password" name="pass" value={logger.pass} onChange={gather} placeholder="Password to login" className="form-control" />
@@ -125,44 +120,36 @@ export const Login=()=>{
             fullWidth
             id="facultyId"
             label="Faculty ID"
-<<<<<<< HEAD
-            name="mail"
-            type="email"
-            autoComplete="email"
-            value={logger.mail}
-=======
             name="id"
             type="id"
             autoComplete="id"
             value={logger.id}
->>>>>>> b3ebc5431490c62f55c9de01d3b023a3672d5db6
+
             onChange={gather}
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="pass"
-            label="Password"
-<<<<<<< HEAD
-            type={showPassword ? 'email' : 'password'}
-=======
-            type={showPassword ? 'id' : 'password'}
->>>>>>> b3ebc5431490c62f55c9de01d3b023a3672d5db6
-            id="password"
-            autoComplete="current-password"
-            value={logger.pass}
-            onChange={gather}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleTogglePasswordVisibility} edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+            <TextField
+      fullWidth
+      variant="outlined"
+      margin="normal"
+      required
+      id="password"
+      label="Password"
+      type={showPassword ? 'id' : 'password'}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton
+              onClick={handleTogglePasswordVisibility}
+              edge="end"
+              style={{ color: '#666' }}
+            >
+              {showPassword ? <Visibility /> : <VisibilityOff />}
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+      
+    />
           <Button type="button" fullWidth variant="contained" color="primary" sx={{ mt: 3, mb: 2 }} onClick={onLoginClicked}>
             Login
           </Button>
