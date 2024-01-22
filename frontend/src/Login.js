@@ -134,7 +134,9 @@ export const Login=()=>{
       required
       id="password"
       label="Password"
+      name="pass"
       type={showPassword ? 'id' : 'password'}
+      onChange={gather}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
