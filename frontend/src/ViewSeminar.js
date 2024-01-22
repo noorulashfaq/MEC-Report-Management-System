@@ -81,7 +81,7 @@ export const ViewSeminar = () => {
 
     const [year, setYear] = useState([])
     const Acad = async () => {
-        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -106,7 +106,7 @@ export const ViewSeminar = () => {
     let [facs, setFacs] = useState([])
 
     const Faculty = async (fid) => {
-        const t = await axios.get(`http://10.167.1.2:1234/ecrFilter/getFacultiesList/${fid}
+        const t = await axios.get(`http://localhost:1234/ecrFilter/getFacultiesList/${fid}
             `)
         // alert(t)
         // alert(JSON.stringify(t.data.result))
@@ -237,7 +237,7 @@ export const ViewSeminar = () => {
     console.log(filter)
 
     const GetCurrAcd = async () => {
-        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         const temp = t.data.result
         let valueYr = 0
@@ -269,7 +269,7 @@ export const ViewSeminar = () => {
         // alert(JSON.stringify(filter))
         try {
             // alert("hi")
-            const filteredRecords = await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001", filter)
+            const filteredRecords = await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001", filter)
             // alert(filteredRecords.data)
             setAllvalues(filteredRecords.data)
         }
@@ -302,7 +302,7 @@ export const ViewSeminar = () => {
         try {
 
 
-            const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}`);
+            const res = await axios.get(`http://localhost:1234/seminar/data/${id}`);
             // console.log("hai");
             const data = res.data;
 
@@ -649,8 +649,8 @@ export const ViewSeminar = () => {
         // alert("view Working")
         handleDownload1();
     }
-    const ecrs = async (report_id) => {
-        const temp = await onTable(report_id)
+    const ecrs = async (report_id,table) => {
+        const temp = await onTable(report_id,table)
         if (temp.report_id) {
             sessionStorage.setItem("report_id", JSON.stringify(temp))
 
@@ -664,7 +664,7 @@ export const ViewSeminar = () => {
         try {
 
 
-            const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}`);
+            const res = await axios.get(`http://localhost:1234/seminar/data/${id1}`);
             // console.log("hai");
             const data = res.data;
 
@@ -1792,8 +1792,8 @@ export const ViewSeminar = () => {
     //     const temp = await approveLevel1(logged.dept_id,logged.faculty_id)
     //     setInfo(temp)
     // }
-    const pdfAccept = async (report_id) => {
-        const temp = await onTable(report_id)
+    const pdfAccept = async (report_id,table) => {
+        const temp = await onTable(report_id,table)
         if (temp.report_id) {
             sessionStorage.setItem("report_id", JSON.stringify(temp))
 
@@ -1935,19 +1935,18 @@ export const ViewSeminar = () => {
                                                 border: 'none',
                                             }} type="button" onClick={async () => {
 
-                                                pdfAccept(val.report_id);
+                                                pdfAccept(val.report_id,val.event_name);
 
                                             }} >View Proposal</button></td>
                                     </tr>
-                                ))
-                            ) : (
-                                <tr>
+                                
+                              
+                                ))):( <tr>
                                     <td colSpan="7" style={{ textAlign: 'center' }}>
-                                        No Proposal requests Found
-                                    </td>
-                                </tr>
-                            )}
-
+                         No Proposal requests Found
+                         </td>
+                                </tr>)
+                                        }
                             {ecr1?.length ||0  > 0 ? (
                                 ecr1.map((val, key) => (
                                     <tr>
@@ -1980,7 +1979,7 @@ export const ViewSeminar = () => {
                                             }}
                                             type="button" onClick={async () => {
                                                 // alert(val.workshop_id+" "+val.dept_id)
-                                                ecrs(val.report_id);
+                                                ecrs(val.report_id,val.event_name);
                                             }} >View ECR</button></td>
                                     </tr>
                                 ))
@@ -1999,6 +1998,7 @@ export const ViewSeminar = () => {
 
                 </div>
             </div>
+
 
 
         </>

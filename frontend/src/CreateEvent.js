@@ -12,7 +12,7 @@ import './facultyEcrFilter.css';
 import Select from 'react-select';
 //import Img6001 from'./6001.jpeg';
 
-// 10.167.1.2
+// localhost
 export const CreateEvent=()=>{
 // --------------------------------------------------
   useEffect(()=>{
@@ -37,7 +37,7 @@ const[allvalues,setAllvalues]=useState([]);
         // console.log(allvalues)
 
 const GetCurrAcd=async()=>{
-    const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+    const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
     // alert(JSON.stringify(t.data.result))
     const temp=t.data.result
     let valueYr=0
@@ -93,7 +93,7 @@ const onClickFilter=async()=>{
     // alert(JSON.stringify(filter))
     try{
         // alert("hi")
-        const filteredRecords=await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001",filter)
+        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
         // alert(filteredRecords.data)
         setAllvalues(filteredRecords.data)
     }
@@ -137,7 +137,7 @@ let [subs,setSubs]=useState([])
 
     const[year,setYear]=useState([])
     const Acad=async()=>{
-        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -294,7 +294,7 @@ const viewPdf1=async(report_id)=>{
 
   const handleDownload = async () => {
     try {
-      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}`);
+      const res = await axios.get(`http://localhost:1234/seminar/data/${id}`);
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
@@ -502,16 +502,16 @@ doc.text('Principal', 155, 290);
         //     sessionStorage.setItem("report_id",JSON.stringify(temp))
         //     // window.location.assign("/ecr")
         // }
-        const accept=async(report_id)=>{
-            const temp=await onTable(report_id)
+        const accept=async(report_id,table)=>{
+            const temp=await onTable(report_id,table)
         if(temp.report_id){
             sessionStorage.setItem("report_id",JSON.stringify(temp))
             
         }
 
         }
-        const pdfAccept=async(report_id)=>{
-            const temp=await onTable(report_id)
+        const pdfAccept=async(report_id,table)=>{
+            const temp=await onTable(report_id,table)
         if(temp.report_id){
             sessionStorage.setItem("report_id",JSON.stringify(temp))
             
@@ -519,8 +519,8 @@ doc.text('Principal', 155, 290);
         viewPdf(temp.report_id);
 
         }   
-        const ecr=async(report_id)=>{
-          const temp=await onTable(report_id)
+        const ecr=async(report_id,table)=>{
+          const temp=await onTable(report_id,table)
       if(temp.report_id){
           sessionStorage.setItem("report_id",JSON.stringify(temp))
           
@@ -535,7 +535,7 @@ doc.text('Principal', 155, 290);
         try {
           
           
-          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}`);
+          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}`);
           // console.log("hai");
           const data = res.data;
           var atten = `/Project_images/attendence.jpg`;
@@ -1688,9 +1688,12 @@ doc.text('Principal', 155, 290);
         <div className="filter-dropdowns">
 
 <label for="acdyr_id">Academic Year : </label>
+
+
     <Select
         className="form1group"
         id="acdyr_id"
+
         isMulti
         name="acdyr_id"
         options={years}
@@ -1816,7 +1819,7 @@ className="form1group"
     border: 'none', // Remove the border
   }} type="button" onClick={async()=>{
                                                         // alert(val.workshop_id+" "+val.dept_id)
-                                                        pdfAccept(data.report_id);
+                                                        pdfAccept(data.report_id,data.event_name);
                                                        
                                                     }} >View Proposal</button></td>
                                         </>
@@ -1842,7 +1845,7 @@ className="form1group"
     border: 'none', // Remove the border
   }} type="button" onClick={async()=>{
                                                         // alert(val.workshop_id+" "+val.dept_id)
-                                                        pdfAccept(data.report_id);
+                                                        pdfAccept(data.report_id,data.event_name);
                                                        
                                                     }} >View Proposal</button></td>
                                         </>
@@ -1868,7 +1871,7 @@ className="form1group"
   }}
   type="button" onClick={async()=>{
                                                         // alert(val.workshop_id+" "+val.dept_id)
-                                                        accept(data.report_id);
+                                                        accept(data.report_id,data.event_name);
                                                     }} >Create ECR</button></a></td>
                                         </>
                                         :
@@ -1904,7 +1907,7 @@ className="form1group"
   }}
   type="button" onClick={async()=>{
                                                         // alert(val.workshop_id+" "+val.dept_id)
-                                                       ecr(data.report_id);
+                                                       ecr(data.report_id,data.event_name);
                                                     }} >View ECR</button></td>
                                         </>
                                        
@@ -1931,7 +1934,7 @@ className="form1group"
   }}
   type="button" onClick={async()=>{
                                                         // alert(val.workshop_id+" "+val.dept_id)
-                                                       ecr(data.report_id);
+                                                       ecr(data.report_id,data.event_name);
                                                     }} >View ECR</button></td>
                                         </>
                                         :
