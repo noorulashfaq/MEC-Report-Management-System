@@ -12,7 +12,7 @@ import './facultyEcrFilter.css';
 import Select from 'react-select';
 //import Img6001 from'./6001.jpeg';
 
-// localhost
+// 10.167.1.2
 export const CreateEvent=()=>{
 // --------------------------------------------------
   useEffect(()=>{
@@ -37,7 +37,7 @@ const[allvalues,setAllvalues]=useState([]);
         // console.log(allvalues)
 
 const GetCurrAcd=async()=>{
-    const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+    const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
     // alert(JSON.stringify(t.data.result))
     const temp=t.data.result
     let valueYr=0
@@ -93,7 +93,7 @@ const onClickFilter=async()=>{
     // alert(JSON.stringify(filter))
     try{
         // alert("hi")
-        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
+        const filteredRecords=await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001",filter)
         // alert(filteredRecords.data)
         setAllvalues(filteredRecords.data)
     }
@@ -137,7 +137,7 @@ let [subs,setSubs]=useState([])
 
     const[year,setYear]=useState([])
     const Acad=async()=>{
-        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -278,7 +278,7 @@ console.log(filter)
     const report=JSON.parse(sessionStorage.getItem("report_id"))
     setId(report.report_id)
     // alert("view Working")
-    handleDownload();
+    handleDownload(report.event_name);
     
 }
 const [id1, setId1] = useState('');
@@ -286,15 +286,15 @@ const viewPdf1=async(report_id)=>{
   const report=JSON.parse(sessionStorage.getItem("report_id"))
   setId1(report.report_id)
   // alert("view Working")
-  handleDownload1();
+  handleDownload1(report.event_name);
   
 }
 
    
 
-  const handleDownload = async () => {
+  const handleDownload = async (table) => {
     try {
-      const res = await axios.get(`http://localhost:1234/seminar/data/${id}`);
+      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
@@ -504,7 +504,9 @@ doc.text('Principal', 155, 290);
         // }
         const accept=async(report_id,table)=>{
             const temp=await onTable(report_id,table)
+
         if(temp.report_id){
+            // alert(temp.report_id)
             sessionStorage.setItem("report_id",JSON.stringify(temp))
             
         }
@@ -531,11 +533,11 @@ doc.text('Principal', 155, 290);
       
       
 
-      const handleDownload1= async () => {
+      const handleDownload1= async (table) => {
         try {
           
           
-          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}`);
+          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
           var atten = `/Project_images/attendence.jpg`;
