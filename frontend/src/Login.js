@@ -7,7 +7,6 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 
-
 import "./sty.css"
 
 const theme = createTheme({
@@ -68,6 +67,8 @@ export const Login=()=>{
 //                 <div className="shadow p-5 rounded-2" style={{ backgroundColor: '#f7f1d7' }}>
 //                     <div className='formGroup'>
 //                         <label >Faculty ID</label>
+//                         <input type="eid" name="id" value={logger.id} onChange={gather} placeholder="Faculty Id to login" className="form-control" />
+//                     </div>
 //                     <div className="formGroup">
 //                         <label>Password</label>
 //                         <input type="password" name="pass" value={logger.pass} onChange={gather} placeholder="Password to login" className="form-control" />
@@ -124,9 +125,30 @@ export const Login=()=>{
             type="id"
             autoComplete="id"
             value={logger.id}
-
             onChange={gather}
           />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="pass"
+            label="Password"
+            type={showPassword ? 'id' : 'password'}
+            id="password"
+            autoComplete="current-password"
+            value={logger.pass}
+            onChange={gather}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleTogglePasswordVisibility} edge="end">
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
             <TextField
       fullWidth
       variant="outlined"
@@ -152,6 +174,7 @@ export const Login=()=>{
       }}
       
     />
+
           <Button type="button" fullWidth variant="contained" color="primary" sx={{ mt: 3, mb: 2 }} onClick={onLoginClicked}>
             Login
           </Button>
