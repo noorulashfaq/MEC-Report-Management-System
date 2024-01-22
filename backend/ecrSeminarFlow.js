@@ -246,7 +246,7 @@ function queryAsync(sql, params = []) {
 
 route.get('/find',async(req,res)=>{
     // const dId=req.params.deptId
-    const sql=`select * from data_faculties inner join data_dept on data_faculties.dept_id = data_dept.dept_id where not faculty_desig in(403,404,401,402)`
+    const sql=`select * from data_faculties inner join data_dept on data_faculties.dept_id = data_dept.dept_id where not faculty_desig in(401,402)`
 //     INNER JOIN data_dept d ON f.dept_id = d.dept_id
 // WHERE f.faculty_desig NOT IN (403, 404);
     base.query(sql,[],(err,rows)=>{
