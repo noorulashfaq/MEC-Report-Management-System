@@ -1,5 +1,5 @@
 ### Faculty proposing for an event
-POST http://10.167.1.2:1234/seminar/ecrProposal/data_management_seminar
+POST http://localhost:1234/seminar/ecrProposal/data_management_seminar
 Content-Type: application/json
 
 {
@@ -129,12 +129,12 @@ PUT http://localhost:1234/seminar/acknowledgelevel1/1/6001/1
 ###
 
 ### Principal is receiving the requested proposal
-GET http://10.167.1.2:1234/seminar/loadforlevel2/0/60MEC
+GET http://localhost:1234/seminar/loadforlevel2/0/60MEC
 
 ###
 
 ### Principal approves the proposal
-PUT http://10.167.1.2:1234/seminar/acknowledgelevel2/data_management_seminar/0/6000/5003
+PUT http://localhost:1234/seminar/acknowledgelevel2/data_management_seminar/0/6000/5003
 
 ###
 

@@ -13,8 +13,8 @@ router.use(cors())
 // Set up the storage for uploaded files
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '/home/cse/Downloads/MEC/frontend/public/Project_Images'); 
-        // cb(null, 'Project_Images/'); 
+        cb(null, 'D:/React/Muthayammal/Updated-MEC-RMS/frontend/public/Project_Images'); 
+      
 
     },
     filename: (req, file, cb) => {
@@ -35,27 +35,25 @@ const storage = multer.diskStorage({
     res.send('Image uploaded and saved on the server.');
   });
 
+  //////pdf/////
   const storage1 = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, 'D:\Project_Images\\'); // Specify the directory where you want to store uploaded images
+        cb(null, 'D:/React/Muthayammal/Updated-MEC-RMS/frontend/public/Pdf');
     },
     filename: (req, file, cb) => {
-        // const currentDate = new Date();
-// const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
-      cb(null, file.originalname);
+        cb(null, file.originalname);
     },
-  });
-  
+});
 
-  
-  const upload1 = multer({ storage1 });
-  
-  router.post('/upload2', upload1.any(), (req, res) => {
-    if (!req.file) {
-      return res.status(400).send('No file uploaded.');
+const upload1 = multer({ storage: storage1 });
+
+router.post('/uploadPdf', upload1.any(), (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).send('No file uploaded.');
     }
-    res.send('Image uploaded and saved on the server.');
-  });
+    res.send('PDF uploaded and saved on the server.');
+});
+
 
 
 

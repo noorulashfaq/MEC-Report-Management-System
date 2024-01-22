@@ -133,9 +133,10 @@ route.get('/compare/:roll',async(req,res)=>{
 
 /////////////////////////////////
 
-route.post('/report/:report_id',async(req,res)=>{
+route.post('/report/:report_id/:table',async(req,res)=>{
+    const table=req.params.table
     const report_id=req.params.report_id
-    const sql="select * from data_management_seminar where report_id=?"
+    const sql=`select * from ${table} where report_id=?`
     base.query(sql,[report_id],(err,rows)=>{
         if(err){
             res.status(500).json({error:err.message})
@@ -2241,7 +2242,7 @@ route.get('/completionloadforlevel1/:deptId/:empId', async (req, res) => {
 
         let resultArr = [];
         for (let i = 0; i < rows.length; i++) {
-            sql = `select * from ${rows[i].data_table_name}  AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id   where final_proposal_status=1 and lvl_1_completion_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=?`;
+            sql = `select * from ${rows[i].data_table_name}  AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id   where final_proposal_status=1 and lvl_1_completion_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and completion_date is not null and dept_id=?`;
 
             const resultRows = await new Promise((resolve, reject) => {
                 base.query(sql, [dId], (err, rows) => {

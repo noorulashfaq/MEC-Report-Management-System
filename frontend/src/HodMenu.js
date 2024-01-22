@@ -15,11 +15,13 @@ export const HodMenu=()=>{
 
          
      </div>
+     <a href="/">
      <img src=
 "https://mec.edu.in/wp-content/uploads/2021/02/main-logo.png"
              class="icn menuicn"
              id="menuicn"
              alt="menu-icon"/>
+            </a>
             <Navbar bg="light" expand="lg">
                 <Container>
                     <Navbar.Brand href="/">
