@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react"
 import "../sty.css";
 import { onProposalsLoad, onPropose,Venue,Major,SubReport,Academic} from "../connect"
@@ -10,7 +9,10 @@ import { useNavigate } from "react-router-dom";
 
 const Ivadd=()=>{
 
-    const callPropose=async()=>{
+    const[info,setInfo]=useState("")
+
+    const callPropose=async(iv)=>{
+        info = await axios.post(`http://localhost:1234/iv/proposeIV`,iv)
         window.location.assign("/iv")
 
     }
@@ -18,36 +20,56 @@ const Ivadd=()=>{
     // ==========================
 
     const [iv,setIv]=useState({
-        "Details_of_the_industry_with_address":""  ,
-        "Date_of_visit":"",
-        "Name": "",
-        "Designation_for_industry_person":""  ,
-        "Mobile_number_of_the_contact_person":0 ,
-        "Mail_id": "",
-        "Name_of_the_Inn": "",
-        "Address_lodging_planned": "" ,
-        "Mobile_number_of_the_inn": 0,
-        "No_of_Students_visited": 0 ,
-        "No_of_Faculty_visited": 0,
-        "Name_of_travels": "",
-        "Registration_no_1":0,
-        "Registration_no_2":0,
-        "Registration_no_3":0,
-        "Name_of_the_operator_1": "" ,
-        "Name_of_the_operator_2": "" ,
-        "Name_of_the_operator_3": "" ,
-        "Operator_contact_no_1":  0,
-        "Operator_contact_no_2":  0,
-        "Operator_contact_no_3":  0,
-        "Faculty_name": "" ,
-         "designation" :"",
-        "Faculty_Mobile_no":0 ,
-        "undertaking_parents_collected_for_students":"" 
+        "date_of_visit_from":""  ,
+    "date_of_visit_to":"" ,
+    "details_of_the_industry_1":"" ,
+    "details_of_the_industry_2":"", 
+    "details_of_the_industry_3":"", 
+    "name_of_the_contact_person_1":"", 
+    "designation_of_the_contact_person_1":"" ,
+    "phone_no_of_the_contact_person_1":0, 
+    "email_of_the_contact_person_1":"", 
+    "name_of_the_contact_person_2":"",
+    "designation_of_the_contact_person_2":"" , 
+    "phone_no_of_the_contact_person_2":0,
+    "email_of_the_contact_person_2":"", 
+    "name_of_the_contact_person_3":"",
+    "designation_of_the_contact_person_3":"", 
+    "phone_no_of_the_contact_person_3":0, 
+    "email_of_the_contact_person_3":"" ,
+    "name_of_the_inn":"", 
+    "address_of_the_inn":"" , 
+    "phone_no_of_the_inn":0,
+    "students_count":0,
+    "faculty_count":0, 
+    "event_coordinator":"" ,
+    "name_of_the_travel_1":"" , 
+    "address_of_the_travel_1":"", 
+    "bus_no_of_the_travel_1":0 ,
+    "operator_of_the_travel_1":"", 
+    "operator_contact_of_the_travel_1":0, 
+    "name_of_the_travel_2":"",
+    "address_of_the_travel_2":"", 
+    "bus_no_of_the_travel_2":0 ,
+    "operator_of_the_travel_2":"",
+    "operator_contact_of_the_travel_2" :0, 
+    "name_of_the_travel_3":"" , 
+    "address_of_the_travel_3" :"", 
+    "bus_no_of_the_travel_3":0, 
+    "operator_of_the_travel_3":"", 
+    "operator_contact_of_the_travel_3":0, 
+    "faculty_accompanied" :"",
+    "undertaking_from_parents": "" ,
+    "acdyr_id":null,
+    "sem_id":null
      })
-     
+     console.log(iv)
      const navigate = useNavigate()
      const handlechange=(e)=>{
-        setIv((prev)=>({...prev,[e.target.name]:e.target.value}))
+        setIv((prev)=>({
+            ...prev,
+            [e.target.name]:e.target.value
+        }))
      }
      console.log(iv)
      const handleClick = async (e)=>{
@@ -90,13 +112,30 @@ const Ivadd=()=>{
 
 
 <div className="form-group">
-        <label>Detail of the Industry to be Visited with Address</label>
-        <textarea  type='text' name="Details_of_the_industry_with_address" onChange={handlechange} placeholder='Industry Details '/>
+        <label>Details of the Industry to be Visited with Address 1</label>
+        <input type='text' name="details_of_the_industry_1" onChange={handlechange} placeholder='Industry Details 1'/>
+     </div>
+
+     
+<div className="form-group">
+        <label>Details of the Industry to be Visited with Address 2</label>
+        <input type='text' name="details_of_the_industry_2" onChange={handlechange} placeholder='Industry Details 2'/>
+     </div>
+
+
+     <div className="form-group">
+        <label>Details of the Industry to be Visited with Address 3</label>
+        <input  type='text' name="details_of_the_industry_3" onChange={handlechange} placeholder='Industry Details 3'/>
      </div>
 
      <div className='form-group'>
-        <label>Date of the Industrial Visit Planned</label>
-        <input type='date' name='Date_of_visit' onChange={handlechange} placeholder='Industrial Visit Date'/>
+        <label>Date of the Industrial Visit Planned from</label>
+        <input type='date' name='date_of_visit_from' onChange={handlechange} placeholder='Industrial Visit Date From'/>
+        </div>
+
+        <div className='form-group'>
+        <label>Date of the Industrial Visit Planned to</label>
+        <input type='date' name='date_of_visit_to' onChange={handlechange} placeholder='Industrial Visit Date To'/>
         </div>
 
         <div class="report-header">
@@ -104,24 +143,65 @@ const Ivadd=()=>{
     </div> 
  
     <div className='form-group'>
-        <label>Name</label>
-        <input type='text' name='Name' onChange={handlechange} placeholder='Name'/>
+        <label>Name of the Contact Person 1</label>
+        <input type='text' name='name_of_the_contact_person_1' onChange={handlechange} placeholder='Name'/>
         </div>
 
         <div className='form-group'>
-        <label>Designation</label>
-        <input type='text' name='Designation_for_industry_person' onChange={handlechange}placeholder='Designation'/>
+        <label>Designation of the Contact Person1</label>
+        <input type='text' name='designation_of_the_contact_person_1' onChange={handlechange}placeholder='Designation'/>
         </div>
    
         <div className='form-group'>
-        <label>Mobile No</label>
-        <input type='number' name='Mobile_number_of_the_contact_person' onChange={handlechange} placeholder='Mobile No'/>
+        <label>Mobile No of the Contact Person 1</label>
+        <input type='number' name='phone_no_of_the_contact_person_1' onChange={handlechange} placeholder='Mobile No'/>
         </div>
 
         <div className='form-group'>
-        <label>Mail Id</label>
-        <input type='text' name='Mail_id'onChange={handlechange} placeholder='Mail Id'/>
+        <label>Mail Id of the Contact person 1</label>
+        <input type='email' name='email_of_the_contact_person_1'onChange={handlechange} placeholder='Mail Id'/>
         </div>
+
+        <div className='form-group'>
+        <label>Name of the Contact Person 2</label>
+        <input type='text' name='name_of_the_contact_person_2' onChange={handlechange} placeholder='Name'/>
+        </div>
+
+        <div className='form-group'>
+        <label>Designation of the Contact Person 2</label>
+        <input type='text' name='designation_of_the_contact_person_2' onChange={handlechange}placeholder='Designation'/>
+        </div>
+   
+        <div className='form-group'>
+        <label>Mobile No of the Contact Person 2</label>
+        <input type='number' name='phone_no_of_the_contact_person_2' onChange={handlechange} placeholder='Mobile No'/>
+        </div>
+
+        <div className='form-group'>
+        <label>Mail Id of the Contat person 2 </label>
+        <input type='email' name='email_of_the_contact_person_2'onChange={handlechange} placeholder='Mail Id'/>
+        </div>
+        
+        <div className='form-group'>
+        <label>Name of the Contact Person 3</label>
+        <input type='text' name='name_of_the_contact_person_3' onChange={handlechange} placeholder='Name'/>
+        </div>
+
+        <div className='form-group'>
+        <label>Designation of the Contact Person 3</label>
+        <input type='text' name='designation_of_the_contact_person_3' onChange={handlechange}placeholder='Designation'/>
+        </div>
+   
+        <div className='form-group'>
+        <label>Mobile No of the Contact Person 3</label>
+        <input type='number' name='phone_no_of_the_contact_person_3' onChange={handlechange} placeholder='Mobile No'/>
+        </div>
+
+        <div className='form-group'>
+        <label>Mail Id of the Contat person 3</label>
+        <input type='email' name='email_of_the_contact_person_3'onChange={handlechange} placeholder='Mail Id'/>
+        </div>
+
 
         <div class="report-header">
     <h1 class="recent-Articles">Details of Lodging Planned</h1>
@@ -130,17 +210,17 @@ const Ivadd=()=>{
 
         <div className='form-group'>
         <label>Name of the Inn</label>
-        <input type='text'name='Name_of_the_Inn' onChange={handlechange} placeholder='Inn Name'/>
+        <input type='text'name='name_of_the_inn' onChange={handlechange} placeholder='Hotel Name'/>
         </div>
 
         <div className='form-group'>
         <label>Address</label>
-        <input type='text' name='Address_lodging_planned' onChange={handlechange} placeholder='Address'/>
+        <input type='text' name='address_of_the_inn' onChange={handlechange} placeholder='Hotel Address'/>
         </div>
 
         <div className='form-group'>
         <label>Phone No</label>
-        <input type='number' name='Mobile_number_of_the_inn' onChange={handlechange} placeholder='Ph.No'/>
+        <input type='number' name='phone_no_of_the_inn' onChange={handlechange} placeholder='Hotel Phone Number'/>
         </div>
          
         <div class="report-header">
@@ -148,86 +228,154 @@ const Ivadd=()=>{
     </div> 
        
     <div className='form-group'>
-        <label>Student</label>
-        <input type='number' placeholder=' Total no.of Visited Students' name='No_of_students_visited' onChange={handlechange}/>
+        <label>Students Count</label>
+        <input type='number' name='students_count' placeholder='No of students visited' onChange={handlechange}/>
        </div>
         
         
         <div className='form-group'>
-        <label>Faculty</label>
-        <input type='number' name='No_of_Faculty_visited' onChange={handlechange} placeholder='No of Faculty Visited'/>
+        <label>Faculty Count</label>
+        <input type='number' name='faculty_count' onChange={handlechange} placeholder='No of Faculty Visited'/>
+        </div>
+
+        <div className='form-group'>
+        <label>Event Coordinator</label>
+        <input type='text' name='event_coordinator' onChange={handlechange}/>
         </div>
         
         <div class="report-header">
     <h1 class="recent-Articles">Travels Details</h1>
     </div> 
 
+
+{/* ----------------------------------- */}
+    
+
         <div className='form-group'>
-        <label>Name of The Travel</label>
-        <input type='text' name='Name_of_travels' onChange={handlechange} placeholder='Travel Name'/>
+        <label>Name of The Travel 1</label>
+        <input type='text' name='name_of_the_travel_1' onChange={handlechange} placeholder='Travels Name'/>
         </div>
 
         <div className='form-group'>
-        <label>Registration No_1</label>
-        <input type='text' name='Registration_no_1' onChange={handlechange} placeholder='Reg.No of the Travel'/>
+        <label>Address of the Travel 1</label>
+        <input type='text' name='address_of_the_travel_1' onChange={handlechange} placeholder='Travels Address'/>
         </div>
 
         <div className='form-group'>
-        <label>Registration No_2</label>
-        <input type='text' name='Registration_no_2' onChange={handlechange} placeholder='Reg.No of the Travel'/>
+        <label>Bus No of the Travel 1</label>
+        <input type='text' name='bus_no_of_the_travel_1' onChange={handlechange} placeholder='Reg Number of the Vehicle'/>
+        </div>
+
+        
+        <div className='form-group'>
+        <label>Name of the Travel Operator 1</label>
+        <input type='text' name='operator_of_the_travel_1' onChange={handlechange} placeholder='Travel Operator Name'/>
         </div>
 
         <div className='form-group'>
-        <label>Registration No_3</label>
-        <input type='text' name='Registration_no_3' onChange={handlechange} placeholder='Reg.No of the Travel'/>
+        <label>Operator Contact Number 1</label>
+        <input type='text' name='operator_contact_of_the_travel_1' onChange={handlechange} placeholder='Contact Number'/>
+        </div>
+
+        {/* ---------------------------------- */}
+        
+        <div className='form-group'>
+        <label>Name of The Travel 2</label>
+        <input type='text' name='name_of_the_travel_2' onChange={handlechange} placeholder='Travel Name'/>
         </div>
 
         <div className='form-group'>
-        <label>Name of the Travel Operator_1</label>
-        <input type='text' name='Name_of_the_operator_1' onChange={handlechange} placeholder='Travel Operator Name'/>
+        <label>Address of the Travel 2</label>
+        <input type='text' name='address_of_the_travel_2' onChange={handlechange} placeholder='Travel Name'/>
         </div>
 
         <div className='form-group'>
-        <label>Name of the Travel Operator_2</label>
-        <input type='text' name='Name_of_the_operator_2' onChange={handlechange} placeholder='Travel Operator Name'/>
+        <label>Bus No of the Travel 2</label>
+        <input type='text' name='bus_no_of_the_travel_2' onChange={handlechange} placeholder='Reg Number of the Vehicle'/>
+        </div>
+
+        
+        <div className='form-group'>
+        <label>Name of the Travel Operator 2</label>
+        <input type='text' name='operator_of_the_travel_2' onChange={handlechange} placeholder='Travel Operator Name'/>
         </div>
 
         <div className='form-group'>
-        <label>Name of the Travel Operator_3</label>
-        <input type='text' name='Name_of_the_operator_3' onChange={handlechange} placeholder='Travel Operator Name'/>
+        <label>Operator Contact Number 2</label>
+        <input type='text' name='operator_contact_of_the_travel_2' onChange={handlechange} placeholder='Contact Number'/>
+        </div>
+
+        {/* --------------------------------- */}
+
+        <div className='form-group'>
+        <label>Name of The Travel 3</label>
+        <input type='text' name='name_of_the_travel_3' onChange={handlechange} placeholder='Travel Name'/>
         </div>
 
         <div className='form-group'>
-        <label>Contact Number_1</label>
-        <input type='text' name='Operator_contact_no_1' onChange={handlechange} placeholder='Contact Number'/>
+        <label>Address of the Travel 3</label>
+        <input type='text' name='address_of_the_travel_3' onChange={handlechange} placeholder='Travel Name'/>
         </div>
 
         <div className='form-group'>
-        <label>Contact Number_2</label>
-        <input type='text' name='Operator_contact_no_2' onChange={handlechange} placeholder='Contact Number'/>
+        <label>Bus No of the Travel 3</label>
+        <input type='text' name='bus_no_of_the_travel_3' onChange={handlechange} placeholder='Reg Number of the Vehicle'/>
+        </div>
+
+        
+        <div className='form-group'>
+        <label>Name of the Travel Operator 3</label>
+        <input type='text' name='operator_of_the_travel_3' onChange={handlechange} placeholder='Travel Operator Name'/>
         </div>
 
         <div className='form-group'>
-        <label>Contact Number_3</label>
-        <input type='text' name='Operator_contact_no_3' onChange={handlechange} placeholder='Contact Number'/>
+        <label>Operator Contact Number 3</label>
+        <input type='text' name='operator_contact_of_the_travel_3' onChange={handlechange} placeholder='Contact Number'/>
         </div>
-         
-         <div>
-                <label>Faculty Member</label>
-                <select>
-                   <option value="" > Name of the Faculty</option>
-                   <option value="" > Name of the Faculty</option>
-                   
-                </select>
-             </div>
 
-             <div>
+        {/* ------------------------------------------------ */}
+
+        <div className='form-group'>
+        <label>Faculty accompanied</label>
+        <select type='text' name='faculty_accompanied' onChange={handlechange}>
+        <option value="">Select faculty...</option>
+                    <option value="1"> Sridhar</option>
+                   <option value="2"> Pragadheesh</option> 
+        </select>
+        </div>
+        
+        <div className="form-group">
                 <label>Undertaking from Parents Collected for all Students</label>
-                <select>
+                <select name="undertaking_from_parents" onChange={handlechange}>
+                <option value="">Select yes or no...</option>
                    <option value="YES"> YES</option>
                    <option value="NO"> NO</option> 
                 </select>
              </div>
+
+             <div className="form-group">
+             <label htmlFor="acdyr_id">Academic Year:</label>
+      <select name="acdyr_id" className="form-group" onChange={handlechange}>
+                        <option value="">Select Academic Year</option>
+                        <option value="1"> 2023</option>
+                   <option value="2"> 2024</option>                            
+                        </select></div>
+
+                            <div className="form-group">
+      <label htmlFor="sem">Semester :</label>
+      <select name="sem_id" onChange={handlechange}>
+        <option value="0">Odd Sem</option>
+        <option value="1">Even Sem</option>
+      </select><br />      
+    </div>
+    
+
+        
+        
+         
+         
+
+             
 
    
      
@@ -236,7 +384,7 @@ const Ivadd=()=>{
     </div>
     
 
-    <h1 style={{color:'red'}}>Sent</h1>
+    <h1 style={{color:'red'}}>{info}</h1>
          
     <div className='row mt-5 justify-content-around'>
         <input type='button' onClick={callPropose} value="Send Proposal" className='col-3 btn btn-primary' />
