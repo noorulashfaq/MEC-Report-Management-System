@@ -13,7 +13,7 @@ router.use(cors())
 // Set up the storage for uploaded files
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'D:/React/Muthayammal/Updated-MEC-RMS/frontend/public/Project_Images'); 
+        cb(null, '/home/cse/Downloads/MEC/frontend/public/Project_Images'); 
       
 
     },
@@ -38,7 +38,7 @@ const storage = multer.diskStorage({
   //////pdf/////
   const storage1 = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'D:/React/Muthayammal/Updated-MEC-RMS/frontend/public/Pdf');
+        cb(null, '/home/cse/Downloads/MEC/frontend/public/Pdf');
     },
     filename: (req, file, cb) => {
         cb(null, file.originalname);

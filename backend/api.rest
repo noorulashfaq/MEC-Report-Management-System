@@ -33,7 +33,7 @@ Content-Type: application/json
 
 ####
 
-PUT http://10.167.1.2:1234/seminar/ecrCompletion/data_management_seminar/RPT5006
+PUT http://localhost:1234/seminar/ecrCompletion/data_management_seminar/5016
 Content-Type: application/json
 
 {
@@ -41,8 +41,8 @@ Content-Type: application/json
     "event_photo_2":"Blockchain2_05-11-2023_20-53-41.png"
 }
 
-###
-PUT http://10.167.1.2:1234/seminar/completionacknowledgelevel2/data_management_seminar/1/6000/5020
+##
+PUT http://localhost:1234/seminar/completionacknowledgelevel2/data_management_seminar/1/6000/5020
 
 
 ###
@@ -169,8 +169,8 @@ POST http://10.167.1.2:1234/login
 Content-Type: application/json
 
 {
-    "mail":"6004",
-    "pass":"arun123"
+    "id":"60CS03",
+    "pass":"vijaycse"
 }
 
 ###
