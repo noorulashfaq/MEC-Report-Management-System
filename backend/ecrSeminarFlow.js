@@ -4174,7 +4174,14 @@ route.get('/getAcdYrWithSubType/:tableName', async (req, res) => {
 });
 route.get('/data/:report_id/:table', (req, res) => {
     const report_id = req.params.report_id;
-    const sql =  `SELECT * FROM ${req.params.table} AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id where report_id=?`;
+    
+
+    const sql =  `SELECT * FROM ${req.params.table} AS seminar INNER JOIN data_faculties AS faculties
+    ON seminar.coordinator_emp_id = faculties.faculty_id INNER JOIN predefined_designation AS designation
+    ON faculties.faculty_desig = designation.designation_id
+    INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
+    INNER JOIN predefined_academic_year AS acd ON seminar.acdyr_id=acd.acd_yr_id
+  INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id where report_id=?`;
     
   base.query(sql,[report_id], (err, results) => {
       if (err) throw err;

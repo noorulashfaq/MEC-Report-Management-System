@@ -49,7 +49,7 @@ export const NPTEL=()=>{
     
     const callPropose=async()=>{
         try{
-            await axios.post(`http://10.167.1.2:1234/newrecord`,Symposium)
+            await axios.post(`http://localhost:1234/newrecord`,Symposium)
             }
             catch(err){
               alert("Error in axios")
@@ -203,7 +203,7 @@ export const Online=()=>{
     
     const callPropose=async()=>{
         try{
-            await axios.post(`http://10.167.1.2:1234/newrecord`,Symposium)
+            await axios.post(`http://localhost:1234/newrecord`,Symposium)
             }
             catch(err){
               alert("Error in axios")
@@ -362,7 +362,7 @@ export const TechTalk1=()=>{
         
         const callPropose=async()=>{
             try{
-                await axios.post(`http://10.167.1.2:1234/newrecord`,Symposium)
+                await axios.post(`http://localhost:1234/newrecord`,Symposium)
                 }
                 catch(err){
                   alert("Error in axios")
@@ -496,7 +496,7 @@ export const TechTalk1=()=>{
         
         const callPropose=async()=>{
             try{
-                await axios.post(`http://10.167.1.2:1234/newrecord`,Symposium)
+                await axios.post(`http://localhost:1234/newrecord`,Symposium)
                 }
                 catch(err){
                   alert("Error in axios")
@@ -645,7 +645,7 @@ export const Internship=()=>{
     
     const callPropose=async()=>{
         try{
-            await axios.post(`http://10.167.1.2:1234/newrecord`,Symposium)
+            await axios.post(`http://localhost:1234/newrecord`,Symposium)
             }
             catch(err){
               alert("Error in axios")
@@ -808,7 +808,7 @@ export const VAC=()=>{
     
     const callPropose=async()=>{
         try{
-            await axios.post(`http://10.167.1.2:1234/newrecord`,Symposium)
+            await axios.post(`http://localhost:1234/newrecord`,Symposium)
             }
             catch(err){
               alert("Error in axios")
@@ -941,7 +941,7 @@ export const TechTalk2=()=>{
     
     const callPropose=async()=>{
         try{
-            await axios.post(`http://10.167.1.2:1234/newrecord`,Symposium)
+            await axios.post(`http://localhost:1234/newrecord`,Symposium)
             }
             catch(err){
               alert("Error in axios")

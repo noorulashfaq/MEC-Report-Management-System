@@ -47,7 +47,7 @@ console.log(finalArr)
 
 const CheckRollWithDb=async(roll)=>{
 try{
- const temp=await axios.get(`http://10.167.1.2:1234/seminar/compare/${roll}`)
+ const temp=await axios.get(`http://localhost:1234/seminar/compare/${roll}`)
  if((temp.data.results[0].number)!=0){
  if(!(finalArr.includes(roll))){
  setFinalArr(prevArr => [
@@ -73,7 +73,7 @@ try{
  label: val.faculty_id+'-'+val.faculty_name+'-'+val.dept,
  }));
 
- axios.get('http://10.167.1.2:1234/seminar/find')
+ axios.get('http://localhost:1234/seminar/find')
  .then((response) => {
  // console.log(response);
  setOptions(response.data.rows);
@@ -158,10 +158,12 @@ try{
  try{
  const report=JSON.parse(sessionStorage.getItem("report_id"))
  setNewFileName(report.event_title);
+ 
 //  alert(report.event_title)
  const temp=await onTable(report.report_id,report.event_name)
  
  setData(temp)
+ 
  
  
  }
@@ -244,12 +246,12 @@ try{
  const dateTimeString = `${dd}-${mm}-${yyyy}_${hh}-${min}-${ss}`;
   // Maximum value for the random number
  let random =Math.random()*Math.random()*1;
- const name1=newFileName+'1_'+dateTimeString+'_'+random+'.png';
- const name2=newFileName+'2_'+dateTimeString+'_'+random+'.png';
- const name3=newFileName+'3_'+dateTimeString+'_'+random+'.png';
- const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
- const name5=newFileName+'5_'+dateTimeString+'_'+random+'.png';
- const name6 = newFileName + '_Pdf_' + dateTimeString + '_' + random + '.pdf';
+ const name1=newFileName+'1_'+dateTimeString+'_'+random;
+ const name2=newFileName+'2_'+dateTimeString+'_'+random;
+ const name3=newFileName+'3_'+dateTimeString+'_'+random;
+ const name4=newFileName+'4_'+dateTimeString+'_'+random;
+ const name5=newFileName+'5_'+dateTimeString+'_'+random;
+ const name6 = newFileName + '_Pdf_' + dateTimeString + '_' + random+'.pdf';
  
  setFormData((old)=>{
  return{
@@ -321,15 +323,16 @@ try{
  
  
  const handleUpload1 = async() => {
+  
 
  if (selectedFile1) {
  const formData1 = new FormData();
  
 
  
- formData1.append('file',selectedFile1,formData.event_photo_1 );
+ formData1.append('file',selectedFile1,formData.event_photo_1.concat('.jpg') );
  
- fetch('http://10.167.1.2:1234/ecr/upload1', {
+ fetch('http://localhost:1234/ecr/upload1', {
  method: 'POST',
  body: formData1,
  })
@@ -346,10 +349,10 @@ try{
  if (selectedFile2 ) {
  const formData2 = new FormData();
  
- formData2.append('file', selectedFile2,formData.event_photo_2 );
+ formData2.append('file', selectedFile2,formData.event_photo_2.concat('.jpg') );
  
  
- fetch('http://10.167.1.2:1234/ecr/upload1', {
+ fetch('http://localhost:1234/ecr/upload1', {
  method: 'POST',
  body: formData2,
  })
@@ -367,9 +370,9 @@ try{
  const formData3 = new FormData();
  
 
- formData3.append('file', selectedFile3,formData.event_photo_3 );
+ formData3.append('file', selectedFile3,formData.event_photo_3.concat('.jpg') );
 
- fetch('http://10.167.1.2:1234/ecr/upload1', {
+ fetch('http://localhost:1234/ecr/upload1', {
  method: 'POST',
  body: formData3,
  })
@@ -387,8 +390,8 @@ try{
  const formData4 = new FormData();
  
 
- formData4.append('file', selectedFile4,formData.event_photo_4 );
- fetch('http://10.167.1.2:1234/ecr/upload1', {
+ formData4.append('file', selectedFile4,formData.event_photo_4.concat('.jpg') );
+ fetch('http://localhost:1234/ecr/upload1', {
  method: 'POST',
  body: formData4,
  })
@@ -405,8 +408,8 @@ try{
 
  if (selectedFile5 ) {
  const formData5 = new FormData();
- formData5.append('file', selectedFile5,formData.event_photo_5 );
- fetch('http://10.167.1.2:1234/ecr/upload1', {
+ formData5.append('file', selectedFile5,formData.event_photo_5.concat('.jpg'));
+ fetch('http://localhost:1234/ecr/upload1', {
  method: 'POST',
  body: formData5,
  })
@@ -434,7 +437,7 @@ try{
  
 
 
-  fetch('http://10.167.1.2:1234/ecr/uploadPdf', {
+  fetch('http://localhost:1234/ecr/uploadPdf', {
     method: 'POST',
     body: formData6,
   })
@@ -465,12 +468,13 @@ try{
 try{
   // alert(Data.event_name)
   const temp = await onComplete(formData,Data.report_id,Data.event_name)
-
+  window. location. reload(false); 
   // alert(temp.message)
   }
   catch(err){
   alert("Error in entering File Name")
   }
+  
 
  }
  // const handleUpload2 = () => {
@@ -498,7 +502,7 @@ try{
  
  // event_photo_2: name2,
  // });
- // fetch('http://10.167.1.2:1234/ecr/upload1', {
+ // fetch('http://localhost:1234/ecr/upload1', {
  // method: 'POST',
  // body: formData2,
  // })
@@ -538,7 +542,7 @@ try{
  // event_photo_3: name3,
  // })
 
- // fetch('http://10.167.1.2:1234/ecr/upload1', {
+ // fetch('http://localhost:1234/ecr/upload1', {
  // method: 'POST',
  // body: formData3,
  // })
@@ -577,7 +581,7 @@ try{
 // ...formData,
 // event_photo_4: name4,
 // })
-// fetch('http://10.167.1.2:1234/ecr/upload1', {
+// fetch('http://localhost:1234/ecr/upload1', {
 // method: 'POST',
 // body: formData4,
 // })
@@ -619,7 +623,7 @@ try{
  
  // event_photo_5: name5,
  // });
- // fetch('http://10.167.1.2:1234/ecr/upload1', {
+ // fetch('http://localhost:1234/ecr/upload1', {
  // method: 'POST',
  // body: formData5,
  // })
@@ -697,7 +701,7 @@ console.log(formData);
  <div className='form'>
   {Data.event_description!=""&&
  <div>
-     
+     <h6 style={{color:'red'}}>*Upload only .jpg images</h6>
  
  <label htmlFor="event_photo_1">Photo 1: (To be displayed on the front page)</label>
 <input
@@ -769,7 +773,7 @@ console.log(formData);
  type="button"
  onClick={pdfUpload}
  id="event"
- value="Submit"
+ value="Upload Files"
  style={{
  backgroundColor: '#4CAF50', 
  color: 'white', // Set your desired text color
