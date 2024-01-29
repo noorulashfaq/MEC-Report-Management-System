@@ -40,11 +40,16 @@ export const Login=()=>{
 
     const onLoginClicked=async()=>{
         // console.log(JSON.stringify(logger))
+        try{
         const temp=await onLogin(logger)
         if(temp.faculty_id){
             sessionStorage.setItem("person",JSON.stringify(temp))
             window.location.assign("/")
         }
+      }
+      catch(e){
+        console.log("password Wrong")
+      }
     }
     const [showPassword, setShowPassword] = useState(false);
 

@@ -2116,6 +2116,18 @@ route.put('/ecrCompletion/:tableName/:report_id',async(req,res)=>{
                 res.status(500).json({error:err.message})
                 return
             }
+            res.status(200).json({message:"Files Stored in the server"})
+        })
+})
+route.put('/ecrCompletion1/:tableName/:report_id',async(req,res)=>{
+    // receive the request from client
+    const{event_po,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date}=req.body
+    sql=`update ${req.params.tableName} set  event_po=?,  event_date_from=?, event_date_to=?, event_organizing_secretary=?, event_time=?, event_description=?, event_budget_utilized=? , completion_date=? where report_id=? and final_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0`
+        base.query(sql,[event_po,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date,req.params.report_id],(err,ack)=>{
+            if(err){
+                res.status(500).json({error:err.message})
+                return
+            }
             res.status(200).json({message:"Workshop Completion Report has sent"})
         })
 })

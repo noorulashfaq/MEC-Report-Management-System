@@ -19,7 +19,7 @@ export const Add=()=>{
         fillPorposals()
        
      
-      axios.get('http://localhost:1234/seminar/find')
+      axios.get('http://10.167.1.2:1234/seminar/find')
         .then((response) => {
         //   console.log(response);
           setOptions(response.data.rows);

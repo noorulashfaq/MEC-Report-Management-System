@@ -82,7 +82,7 @@ export const ViewSeminar = () => {
 
     const [year, setYear] = useState([])
     const Acad = async () => {
-        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -107,7 +107,7 @@ export const ViewSeminar = () => {
     let [facs, setFacs] = useState([])
 
     const Faculty = async (fid) => {
-        const t = await axios.get(`http://localhost:1234/ecrFilter/getFacultiesList/${fid}
+        const t = await axios.get(`http://10.167.1.2:1234/ecrFilter/getFacultiesList/${fid}
             `)
         // alert(t)
         // alert(JSON.stringify(t.data.result))
@@ -238,7 +238,7 @@ export const ViewSeminar = () => {
     console.log(filter)
 
     const GetCurrAcd = async () => {
-        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         const temp = t.data.result
         let valueYr = 0
@@ -270,7 +270,7 @@ export const ViewSeminar = () => {
         // alert(JSON.stringify(filter))
         try {
             // alert("hi")
-            const filteredRecords = await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001", filter)
+            const filteredRecords = await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001", filter)
             // alert(filteredRecords.data)
             setAllvalues(filteredRecords.data)
         }
@@ -303,7 +303,7 @@ export const ViewSeminar = () => {
         try {
 
 
-            const res = await axios.get(`http://localhost:1234/seminar/data/${id}`);
+            const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}`);
             // console.log("hai");
             const data = res.data;
 
@@ -688,7 +688,7 @@ newPdf.setFontSize(12);
         try {
 
 
-            const res = await axios.get(`http://localhost:1234/seminar/data/${id1}`);
+            const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}`);
             // console.log("hai");
             const data = res.data;
 
