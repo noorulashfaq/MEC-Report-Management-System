@@ -11,7 +11,7 @@ import PDFGenerator from "./pdfGenerator"
 import SeSTAadd from "./Sesta/SestaAdd"
 import SeSTAbuttons from "./Sesta/SestaButtons"
 import { Intership, NptelCertification, OnlineCertification, StudentTechTalks, StudentsParticipation, ValueAdded } from "./Sesta/SestaFacultyView"
-
+import { HodECRPage } from "./HodECRPage"
 
 
 export const Dashboard=()=>{
@@ -41,7 +41,7 @@ export const Dashboard=()=>{
                 :
                 (hodLog) ?
                 <>
-                    <HodDashboard/>
+                <HodDashboard/>
                 </>
                 :
                 <>
