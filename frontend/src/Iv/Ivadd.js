@@ -9,9 +9,28 @@ import { useNavigate } from "react-router-dom";
 
 const Ivadd=()=>{
 
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [option, setOptions] = useState([]);
+
+  useEffect(()=>{
+    axios.get('http://localhost:1234/seminar/find')
+        .then((response) => {
+        //   console.log(response);
+          setOptions(response.data.rows);
+        })
+        .catch((error) => {
+          console.error('Error fetching options:', error);
+        });
+  },[])
+
     let[info,setInfo]=useState("")
 
-    
+    const options = option.map((val, key) => ({
+      value: val.faculty_id+'-'+val.faculty_name,
+      label: val.faculty_id+'-'+val.faculty_name+'-'+val.dept,
+    }));
+
+    const logged=JSON.parse(sessionStorage.getItem("person"))
 
     // ==========================
 
@@ -65,6 +84,68 @@ const Ivadd=()=>{
      console.log(iv)
      const navigate = useNavigate()
      
+     const[facid,setFacid]=useState([])
+
+     const infoCollect=(eve)=>{
+      let updatedFacidString = facid;
+      for (var i = 0; i < eve.length; i++) {
+        const valueToAdd = eve[i].value;
+    
+        if (!updatedFacidString.includes(valueToAdd)) {
+          if (updatedFacidString && updatedFacidString.length>1) {
+
+            updatedFacidString += ','; // Add a comma as a separator
+          }
+          updatedFacidString += valueToAdd;
+          // alert("setFacid works");
+        }
+      }
+      setFacid(updatedFacidString);
+      setSelectedOptions(eve);
+    
+      setIv((old) => {
+        return {
+          ...old,
+          event_coordinator: updatedFacidString
+        }
+      })
+        setIv((old) => {
+          return {
+            ...old,
+            dept_id: logged.dept_id
+          }
+        })
+     }
+
+     const[facl,setFacl]=useState([])
+     const [selectOptions, setSelectOptions] = useState([]);
+
+     const informCollect=(eve)=>{
+      let updatedString = facl;
+      for (var i = 0; i < eve.length; i++) {
+        const valueToAdd = eve[i].value;
+    
+        if (!updatedString.includes(valueToAdd)) {
+          if (updatedString && updatedString.length>1) {
+
+            updatedString += ','; // Add a comma as a separator
+          }
+          updatedString += valueToAdd;
+          // alert("setFacid works");
+        }
+      }
+      setFacl(updatedString);
+      setSelectOptions(eve);
+    
+      setIv((old) => {
+        return {
+          ...old,
+          faculty_accompanied: updatedString
+        }
+      })
+     }
+
+
      const handlechange=(eve)=>{
         const{name,value}=eve.target
         setIv((old) => {
@@ -111,6 +192,21 @@ const Ivadd=()=>{
         window.location.assign("/iv")
     };
 
+    const[year,setYear]=useState([])
+
+    const Acad=async()=>{
+      let sid=3186;
+      try{
+      const t = await Academic(sid)
+      // alert(t)
+      setYear(t)
+      }
+      catch(err){
+          // alert("Not Found")
+      }
+      
+  }
+
         console.log(iv)
 
 
@@ -133,24 +229,30 @@ const Ivadd=()=>{
 
 
 
-
+ <div class="report-header">
+    <h1 class="recent-Articles">Details of the Industry</h1>
+    </div> 
 
 <div className="form-group">
-        <label>Details of the Industry to be Visited with Address 1</label>
+        <label>Name of the Industry 1 with Address:</label>
         <input type='text' name="details_of_the_industry_1" onChange={handlechange} placeholder='Industry Details 1'/>
      </div>
 
      
 <div className="form-group">
-        <label>Details of the Industry to be Visited with Address 2</label>
+        <label>Name of the Industry 2 with Address (Optional):</label>
         <input type='text' name="details_of_the_industry_2" onChange={handlechange} placeholder='Industry Details 2'/>
      </div>
 
 
      <div className="form-group">
-        <label>Details of the Industry to be Visited with Address 3</label>
+        <label>Name of the Industry 3 with Address (Optional):</label>
         <input  type='text' name="details_of_the_industry_3" onChange={handlechange} placeholder='Industry Details 3'/>
      </div>
+
+     <div class="report-header">
+    <h1 class="recent-Articles">Date of the Visit</h1>
+    </div> 
 
      <div className='form-group'>
         <label>Date of the Industrial Visit Planned from</label>
@@ -164,8 +266,12 @@ const Ivadd=()=>{
 
         <div class="report-header">
     <h1 class="recent-Articles">Contact Person of the Industry</h1>
-    </div> 
- 
+    </div>
+
+    <div>
+        <label style={{fontSize:"20px",color:"green"}}>Details of the Contact Person 1</label>
+        </div>
+
     <div className='form-group'>
         <label>Name of the Contact Person 1</label>
         <input type='text' name='name_of_the_contact_person_1' onChange={handlechange} placeholder='Name'/>
@@ -186,6 +292,10 @@ const Ivadd=()=>{
         <input type='email' name='email_of_the_contact_person_1'onChange={handlechange} placeholder='Mail Id'/>
         </div>
 
+        <div>
+        <label style={{fontSize:"20px",color:"green"}}>Details of the Contact Person 2 (Optional)</label>
+        </div>
+
         <div className='form-group'>
         <label>Name of the Contact Person 2</label>
         <input type='text' name='name_of_the_contact_person_2' onChange={handlechange} placeholder='Name'/>
@@ -202,10 +312,14 @@ const Ivadd=()=>{
         </div>
 
         <div className='form-group'>
-        <label>Mail Id of the Contat person 2 </label>
+        <label>Mail Id of the Contact person 2 </label>
         <input type='email' name='email_of_the_contact_person_2'onChange={handlechange} placeholder='Mail Id'/>
         </div>
         
+        <div>
+        <label style={{fontSize:"20px",color:"green"}}>Details of the Contact Person 3 (Optional)</label>
+        </div>
+
         <div className='form-group'>
         <label>Name of the Contact Person 3</label>
         <input type='text' name='name_of_the_contact_person_3' onChange={handlechange} placeholder='Name'/>
@@ -222,7 +336,7 @@ const Ivadd=()=>{
         </div>
 
         <div className='form-group'>
-        <label>Mail Id of the Contat person 3</label>
+        <label>Mail Id of the Contact person 3</label>
         <input type='email' name='email_of_the_contact_person_3'onChange={handlechange} placeholder='Mail Id'/>
         </div>
 
@@ -269,9 +383,9 @@ const Ivadd=()=>{
         isMulti
         id="event_coordinator"
         name="event_coordinator"
-        // options={options}
-        // value={selectedOptions}
-        // onChange={handleChange}
+        options={options}
+        value={selectedOptions}
+        onChange={infoCollect}
         isSearchable
         placeholder="Select options..."
         closeMenuOnSelect={false}
@@ -279,12 +393,14 @@ const Ivadd=()=>{
 
         
         <div class="report-header">
-    <h1 class="recent-Articles">Travels Details</h1>
+    <h1 class="recent-Articles">Details of the Travels</h1>
     </div> 
 
 
 {/* ----------------------------------- */}
-    
+<div>
+        <label style={{fontSize:"20px",color:"green"}}>Travels 1</label>
+        </div>
 
         <div className='form-group'>
         <label>Name of The Travel 1</label>
@@ -309,11 +425,15 @@ const Ivadd=()=>{
 
         <div className='form-group'>
         <label>Operator Contact Number 1</label>
-        <input type='text' name='operator_contact_of_the_travel_1' onChange={handlechange} placeholder='Contact Number'/>
+        <input type='number' name='operator_contact_of_the_travel_1' onChange={handlechange} placeholder='Contact Number'/>
         </div>
 
         {/* ---------------------------------- */}
         
+        <div>
+        <label style={{fontSize:"20px",color:"green"}}>Travels 2</label>
+        </div>
+
         <div className='form-group'>
         <label>Name of The Travel 2</label>
         <input type='text' name='name_of_the_travel_2' onChange={handlechange} placeholder='Travel Name'/>
@@ -321,7 +441,7 @@ const Ivadd=()=>{
 
         <div className='form-group'>
         <label>Address of the Travel 2</label>
-        <input type='text' name='address_of_the_travel_2' onChange={handlechange} placeholder='Travel Name'/>
+        <input type='text' name='address_of_the_travel_2' onChange={handlechange} placeholder='Travel Address'/>
         </div>
 
         <div className='form-group'>
@@ -337,10 +457,14 @@ const Ivadd=()=>{
 
         <div className='form-group'>
         <label>Operator Contact Number 2</label>
-        <input type='text' name='operator_contact_of_the_travel_2' onChange={handlechange} placeholder='Contact Number'/>
+        <input type='number' name='operator_contact_of_the_travel_2' onChange={handlechange} placeholder='Contact Number'/>
         </div>
 
         {/* --------------------------------- */}
+
+        <div>
+        <label style={{fontSize:"20px",color:"green"}}>Travels 3</label>
+        </div>
 
         <div className='form-group'>
         <label>Name of The Travel 3</label>
@@ -349,7 +473,7 @@ const Ivadd=()=>{
 
         <div className='form-group'>
         <label>Address of the Travel 3</label>
-        <input type='text' name='address_of_the_travel_3' onChange={handlechange} placeholder='Travel Name'/>
+        <input type='text' name='address_of_the_travel_3' onChange={handlechange} placeholder='Travel Address'/>
         </div>
 
         <div className='form-group'>
@@ -365,29 +489,16 @@ const Ivadd=()=>{
 
         <div className='form-group'>
         <label>Operator Contact Number 3</label>
-        <input type='text' name='operator_contact_of_the_travel_3' onChange={handlechange} placeholder='Contact Number'/>
+        <input type='number' name='operator_contact_of_the_travel_3' onChange={handlechange} placeholder='Contact Number'/>
         </div>
 
         {/* ------------------------------------------------ */}
 
-        <div className='form-group'>
-        <label>Faculty accompanied</label>
-        <select type='text' name='faculty_accompanied' onChange={handlechange}>
-        <option value="">Select faculty...</option>
-                    <option value="1"> Sridhar</option>
-                   <option value="2"> Pragadheesh</option> 
-        </select>
-        </div>
-        
-        <div className="form-group">
-                <label>Undertaking from Parents Collected for all Students</label>
-                <select name="undertaking_from_parents" onChange={handlechange}>
-                <option value="">Select yes or no...</option>
-                   <option value="YES"> YES</option>
-                   <option value="NO"> NO</option> 
-                </select>
-             </div>
+        <div class="report-header">
+    <h1 class="recent-Articles">Academic Details</h1>
+    </div> 
 
+        
              <div className="form-group">
              <label htmlFor="acdyr_id">Academic Year:</label>
       <select name="acdyr_id" className="form-group" onChange={handlechange}>
@@ -431,6 +542,41 @@ const Ivadd=()=>{
       </select><br/>
     </div>        
         
+{/* 
+    <div className='form-group'>
+        <label>Faculties accompanying</label>
+        <select type='text' name='faculty_accompanied' onChange={handlechange}>
+        <option value="">Select Faculty...</option>
+                    <option value="1"> Sridhar</option>
+                   <option value="2"> Pragadheesh</option> 
+        </select>
+        </div> */}
+
+        
+<label for="faculty_accompanied">Faculties Accompanying: </label>
+ <Select
+ className="form-group"
+        isMulti
+        id="faculty_accompanied"
+        name="faculty_accompanied"
+        options={options}
+        value={selectOptions}
+        onChange={informCollect}
+        isSearchable
+        placeholder="Select options..."
+        closeMenuOnSelect={false}
+      />
+
+        
+        <div className="form-group">
+                <label>Undertaking from Parents Collected for all Students</label>
+                <select name="undertaking_from_parents" onChange={handlechange}>
+                <option value="">Select Yes or No...</option>
+                   <option value="YES"> YES</option>
+                   <option value="NO"> NO</option> 
+                </select>
+             </div>
+
          
          
 
@@ -449,6 +595,7 @@ const Ivadd=()=>{
         <input type='button' onClick={callPropose} value="Send Proposal" className='col-3 btn btn-primary' />
                         <input type='button' onClick={()=>{
                                     window.location.assign("/ivproposal")
+
 
                         }}
         //                 onClick={()=>{

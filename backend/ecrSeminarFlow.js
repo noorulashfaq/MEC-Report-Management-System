@@ -352,7 +352,7 @@ route.get('/loadforlevel1/:deptId/:empId', async (req, res) => {
 
         let resultArr = [];
         for (let i = 0; i < rows.length; i++) {
-            sql = `select * from ${rows[i].data_table_name}  AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id   where report_proposal_status=0 and final_proposal_status=0 and lvl_1_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0`;
+            sql = `select * from ${rows[i].data_table_name} AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id   where report_proposal_status=0 and final_proposal_status=0 and lvl_1_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0`;
 
             const resultRows = await new Promise((resolve, reject) => {
                 base.query(sql, (err, rows) => {
@@ -395,11 +395,11 @@ route.get('/loadforlevel1/:deptId/:empId', async (req, res) => {
             // res.status(200).json([]);
             return;
         }
+        console.log(rows)
 
         let resultArr = [];
         for (let i = 0; i < rows.length; i++) {
             sql = `select * from ${rows[i].data_table_name}  AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id  where report_proposal_status=0 and final_proposal_status=0 and lvl_1_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`;
-
             const resultRows = await new Promise((resolve, reject) => {
                 base.query(sql, (err, rows) => {
                     if (err) {
@@ -412,10 +412,10 @@ route.get('/loadforlevel1/:deptId/:empId', async (req, res) => {
             });
 
             if (resultRows.length > 0) {
-                resultArr.push({resultRows});
+                resultArr.push(resultRows);
             }
         }
-
+        // console.log(resultArr)
         res.status(200).json({resultArr});
     } catch (error) {
         console.error("Error:", error);
@@ -1939,7 +1939,7 @@ route.get('/loadforlevel5/:deptId/:empId', async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
     }else{
-        let sql = `select report_lvl5, data_table_name from data_approval where dept_id=${dId} and report_lvl5 like concat("%",${eId},"%")`;
+        let sql = `select report_lvl5, data_table_name from data_approval where dept_id=? and report_lvl5 like ?`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -2279,7 +2279,7 @@ route.put('/completionacknowledgelevel1/:tableName/:deptId/:empId/:report_id',as
             res.status(500).json({error:err.message})
             return
         }
-        else if(rows.length==0){
+        else if(rows.length==0){    
             res.status(201).json({error:"No matches found"})
             return
         }

@@ -525,8 +525,6 @@ export const ViewSeminar = () => {
             let data;
             // alert(report_proposal_status);
             if (report_proposal_status === 0) {
-
-
                 data = await approveLevel1(name, dept_id, log.faculty_id, report_id)
             }
             else if (report_proposal_status === 1) {

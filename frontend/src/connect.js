@@ -56,7 +56,7 @@ export const loadForLevel1=async(dept,emp)=>{
     // alert(dept)
     try{
     const receive = await axios.get(`${url}/seminar/loadForLevel1/${dept}/${emp}`)
-    // alert(JSON.stringify(receive.data.resultArr))
+    console.log(receive.data)
     return receive.data.resultArr[0].resultRows
     }
     catch(e){

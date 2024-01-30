@@ -48,7 +48,7 @@ Content-Type: application/json
 {
     "acdyr_id":"3",
     "dept_id":"1",
-    "emp_id":"6004",
+    "emp_id":"60CS04,60CS02",
     "major_id":null,
     "sem_id":"1",
     "sub_id":null

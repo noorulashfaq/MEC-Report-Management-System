@@ -8,7 +8,7 @@ const db = mysql.createConnection({
     "password":"",
     "database":"mec_report_management",
     "connectTimeout":3000000
-    // "host":"localhost",
+    // "host":"10.167.1.2",
     // "port":3306,
     // "user":"testuser",
     // "password":"testuser",
