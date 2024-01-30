@@ -9,13 +9,9 @@ import { useNavigate } from "react-router-dom";
 
 const Ivadd=()=>{
 
-    const[info,setInfo]=useState("")
+    let[info,setInfo]=useState("")
 
-    const callPropose=async(iv)=>{
-        info = await axios.post(`http://localhost:1234/iv/proposeIV`,iv)
-        window.location.assign("/iv")
-
-    }
+    
 
     // ==========================
 
@@ -45,55 +41,83 @@ const Ivadd=()=>{
     "event_coordinator":"" ,
     "name_of_the_travel_1":"" , 
     "address_of_the_travel_1":"", 
-    "bus_no_of_the_travel_1":0 ,
+    "bus_no_of_the_travel_1":"",
     "operator_of_the_travel_1":"", 
     "operator_contact_of_the_travel_1":0, 
     "name_of_the_travel_2":"",
     "address_of_the_travel_2":"", 
-    "bus_no_of_the_travel_2":0 ,
+    "bus_no_of_the_travel_2":"" ,
     "operator_of_the_travel_2":"",
     "operator_contact_of_the_travel_2" :0, 
     "name_of_the_travel_3":"" , 
     "address_of_the_travel_3" :"", 
-    "bus_no_of_the_travel_3":0, 
+    "bus_no_of_the_travel_3":"", 
     "operator_of_the_travel_3":"", 
     "operator_contact_of_the_travel_3":0, 
     "faculty_accompanied" :"",
     "undertaking_from_parents": "" ,
     "acdyr_id":null,
-    "sem_id":null
+    "sem_id":null,
+    "sem_of_students_visited":"",
+    "year_of_students_visited":"",
+    "proposal_date":""
      })
      console.log(iv)
      const navigate = useNavigate()
-     const handlechange=(e)=>{
-        setIv((prev)=>({
-            ...prev,
-            [e.target.name]:e.target.value
-        }))
-     }
-     console.log(iv)
-     const handleClick = async (e)=>{
-        e.preventDefault()
-        try{
-           alert(JSON.stringify(iv))
-           await axios.post("http://localhost:1234/iv/insert",iv)
-           // alert(JSON.stringify(t.data.records))
      
-           navigate("/")
-        }catch(err){
+     const handlechange=(eve)=>{
+        const{name,value}=eve.target
+        setIv((old) => {
+            const date = new Date(); // Replace with your actual date value
+            const currentDate = format(date, 'dd-MM-yyyy');
+            return {
+              ...old,
+              proposal_date: currentDate
+            }
+          })
+        setIv((old)=>{
+            if(name==="phone_no_of_the_contact_person_1"||name==="phone_no_of_the_contact_person_2"||name==="phone_no_of_the_contact_person_3"||name==="phone_no_of_the_inn"||name==="students_count"||name==="faculty_count"||name==="operator_contact_of_the_travel_1"||name==="operator_contact_of_the_travel_2"||name==="operator_contact_of_the_travel_3"||name==="acdyr_id"||name==="sem_id"){
+                return{
+                    ...old,
+                    [name]:parseInt(value)
+                }
+            }
+            else{
+                return{
+                    ...old,
+                    [name]:value
+                }
+            }
+        })
+    }
+    const callPropose = async() => {
+        const jsonData = JSON.stringify(iv, (key, value) => {
+          if (key === '__reactInternalInstance$zw213f') {
+            // Ignore internal React properties
+            return undefined;
+          } else {
+            return value;
+          }
+        });
+        const data=JSON.parse(jsonData);
+        console.log(typeof(data))
+        try{
+            console.log(data)
+            info = await axios.post(`http://localhost:1234/iv/proposeIV`,data)
+        }
+        catch(err){
             console.log(err)
         }
-     }
+        window.location.assign("/iv")
+    };
+
+        console.log(iv)
+
 
     return(
         <>
-         <body>
+        <body>
         <div class="main" >
-
-            
-         
-
-
 <div className="report-container" style={{justifyContent:'center'}}>
     <div class="report-header">
         <h1 class="recent-Articles" style={{backgroundColor:"transparent"}}>EVENT PROPOSAL</h1>
@@ -238,10 +262,21 @@ const Ivadd=()=>{
         <input type='number' name='faculty_count' onChange={handlechange} placeholder='No of Faculty Visited'/>
         </div>
 
-        <div className='form-group'>
-        <label>Event Coordinator</label>
-        <input type='text' name='event_coordinator' onChange={handlechange}/>
-        </div>
+        
+<label for="event_coordinator">Event Co-ordinator : </label>
+ <Select
+ className="form-group"
+        isMulti
+        id="event_coordinator"
+        name="event_coordinator"
+        // options={options}
+        // value={selectedOptions}
+        // onChange={handleChange}
+        isSearchable
+        placeholder="Select options..."
+        closeMenuOnSelect={false}
+      />
+
         
         <div class="report-header">
     <h1 class="recent-Articles">Travels Details</h1>
@@ -369,8 +404,32 @@ const Ivadd=()=>{
       </select><br />      
     </div>
     
+    <div className="form-group">
+      <label htmlFor="sem">Semester of student studying :</label>
+      <select name="sem_of_students_visited" onChange={handlechange}>
+        <option value="">Select semester...</option>
+        <option value="I">I</option>
+        <option value="II">II</option>
+        <option value="III">III</option>
+        <option value="IV">IV</option>
+        <option value="V">V</option>
+        <option value="VI">VI</option>
+        <option value="VII">VII</option>
+        <option value="VIII">VIII</option>
+      </select><br/>
+    </div>
 
-        
+    
+    <div className="form-group">
+      <label htmlFor="year">Year of student studying :</label>
+      <select name="year_of_students_visited" onChange={handlechange}>
+        <option value="">Select year...</option>
+        <option value="I">I</option>
+        <option value="II">II</option>
+        <option value="III">III</option>
+        <option value="IV">IV</option>        
+      </select><br/>
+    </div>        
         
          
          

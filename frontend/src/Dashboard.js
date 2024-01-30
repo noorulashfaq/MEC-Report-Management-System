@@ -13,6 +13,7 @@ import SeSTAbuttons from "./Sesta/SestaButtons"
 import { Intership, NptelCertification, OnlineCertification, StudentTechTalks, StudentsParticipation, ValueAdded } from "./Sesta/SestaFacultyView"
 import Iv from "./Iv/Iv"
 import Ivadd from "./Iv/Ivadd"
+import IvInput from "./Iv/IvInput"
 
 
 
@@ -74,6 +75,7 @@ export const Dashboard=()=>{
                         {/* Iv routers */}
                             <Route path="/iv" element={<Iv/>}/>
                             <Route path="/ivproposal" element={<Ivadd/>}/>
+                            <Route path="/ivinput" element={<IvInput/>}/>
                         </Routes>
                     </BrowserRouter>
                 </>

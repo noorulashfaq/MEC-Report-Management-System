@@ -28,26 +28,29 @@ Content-Type: application/json
     "event_coordinator":"mmhbjg" ,
     "name_of_the_travel_1":"sai" , 
     "address_of_the_travel_1":"hccWSYDTGTDV", 
-    "bus_no_of_the_travel_1":345 ,
+    "bus_no_of_the_travel_1":"345" ,
     "operator_of_the_travel_1":"tsrda", 
     "operator_contact_of_the_travel_1":6590124578, 
     "name_of_the_travel_2":"sastha",
     "address_of_the_travel_2":"GDVHJVSG", 
-    "bus_no_of_the_travel_2":54 ,
+    "bus_no_of_the_travel_2":"54" ,
     "operator_of_the_travel_2":"bfc",
     "operator_contact_of_the_travel_2" :6734096543, 
     "name_of_the_travel_3":"hgffet" , 
     "address_of_the_travel_3" :"jgvxf", 
-    "bus_no_of_the_travel_3":643, 
+    "bus_no_of_the_travel_3":"643", 
     "operator_of_the_travel_3":"dsfvgf", 
     "operator_contact_of_the_travel_3":9067341287, 
     "faculty_accompanied" :"gdhcrfvff",
-    "undertaking_from_parents": "yes"
+    "undertaking_from_parents": "yes",
+    "sem_of_students_visited":1,
+    "year_of_students_visited":1,
+    "proposal_date:"2024-12-02"
 }
 
 ###
 
-GET http://10.167.1.2:1234/iv/listAll
+GET http://localhost:1234/iv/fetchIv
 
 ###
 
@@ -107,7 +110,7 @@ GET http://10.167.1.2:1234/iv/listAll
 ###
 
 
-GET http://10.167.1.2:1234/iv/ivtour
+GET http://localhost:1234/iv/ivtour
 
 ###
 
