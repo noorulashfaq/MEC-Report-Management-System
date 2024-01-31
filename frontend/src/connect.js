@@ -41,12 +41,26 @@ export const onPropose=async(obj)=>{
 export const onComplete=async(obj,report_id,table)=>{
    
     try{
-        // alert(obj);
+        // alert(JSON.stringify(obj));
+        // alert(table+','+report_id)
     const returned = await axios.put(`${url}/seminar/ecrCompletion/${table}/${report_id}`,obj)
     return returned.data
     }
     catch(error){
-        alert("OnComplete"+error)
+        alert("On Complete "+error)
+        // alert("Please fill all fields")
+    }
+} 
+export const onComplete1=async(obj,report_id,table)=>{
+   
+    try{
+        // alert(JSON.stringify(obj));
+        // alert(table+','+report_id)
+    const returned = await axios.put(`${url}/seminar/ecrCompletion1/${table}/${report_id}`,obj)
+    return returned.data
+    }
+    catch(error){
+        alert("On Complete1 "+error)
         // alert("Please fill all fields")
     }
 } 

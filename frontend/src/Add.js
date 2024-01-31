@@ -110,8 +110,15 @@ export const Add=()=>{
             }
             
         }
-        const Maj=async()=>{
+        const Maj=async(eve)=>{
             const t = await Major()
+            
+            // setSeminar((old) => {
+            //     return{
+            //         ...old,
+            //         event_sponsor:eve.target
+            //     }
+            //   })
             setMajor(t)
             // alert(t)
         }
@@ -186,29 +193,47 @@ export const Add=()=>{
                 
                 return{
                     ...old,
+                   
+                        event_sponsor:maj,
+                        
                     [name]:value
                 }
             }
             else if(name==="major_id"){
                 Sub(value)
                 major.map((item)=>{
+                    try{
                     if(item.major_report_id==value){
                         setMaj(item.major_report)
+                        
+
+                        
                     }
+                    // setMaj(item.major_report)
+                }
+                catch(e){
+                    console.log(e)
+                }
                     // console.log(value)
                 
                 })
                 console.log(maj)
+                // return{
+                //     ...old,
+                //     event_sponsor:maj
+                // }
                 // alert(sub.major_report)
                 
                 // alert(major.major_report[value])
                
-
+                
                 return{
                     ...old,
+                   
                     [name]:parseInt(value)
                 }
             }
+           
             else if(name==="event_coordinator"){
                 // alert("called")
                 
@@ -283,7 +308,7 @@ export const Add=()=>{
                                 })
                             }
 </select>
-<label for="event_name">Sub Type :</label>
+<label for="event_name">Nature of The Event :</label>
 <select name="event_name" value={seminar.event_name} onChange={infoCollect}>
     <option value="">Select Event Nature .......</option>
     {
@@ -306,7 +331,7 @@ export const Add=()=>{
                   
                     
                    
-                    <label for="event_organizer">Organised By:</label>
+                    <label for="event_organizer">Organised By (eg : CSE,ECE):</label>
                     <input onChange={infoCollect} value={seminar.event_organizer} type="text" name="event_organizer" placeholder="Event Organizer" className="form-control" />
                    
 
