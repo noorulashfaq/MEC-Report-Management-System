@@ -12,6 +12,10 @@ import SeSTAadd from "./Sesta/SestaAdd"
 import SeSTAbuttons from "./Sesta/SestaButtons"
 import { Intership, NptelCertification, OnlineCertification, StudentTechTalks, StudentsParticipation, ValueAdded } from "./Sesta/SestaFacultyView"
 import { HodECRPage } from "./HodECRPage"
+import Iv from "./Iv/Iv"
+import Ivadd from "./Iv/Ivadd"
+import IvInput from "./Iv/IvInput"
+
 
 
 export const Dashboard=()=>{
@@ -68,6 +72,11 @@ export const Dashboard=()=>{
                             <Route path="/intership" element={<Intership/>}/>
                             <Route path="/valueadded" element={<ValueAdded/>}/>
                             <Route path="/studenttechtalk" element={<StudentTechTalks/>}/>
+
+                        {/* Iv routers */}
+                            <Route path="/iv" element={<Iv/>}/>
+                            <Route path="/ivproposal" element={<Ivadd/>}/>
+                            <Route path="/ivinput" element={<IvInput/>}/>
                         </Routes>
                     </BrowserRouter>
                 </>

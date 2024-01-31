@@ -1,5 +1,5 @@
 ### Faculty proposing for an event
-POST http://10.167.1.2:1234/seminar/ecrProposal/data_management_seminar
+POST http://localhost:1234/seminar/ecrProposal/data_management_seminar
 Content-Type: application/json
 
 {
@@ -33,7 +33,7 @@ Content-Type: application/json
 
 ####
 
-PUT http://10.167.1.2:1234/seminar/ecrCompletion/data_management_seminar/5016
+PUT http://localhost:1234/seminar/ecrCompletion/data_management_seminar/5016
 Content-Type: application/json
 
 {
@@ -45,18 +45,19 @@ Content-Type: application/json
 PUT http://10.167.1.2:1234/seminar/completionacknowledgelevel2/data_management_seminar/1/6000/5020
 
 
-###
-
-GET http://10.167.1.2:1234/seminar/getAcdYrWithSubType/3003
 
 ###
 
-POST http://10.167.1.2:1234/seminar/ecrProposal/data_management_Seminar
+GET http://localhost:1234/seminar/getAcdYrWithSubType/3003
+
+###
+
+POST http://localhost:1234/seminar/ecrProposal/data_management_Seminar
 Content-Type: application/json
 
 {
     "report_id":"RPT5005",
-    "http://10.167.1.2:1234":"seminar",
+    "http://localhost:1234":"seminar",
     "event_title":"Vue JS",
     "event_organizer":"CSE",
     "event_sponsor":"CSI & Management",
@@ -86,29 +87,29 @@ Content-Type: application/json
 
 ###
 
-GET http://10.167.1.2:1234/seminar/supply/Cloud-2023-09-11-1694405954
+GET http://localhost:1234/seminar/supply/Cloud-2023-09-11-1694405954
 
 ###
 
-GET http://10.167.1.2:1234/seminar/dept/6004
+GET http://localhost:1234/seminar/dept/6004
 
 ### HoD is receiving the requested proposal
-GET http://10.167.1.2:1234/seminar/loadforlevel1/1/60CS01
+GET http://localhost:1234/seminar/loadforlevel1/1/60CS01
 
 ###
 
 ### HoD approves the proposal
-PUT http://10.167.1.2:1234/seminar/acknowledgelevel1/1/6001/1
+PUT http://localhost:1234/seminar/acknowledgelevel1/1/6001/1
 
 ###
 
 ### Principal is receiving the requested proposal
-GET http://10.167.1.2:1234/seminar/loadforlevel2/0/60MEC
+GET http://localhost:1234/seminar/loadforlevel2/0/60MEC
 
 ###
 
 ### Principal approves the proposal
-PUT http://10.167.1.2:1234/seminar/acknowledgelevel2/data_management_seminar/0/6000/5003
+PUT http://localhost:1234/seminar/acknowledgelevel2/data_management_seminar/0/6000/5003
 
 ###
 
@@ -117,12 +118,12 @@ PUT http://10.167.1.2:1234/seminar/acknowledgelevel2/data_management_seminar/0/6
 ###
 
 ### Faculty is receiving his/her proposal after approved
-GET http://10.167.1.2:1234/ecrWorkshop/loadforCompletion/1
+GET http://localhost:1234/ecrWorkshop/loadforCompletion/1
 
 ###
 
 ### Faculty is updating the completion report
-PUT http://10.167.1.2:1234/ecrWorkshop/ecrCompletion/0000001
+PUT http://localhost:1234/ecrWorkshop/ecrCompletion/0000001
 Content-Type: application/json
 
 {
@@ -143,29 +144,29 @@ Content-Type: application/json
 ###
 
 ### HoD is receiving the completion report
-GET http://10.167.1.2:1234/ecrWorkshop/eventcompletionloadlevel1/1/6001
+GET http://localhost:1234/ecrWorkshop/eventcompletionloadlevel1/1/6001
 
 ###
 
 ### HoD approves the completion report
-PUT http://10.167.1.2:1234/ecrWorkshop/completionacknowledgelevel1/1/6001
+PUT http://localhost:1234/ecrWorkshop/completionacknowledgelevel1/1/6001
 
 ###
 
 ### Principal is receiving the completion report
-GET http://10.167.1.2:1234/ecrWorkshop/completionloadlevel2/1
+GET http://localhost:1234/ecrWorkshop/completionloadlevel2/1
 
 ###
 
 ### Principal approves the completion report
-PUT http://10.167.1.2:1234/ecrWorkshop/completionacknowledgelevel2/1/RPT0000001
+PUT http://localhost:1234/ecrWorkshop/completionacknowledgelevel2/1/RPT0000001
 
 
-GET http://10.167.1.2:1234/seminar/find
+GET http://localhost:1234/seminar/find
 
 ###
 
-POST http://10.167.1.2:1234/login
+POST http://localhost:1234/login
 Content-Type: application/json
 
 {
@@ -175,11 +176,11 @@ Content-Type: application/json
 
 ###
 
-POST http://10.167.1.2:1234/seminar/dropdownSubTypeWithMajor/2001
+POST http://localhost:1234/seminar/dropdownSubTypeWithMajor/2001
 
 ###
 
-GET http://10.167.1.2:1234/seminar/compare/21CS121
+GET http://localhost:1234/seminar/compare/21CS121
 
 
 
@@ -190,16 +191,16 @@ GET http://10.167.1.2:1234/seminar/compare/21CS121
 #######################################################
 ########################################################
 
-GET http://10.167.1.2:1234/load/loadforlevel1/1/6001
+GET http://localhost:1234/load/loadforlevel1/1/6001
 
 ###
 
-PUT http://10.167.1.2:1234/load/acknowledgelevel1/data_management_seminar/0/6000/5035
+PUT http://localhost:1234/load/acknowledgelevel1/data_management_seminar/0/6000/5035
 
 ###
 
-GET http://10.167.1.2:1234/load/loadforlevel2/1/6000
+GET http://localhost:1234/load/loadforlevel2/1/6000
 
 ###
 
-PUT http://10.167.1.2:1234/load/acknowledgelevel2/data_management_seminar/1/6000/5033
+PUT http://localhost:1234/load/acknowledgelevel2/data_management_seminar/1/6000/5033

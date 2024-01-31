@@ -17,7 +17,7 @@ export const FacultyPage = () => {
     try {
 
 
-        const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}`);
+        const res = await axios.get(`http://localhost:1234/seminar/data/${id1}`);
         // console.log("hai");
         const data = res.data;
 
@@ -1279,6 +1279,7 @@ newPdf.text(x+2, y+5, textLines);
 // newPdf.rect(133, 140,67, 10).stroke();
 // newPdf.text(textLines,135, 145);/////Address
 newPdf.setFontSize(12);
+
 
 
 newPdf.rect(110, 155, 23, 10).stroke();

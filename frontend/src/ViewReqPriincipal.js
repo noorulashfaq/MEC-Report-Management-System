@@ -37,7 +37,7 @@ const loggedUser = JSON.parse(logged)
 }
 
 const GetCurrAcd=async()=>{
-    const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+    const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
     // alert(JSON.stringify(t.data.result))
     const temp=t.data.result
     let valueYr=0
@@ -70,7 +70,7 @@ const onClickFilter=async()=>{
     // alert("clicked")
     // console.log(filter)
     try{
-        const filteredRecords=await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001",filter)
+        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
         // alert(filteredRecords.data)
         setAllvalues(filteredRecords.data)
     }
@@ -127,7 +127,7 @@ extraInfo: "sub_id"
 
 const[year,setYear]=useState([])
 const Acad=async()=>{
-const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
 // alert(JSON.stringify(t.data.result))
 setYear(t.data.result)
 }
@@ -152,7 +152,7 @@ const[fac,setFac]=useState([])
 let [facs,setFacs]=useState([])
 
 const Faculty=async(fid)=>{
-    const t = await axios.get(`http://10.167.1.2:1234/ecrFilter/getFacultiesList/${fid}
+    const t = await axios.get(`http://localhost:1234/ecrFilter/getFacultiesList/${fid}
     `)
     // alert(t)
     // alert(JSON.stringify(t.data.result))
@@ -286,6 +286,7 @@ console.log(filter)
 const handleDownload = async (table) => {
     try {
       const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
+
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
@@ -1042,7 +1043,7 @@ for(let i=0;i<arr.length;i++){
   
    
 }
-    
+
 
 newPdf.rect(154, 267, 15, 9).stroke();
 newPdf.rect(169, 267, 15, 9).stroke();

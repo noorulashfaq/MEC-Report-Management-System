@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const url="http://10.167.1.2:1234"
+const url="http://localhost:1234"
 export const onLogin=async(obj)=>{
 try{
     const returned = await axios.post(`${url}/login`,obj)
@@ -70,7 +70,7 @@ export const loadForLevel1=async(dept,emp)=>{
     // alert(dept)
     try{
     const receive = await axios.get(`${url}/seminar/loadForLevel1/${dept}/${emp}`)
-    // alert(JSON.stringify(receive.data.resultArr))
+    console.log(receive.data)
     return receive.data.resultArr[0].resultRows
     }
     catch(e){
