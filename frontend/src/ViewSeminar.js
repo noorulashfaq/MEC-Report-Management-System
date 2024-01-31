@@ -317,10 +317,10 @@ export const ViewSeminar = () => {
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
       var sign = `/Project_images/${data.lvl_1_proposal_sign}.jpeg`;
       // alert(sign);
-      
+     
       const newPdf = new jsPDF();
        
-      
+     
    
     newPdf.addImage(Image, 'PNG', 10, 3, 20, 20);
 newPdf.addImage(Image2, 'PNG', 12,23, 15, 15);
@@ -405,7 +405,7 @@ newPdf.text('Details of the Guest',22, 141);
 newPdf.rect(110, 125, 23, 10).stroke();
 newPdf.text('Name', 111, 131);
 newPdf.rect(133, 125,67, 10).stroke();
-newPdf.text(`${data.guest_name}`, 135, 131);///Name of the Guest 
+newPdf.text(`${data.guest_name}`, 135, 131);///Name of the Guest
 newPdf.rect(110, 135, 23, 10).stroke();
 newPdf.text('Designation', 111, 141);
 newPdf.rect(133, 135,67, 10).stroke();
@@ -513,7 +513,7 @@ newPdf.rect(80, 250, 60, 10).stroke();
 newPdf.text('', 100, 229);//coordinator Desgination
 
 newPdf.rect(140, 250, 60, 10).stroke();
-newPdf.text('', 155, 229);//coordinator 
+newPdf.text('', 155, 229);//coordinator
 
 // newPdf.rect(10, 225, 70, 5).stroke();
 // newPdf.text('Name', 35, 229);
@@ -548,9 +548,9 @@ newPdf.text('Principal', 155, 290);
     // Open the PDF in a new tab or window
     const newWindow = window.open();
     newWindow.document.write(`<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`);
-  
+ 
   }
-      
+     
      catch (err) {
       console.error(err);
     }
@@ -616,17 +616,17 @@ newPdf.text('Principal', 155, 290);
         const logged = JSON.parse(sessionStorage.getItem("person"))
         let temp;
         try {
-            
+           
          temp = await loadComForLevel1(logged.dept_id, logged.faculty_id)
          
-        
+       
             setEcr1(temp)
         }
         catch (e) {
             console.log("Error in load For Level 1")
         }
         try {
-            
+           
             temp = await loadComForLevel2(logged.dept_id, logged.faculty_id)
                setEcr1(temp)
            }
@@ -634,7 +634,7 @@ newPdf.text('Principal', 155, 290);
                console.log("Error in load For Level 2")
            }
            try {
-            
+           
             temp = await loadComForLevel3(logged.dept_id, logged.faculty_id)
                setEcr1(temp)
            }
@@ -642,7 +642,7 @@ newPdf.text('Principal', 155, 290);
                console.log("Error in load For Level 3")
            }
            try {
-            
+           
             temp = await loadComForLevel4(logged.dept_id, logged.faculty_id)
                setEcr1(temp)
            }
@@ -650,7 +650,7 @@ newPdf.text('Principal', 155, 290);
                console.log("Error in load For Level 4")
            }
            try {
-            
+           
             temp = await loadComForLevel5(logged.dept_id, logged.faculty_id)
                setEcr1(temp)
            }
@@ -730,19 +730,19 @@ newPdf.text('Principal', 155, 290);
         try {
           
           
-          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}/${table}`);
+          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
         //   var atten = `/Project_images/attendence.jpg`;
           const picture1 = `/Project_Images/${data.event_photo_1}.jpg`;
           const picture2 = `/Project_Images/${data.event_photo_2}.jpg`;
-    
+   
           const newPdf = new jsPDF();
          
           const POs = `${data.event_po}`;
         //   console.log(data.event_po);
           let arr=POs.split(",");
-        
+       
            arr=arr.sort();
         //    alert(arr[1]);
            let pdfDocument;
@@ -750,7 +750,7 @@ newPdf.text('Principal', 155, 290);
             const pdfUrl = `/Pdf/${data.pdf}`;
             const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
           const pdfData = pdfResponse.data;
-    
+   
          pdfDocument = await getDocument({ data: pdfData }).promise;
            }catch(e){
             console.log(e)
@@ -764,14 +764,14 @@ newPdf.text('Principal', 155, 290);
             newPdf.setTextColor(color[0],color[1],color[2]);
             newPdf.text(text,textcenter,y);
           }
-    
-    
+   
+   
     //////////////////////////////////////////////// First Page ///////////////////////////
     newPdf.addImage(Image, 'PNG', 10, 3, 20, 20);
       newPdf.addImage(Image2, 'PNG', 12,23, 15, 15);
       newPdf.addImage(Image3, 'JPG', 175, 3, 20, 15);
       newPdf.addImage(Image4, 'JPG', 175, 20, 20, 15);
-      
+     
       newPdf.setFontSize(18);
       newPdf.setFont("times", "bold");
       newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
@@ -799,7 +799,7 @@ newPdf.text('1.', 12, 65);
 newPdf.rect(20, 55, 90, 15).stroke();
 newPdf.text('Nature of the Event:\nConference/Technical Symposium/Workshop/\nSeminar/Guest/Lecture/FDP/Any other',22, 61);
 newPdf.rect(110, 55, 90, 15).stroke();
-newPdf.text(`${data.sub_report}`, 113, 65);///Nature of the Event 
+newPdf.text(`${data.sub_report}`, 113, 65);///Nature of the Event
 newPdf.setFontSize(11);
 
 
@@ -809,7 +809,7 @@ newPdf.rect(20, 70, 90, 10).stroke();
 newPdf.text('Title of the event',22, 78);
 newPdf.rect(110, 70, 90, 10).stroke();
 
-const event_title = `${data.event_title}`; 
+const event_title = `${data.event_title}`;
 const title = newPdf.splitTextToSize(event_title, 80);
 newPdf.text(title, 113, 74);///Title of the Event
 
@@ -836,7 +836,7 @@ newPdf.text('5.', 12, 108);
 newPdf.rect(20, 100, 90, 10).stroke();
 newPdf.text('Date of the Event Planned',22, 108);
 newPdf.rect(110, 100, 90, 10).stroke();
-newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`, 113, 108);////Date of the Event 
+newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`, 113, 108);////Date of the Event
 
 newPdf.rect(10, 110, 10, 10).stroke();
 newPdf.text('6.', 12, 118);
@@ -974,7 +974,7 @@ for(let i=0;i<12;i++){
   {
     x1=x1+10;
     y1=y1+13;
-    
+   
   }
   else{
     x1=x1+12;
@@ -998,7 +998,7 @@ for(let i=0;i<12;i++){
 // let j1=0;
 
 for(let i=0;i<arr.length;i++){
-  
+ 
   let temp2='PSO1'
   let temp3='PSO2'
   let temp4='PSO3'
@@ -1016,10 +1016,10 @@ for(let i=0;i<arr.length;i++){
   {
     newPdf.text("X",193,273);
   }
-  
+ 
    
 }
-    
+   
 
 newPdf.rect(154, 267, 15, 9).stroke();
 newPdf.rect(169, 267, 15, 9).stroke();
@@ -1281,7 +1281,7 @@ newPdf.text('Details of the Guest',22, 141);
 newPdf.rect(110, 125, 23, 10).stroke();
 newPdf.text('Name', 111, 131);
 newPdf.rect(133, 125,67, 10).stroke();
-newPdf.text(`${data.guest_name}`, 135, 131);///Name of the Guest 
+newPdf.text(`${data.guest_name}`, 135, 131);///Name of the Guest
 newPdf.rect(110, 135, 23, 10).stroke();
 newPdf.text('Designation', 111, 141);
 newPdf.rect(133, 135,67, 10).stroke();
@@ -1367,7 +1367,7 @@ newPdf.rect(80, 250, 60, 10).stroke();
 newPdf.text('', 100, 229);//coordinator Desgination
 
 newPdf.rect(140, 250, 60, 10).stroke();
-newPdf.text('', 155, 229);//coordinator 
+newPdf.text('', 155, 229);//coordinator
 
 
 // newPdf.rect(140, 230, 60, 35).stroke();newPdf.setFont("times","bold");
@@ -1376,7 +1376,7 @@ newPdf.text('HoD', 15, 290);
 
 newPdf.text('Principal', 155, 290);
 
-      
+     
      try{
 
       // Add pages from the original PDF
@@ -1418,7 +1418,7 @@ newPdf.text('Budget Proposal', 80, 45);
 newPdf.setFontSize(18);
 newPdf.text('Date of the Event:', 15, 60);
 newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,67, 60);
-newPdf.setFont("times", ""); 
+newPdf.setFont("times", "");
 newPdf.setFontSize(10);
 newPdf.text('To the Management through Principle', 15, 70);
 newPdf.setFontSize(15);
@@ -1487,7 +1487,7 @@ console.log(centerX);
 newPdf.setFont('times', 'roman');
 newPdf.rect(8,58,50,10).stroke();
 newPdf.text('Event Date:',10,65);
-newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,35,65);////Event Date 
+newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,35,65);////Event Date
 newPdf.rect(165,58,30,10);
 newPdf.text(`${data.acd_yr}`,170,65);///Academic Year
 
@@ -1676,24 +1676,24 @@ newPdf.setFont("times","bold");
 newPdf.text('Event Coordinator(s)', 15, 234);
 newPdf.text('HOD', 100, 234);
 newPdf.text('Principal', 167, 234);
-    
+   
     ////////////////////////////////////////////////////////    
-    
-      
-    
-    
-    
-    
+   
+     
+   
+   
+   
+   
 
         // Generate a data URI for the PDF
         const pdfDataUri = newPdf.output('datauristring');
-    
+   
         // Open the PDF in a new tab or window
         const newWindow = window.open();
         newWindow.document.write(`<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`);
-      
+     
       }
-          
+         
          catch (err) {
           console.error(err);
         }
@@ -1750,97 +1750,89 @@ newPdf.text('Principal', 167, 234);
                   <h2 className="topic-heading">IV</h2>
                 </div>
               </a>
-            </div> */}
-          </div>
-          <>
-         </>
-                   
-                </>
-              <>
-              <div className="boxContainer1" >
-              <a href="/hodecr">
-          <div className="boxx1" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
-        <div className="card-body">
-          <div className="row">
-            <div className="col-9">
-              <div className="d-flex align-items-center align-self-start">
-                <h3 className="mb-0">ECR</h3>
-                <p className="text-success ml-2 mb-0 font-weight-medium"></p>
-              </div>
             </div>
-            <div className="col-3"></div>
           </div>
-          {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
-        </div>
-        <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
-          <span className="dashIcon">50</span>
-        </div>
-     
-          </div>
-          </a>
-          
-          <div className="boxx2" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
-        <div className="card-body">
-          <div className="row">
-            <div className="col-9">
-              <div className="d-flex align-items-center align-self-start">
-                <h3 className="mb-0">SeSTA</h3>
-                <p className="text-success ml-2 mb-0 font-weight-medium"></p>
-              </div>
-            </div>
-            <div className="col-3"></div>
-          </div>
-          {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
-        </div>
-        <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
-          <span className="dashIcon">5</span>
-        </div>
-     
-          </div>
+                    <div className="hodfilter-dropdowns">
 
-          <div className="boxx3" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
-        <div className="card-body">
-          <div className="row">
-            <div className="col-9">
-              <div className="d-flex align-items-center align-self-start">
-                <h3 className="mb-0">SeTAF</h3>
-                <p className="text-success ml-2 mb-0 font-weight-medium"></p>
-              </div>
-            </div>
-            <div className="col-3"></div>
-          </div>
-          {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
-        </div>
-        <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
-          <span className="dashIcon">2</span>
-        </div>
-     
-          </div>
-          
-          <div className="boxx4" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
-        <div className="card-body">
-          <div className="row">
-            <div className="col-9">
-              <div className="d-flex align-items-center align-self-start">
-                <h3 className="mb-0">IV</h3>
-                <p className="text-success ml-2 mb-0 font-weight-medium"></p>
-              </div>
-            </div>
-            <div className="col-3"></div>
-          </div>
-          {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
-        </div>
-        <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
-          <span className="dashIcon">100</span>
-        </div>
-     
-          </div>
-        </div>
-        </>
-        <>
-       
-         
-             </>
+                        <label for="acdyr_id">Academic Year : </label>
+                        <Select
+                            className="form1group"
+                            id="acdyr_id"
+                            isMulti
+                            name="acdyr_id"
+                            options={years}
+                            // value={selectedAcd}
+                            onChange={infoCollect}
+                            isSearchable
+                            placeholder="Select options..."
+                            closeMenuOnSelect={true}
+                        />
+                        {/* <input type="" name="acdyr_id" onChange={handleChange} value={selectedAcd} /> */}
+
+
+                        <label for="sem_id">Semester : </label>
+                        <Select
+                            className="form1group"
+                            // isMulti
+                            name="sem_id"
+                            options={sems}
+                            // value={selectedSem}
+                            onChange={infoCollect}
+                            isSearchable
+                            placeholder="Select options..."
+                            closeMenuOnSelect={true}
+                        />
+                        {/* <input type="" name="sem_id" onChange={handleChange} value={selectedSem} /> */}
+
+
+                        <label for="major_id">Major Type : </label>
+                        <Select
+                            className="form1group"
+                            isMulti
+                            name="major_id"
+                            options={majors}
+                            // value={selectedMajor}
+                            onChange={infoCollect}
+                            isSearchable
+                            placeholder="Select options..."
+                            closeMenuOnSelect={false}
+                        />
+                        {/* <input type="" name="major_id" onChange={handleChange} value={selectedMajor} /> */}
+
+                        <label for="sub_id">Sub Type : </label>
+                        <Select
+                            className="form1group"
+                            isMulti
+                            name="sub_id"
+                            options={subs}
+                            // value={selectedSub}
+                            onChange={infoCollect}
+                            isSearchable
+                            placeholder="Select options..."
+                            closeMenuOnSelect={true}
+                        />
+
+                        <label for="emp_id">Faculty : </label>
+                        <Select
+                            className="form1group"
+                            isMulti
+                            name="emp_id"
+                            options={facs}
+                            // value={selectedSub}
+                            onChange={infoCollect}
+                            isSearchable
+                            placeholder="Select options..."
+                            closeMenuOnSelect={true}
+                        />
+
+
+                        <div>
+                            <input className='filter-button' type='button' value="Filter" onClick={onClickFilter} />
+                        </div>
+
+                    </div>
+                </>
+
 
 
                 <div className="report-container1">
@@ -1855,7 +1847,7 @@ newPdf.text('Principal', 167, 234);
                             </tr>
                         </thead>
                         <tbody>
-                            { 
+                            {
                             ecr?.length ||0 > 0 ? (
 
                                 ecr.map((val, key) => (
@@ -1889,8 +1881,8 @@ newPdf.text('Principal', 167, 234);
 
                                             }} >View Proposal</button></td>
                                     </tr>
-                                
-                              
+                               
+                             
                                 ))):( <tr>
                                     <td colSpan="7" style={{ textAlign: 'center' }}>
                          No Proposal requests Found
@@ -1954,3 +1946,4 @@ newPdf.text('Principal', 167, 234);
         </>
     )
 }
+

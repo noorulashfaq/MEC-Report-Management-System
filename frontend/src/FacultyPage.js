@@ -1281,6 +1281,7 @@ newPdf.text(x+2, y+5, textLines);
 newPdf.setFontSize(12);
 
 
+
 newPdf.rect(110, 155, 23, 10).stroke();
 newPdf.text('Contact No', 111, 161);
 newPdf.rect(133, 155,67, 10).stroke();

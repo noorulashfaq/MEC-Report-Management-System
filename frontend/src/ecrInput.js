@@ -395,7 +395,7 @@ try{
  
 
  formData4.append('file', selectedFile4,formData.event_photo_4.concat('.jpg') );
- fetch('http://localhost:1234/ecr/upload1', {
+ fetch('http://10.167.1.2:1234/ecr/upload1', {
  method: 'POST',
  body: formData4,
  })
@@ -413,7 +413,7 @@ try{
  if (selectedFile5 ) {
  const formData5 = new FormData();
  formData5.append('file', selectedFile5,formData.event_photo_5.concat('.jpg'));
- fetch('http://localhost:1234/ecr/upload1', {
+ fetch('http://10.167.1.2:1234/ecr/upload1', {
  method: 'POST',
  body: formData5,
  })

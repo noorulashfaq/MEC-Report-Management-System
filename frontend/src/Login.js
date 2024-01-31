@@ -134,31 +134,7 @@ export const Login=()=>{
           />
           
 
-            <TextField
-      fullWidth
-      variant="outlined"
-      margin="normal"
-      required
-      id="password"
-      label="Password"
-      name="pass"
-      type={showPassword ? 'id' : 'password'}
-      onChange={gather}
-      InputProps={{
-        endAdornment: (
-          <InputAdornment position="end">
-            <IconButton
-              onClick={handleTogglePasswordVisibility}
-              edge="end"
-              style={{ color: '#666' }}
-            >
-              {showPassword ? <Visibility /> : <VisibilityOff />}
-            </IconButton>
-          </InputAdornment>
-        ),
-      }}
-      
-    />
+          
 
           <Button type="button" fullWidth variant="contained" color="primary" sx={{ mt: 3, mb: 2 }} onClick={onLoginClicked}>
             Login
