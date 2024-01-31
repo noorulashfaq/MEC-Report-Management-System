@@ -1,5 +1,5 @@
 import React, { useState ,useEffect} from 'react';
-import { onTable ,onComplete} from './connect';
+import { onTable ,onComplete,onComplete1} from './connect';
 import './sty.css';
 import { format } from 'date-fns';
 import Select from 'react-select';
@@ -138,7 +138,7 @@ try{
  
  // alert(Data.report_id)
  try{
- const temp = await onComplete(formData,Data.report_id,Data.event_name)
+ const temp = await onComplete1(formData,Data.report_id,Data.event_name)
  alert(temp.message)
  }
  catch(err){
@@ -158,10 +158,13 @@ try{
  try{
  const report=JSON.parse(sessionStorage.getItem("report_id"))
  setNewFileName(report.event_title);
+ 
+ 
 //  alert(report.event_title)
  const temp=await onTable(report.report_id,report.event_name)
  
  setData(temp)
+ 
  
  
  }
@@ -229,7 +232,10 @@ try{
  return;
  }
  else{
- 
+  if(newFileName.length<=1){
+  const report=JSON.parse(sessionStorage.getItem("report_id"))
+ setNewFileName(report.event_title);
+  }
    // alert("handle upload working")
  const currentDate = new Date();
 
@@ -244,12 +250,12 @@ try{
  const dateTimeString = `${dd}-${mm}-${yyyy}_${hh}-${min}-${ss}`;
   // Maximum value for the random number
  let random =Math.random()*Math.random()*1;
- const name1=newFileName+'1_'+dateTimeString+'_'+random+'.png';
- const name2=newFileName+'2_'+dateTimeString+'_'+random+'.png';
- const name3=newFileName+'3_'+dateTimeString+'_'+random+'.png';
- const name4=newFileName+'4_'+dateTimeString+'_'+random+'.png';
- const name5=newFileName+'5_'+dateTimeString+'_'+random+'.png';
- const name6 = newFileName + '_Pdf_' + dateTimeString + '_' + random + '.pdf';
+ const name1=newFileName+'1_'+dateTimeString+'_'+random;
+ const name2=newFileName+'2_'+dateTimeString+'_'+random;
+ const name3=newFileName+'3_'+dateTimeString+'_'+random;
+ const name4=newFileName+'4_'+dateTimeString+'_'+random;
+ const name5=newFileName+'5_'+dateTimeString+'_'+random;
+ const name6 = newFileName + '_Pdf_' + dateTimeString + '_' + random+'.pdf';
  
  setFormData((old)=>{
  return{
@@ -321,13 +327,14 @@ try{
  
  
  const handleUpload1 = async() => {
+  
 
  if (selectedFile1) {
  const formData1 = new FormData();
  
 
  
- formData1.append('file',selectedFile1,formData.event_photo_1 );
+ formData1.append('file',selectedFile1,formData.event_photo_1.concat('.jpg') );
  
  fetch('http://localhost:1234/ecr/upload1', {
  method: 'POST',
@@ -346,7 +353,7 @@ try{
  if (selectedFile2 ) {
  const formData2 = new FormData();
  
- formData2.append('file', selectedFile2,formData.event_photo_2 );
+ formData2.append('file', selectedFile2,formData.event_photo_2.concat('.jpg') );
  
  
  fetch('http://localhost:1234/ecr/upload1', {
@@ -367,7 +374,7 @@ try{
  const formData3 = new FormData();
  
 
- formData3.append('file', selectedFile3,formData.event_photo_3 );
+ formData3.append('file', selectedFile3,formData.event_photo_3.concat('.jpg') );
 
  fetch('http://localhost:1234/ecr/upload1', {
  method: 'POST',
@@ -387,8 +394,9 @@ try{
  const formData4 = new FormData();
  
 
- formData4.append('file', selectedFile4,formData.event_photo_4 );
- fetch('http://localhost:1234/ecr/upload1', {
+ formData4.append('file', selectedFile4,formData.event_photo_4.concat('.jpg') );
+ fetch('http://10.167.1.2:1234/ecr/upload1', {
+
  method: 'POST',
  body: formData4,
  })
@@ -405,8 +413,9 @@ try{
 
  if (selectedFile5 ) {
  const formData5 = new FormData();
- formData5.append('file', selectedFile5,formData.event_photo_5 );
- fetch('http://localhost:1234/ecr/upload1', {
+ formData5.append('file', selectedFile5,formData.event_photo_5.concat('.jpg'));
+ fetch('http://10.167.1.2:1234/ecr/upload1', {
+
  method: 'POST',
  body: formData5,
  })
@@ -464,13 +473,24 @@ try{
 }
 try{
   // alert(Data.event_name)
+  if(formData.event_photo_1.length<=1){
+    alert("Server is busy try again");
+  }
+  else{
+    try{
   const temp = await onComplete(formData,Data.report_id,Data.event_name)
-
+  window. location. reload(false); 
+    }
+    catch(e){
+      alert(e)
+    }
+  }
   // alert(temp.message)
   }
   catch(err){
   alert("Error in entering File Name")
   }
+  
 
  }
  // const handleUpload2 = () => {
@@ -697,7 +717,7 @@ console.log(formData);
  <div className='form'>
   {Data.event_description!=""&&
  <div>
-     
+     <h6 style={{color:'red'}}>*Upload only .jpg images</h6>
  
  <label htmlFor="event_photo_1">Photo 1: (To be displayed on the front page)</label>
 <input
@@ -769,7 +789,7 @@ console.log(formData);
  type="button"
  onClick={pdfUpload}
  id="event"
- value="Submit"
+ value="Upload Files"
  style={{
  backgroundColor: '#4CAF50', 
  color: 'white', // Set your desired text color

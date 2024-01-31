@@ -13,8 +13,8 @@ import './facultyEcrFilter.css';
 import Select from 'react-select';
 //import Img6001 from'./6001.jpeg';
 
-// localhost
-export const CreateEvent=()=>{
+// 10.167.1.2
+export const HodECRPage=()=>{
 // --------------------------------------------------
   useEffect(()=>{
     doSomething();
@@ -33,13 +33,12 @@ const[allvalues,setAllvalues]=useState([]);
 
     const doSomething = async() =>{
         const res=await Table(`${loggedUser.faculty_id}`)
-        // alert(JSON.stringify(res.data.recordsArr))
             setAllvalues(res.data.recordsArr)
         }
         // console.log(allvalues)
 
 const GetCurrAcd=async()=>{
-    const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+    const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
     // alert(JSON.stringify(t.data.result))
     const temp=t.data.result
     let valueYr=0
@@ -95,7 +94,7 @@ const onClickFilter=async()=>{
     // alert(JSON.stringify(filter))
     try{
         // alert("hi")
-        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
+        const filteredRecords=await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001",filter)
         // alert(filteredRecords.data)
         setAllvalues(filteredRecords.data)
     }
@@ -176,7 +175,7 @@ let [subs,setSubs]=useState([])
 
     const[year,setYear]=useState([])
     const Acad=async()=>{
-        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -334,7 +333,6 @@ const viewPdf1=async(report_id)=>{
   const handleDownload = async (table) => {
     try {
       const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
-
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
@@ -629,7 +627,6 @@ newPdf.text('Principal', 155, 290);
           
           
           const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
-
           // console.log("hai");
           const data = res.data;
         //   var atten = `/Project_images/attendence.jpg`;
@@ -1686,7 +1683,7 @@ className="form1group"
         />
                     {/* <input type="" name="sub_id" onChange={handleChange} value={selectedSub} /> */}
         <div>
-            <input className='filter-button' type='button' value="Filter" onClick={onClickFilter}/>
+            <input className='filter-button' type='button' value="Filter" onClick={onClheaderickFilter}/>
         </div>
 
             </div>
@@ -1696,7 +1693,7 @@ className="form1group"
             <div class="report-container1">
                 <div class="report-header">
                     <h1 class="recent-Articles">Your Reports</h1>
-                    <a className="topic-heading" href="/add"><button class="view" id="addButton">+ Add</button></a>
+                    {/* <a className="topic-heading" href="/add"><button class="view" id="addButton">+ Add</button></a> */}
                               </div>
                               <div className='table-responsive text-nowrap'>
    <table className='table table-striped '>
@@ -1708,17 +1705,14 @@ className="form1group"
                             <th>Major Type</th>
                             <th>Sub Type</th>
                             {/* <th></th> */}
-                            <th>
-
-                            </th>
+                            
                             <th>Proposal</th>
-                            <th>
+                            
 
-                            </th>
-                            <th></th><th>Completion</th><th></th><th>Details</th>
+                            <th>Completion</th><th></th><th>Status</th><th>Details</th>
                             </tr>
-                            <tr><th></th><th></th><th></th> <th></th><th></th><th>Submitted on</th><th>Hod</th><th>Principal</th><th>Submitted on</th><th>Hod</th><th>Principal</th><th></th>
-                        </tr>
+                            {/* <tr><th></th><th></th><th></th> <th></th><th></th><th>Submitted on</th><th>Hod</th><th>Principal</th><th>Submitted on</th><th>Hod</th><th>Principal</th><th></th>
+                        </tr> */}
                     </thead>
                     <tbody>
                         {
@@ -1731,20 +1725,34 @@ className="form1group"
                                     <td>{data.major_report}</td>
                                     <td>{(data.sub_report)}</td>
                                     {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
-                                    <td>{data.proposal_date}</td>
+                                    
                                    
                                   
                                     {
                                 (data.report_proposal_status===0) ?
                                 <>
-               
-                                        <td>🕒Pending</td>
-                                        <td>🕒Pending</td>
+                                <td>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
                                         {/* <td></td> */}
-                                        <td></td>
-                                        <td>🕒Pending</td>
-                                        <td>🕒Pending</td>
-                                        <td><button
+                                        </td>
+                                        <td>    
+                                        <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                </td>
+                                <td >
+                                <button type="button" style={{width:'80px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accept</button></td>
+<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+
+                                    <td><button
   style={{
     backgroundColor: '#0000ff', // Background color
     color: 'white', // Text color
@@ -1764,13 +1772,28 @@ className="form1group"
                                         (data.report_proposal_status===1 && data.report_completion_status===0 ) ? 
                                         <>
                                         
-                                        <td><h3 style={{color:'green'}}>Accepted</h3></td>
-                                        <td>🕒Pending</td>
-                                        <td></td>
+                                        <td>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                        {/* <td></td> */}
+                                        </td>
+                                        <td>    
+                                        <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                </td>
+                                <td >
+                                <button type="button" style={{width:'80px'}} onClick={async () => {
 
-                                        <td>🕒Pending</td>
-                                        <td>🕒Pending</td>
-                                        <td><button
+}} className="btn btn-success col-4">Accept</button></td>
+<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+
+                                    <td><button
   style={{
     backgroundColor: '#0000ff', // Background color
     color: 'white', // Text color
@@ -1789,12 +1812,28 @@ className="form1group"
                                         :
                                         (data.report_proposal_status===2 && data.report_completion_status===0 ) ?
                                         <>
-                                        <td><h3 style={{color:'green'}}>Accepted</h3></td>
-                                        <td><h3 style={{color:'green'}}>Accepted</h3></td>
-                                        <td>{data.completion_date}</td>
-                                   
-                                        <td>🕒Pending</td>
-                                        <td>🕒Pending</td>
+                                        <td>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                        {/* <td></td> */}
+                                        </td>
+                                        <td>    
+                                        <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                </td>
+                                <td >
+                                <button type="button" style={{width:'80px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accept</button></td>
+<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+
+                                 
                                         <td><a className="topic-heading" href="/ecrInput"><button
   style={{
     backgroundColor: ' #00997a', // Background color
@@ -1825,12 +1864,28 @@ className="form1group"
                                         (data.report_completion_status===1)?
 
                                         <>
-                                          <td><h3 style={{color:'green'}}>Accepted</h3></td>
-                                        <td><h3 style={{color:'green'}}>Accepted</h3></td>
-                                        <td>{data.completion_date}</td>
-                                   
-                                        <td><h3 style={{color:'green'}}>Accepted</h3></td>
-                                        <td>🕒Pending</td>
+                                       <td>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                        {/* <td></td> */}
+                                        </td>
+                                        <td>    
+                                        <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                </td>
+                                <td >
+                                <button type="button" style={{width:'80px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accept</button></td>
+<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+
+     
                                         <td><button
   style={{
     backgroundColor: ' #f29b44', // Background color
@@ -1852,12 +1907,28 @@ className="form1group"
                                         (data.report_completion_status===2)?
 
                                         <>
-                                          <td><h3 style={{color:'green'}}>Accepted</h3></td>
-                                        <td><h3 style={{color:'green'}}>Accepted</h3></td>
-                                        <td>{data.completion_date}</td>
-                                   
-                                        <td><h3 style={{color:'green'}}>Accepted</h3></td>
-                                        <td><h3 style={{color:'green'}}>Accepted</h3></td>
+                                     <td>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                        {/* <td></td> */}
+                                        </td>
+                                        <td>    
+                                        <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                </td>
+                                <td >
+                                <button type="button" style={{width:'80px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accept</button></td>
+<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+
+                    
                                         <td><button
   style={{
     backgroundColor: '#f29b44', // Background color

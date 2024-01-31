@@ -477,7 +477,7 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
   background-color: #fff !important;
   color: #555 !important;
-} */
+} 
 
 input[type="submit"] {
   background-color: #3498db;
@@ -490,7 +490,7 @@ input[type="submit"] {
 }
 input[type="submit"]:hover {
   background-color: #2980b9;
-} */
+} 
 
 th, td {
   height:60px;
@@ -512,13 +512,13 @@ td h2,a{
   font-size: 14px;
   color:blue;
 }
-th {
+/* th {
   background-color: #f2f2f2;
-}
+} */
 
-tr:nth-child(even) {
+/* tr:nth-child(even) {
   background-color: #f2f2f2;
-}
+} */
 .report-container {
   min-height: 300px;
   align-items: center;

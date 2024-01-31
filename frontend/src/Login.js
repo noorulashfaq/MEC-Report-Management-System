@@ -40,11 +40,16 @@ export const Login=()=>{
 
     const onLoginClicked=async()=>{
         // console.log(JSON.stringify(logger))
+        try{
         const temp=await onLogin(logger)
         if(temp.faculty_id){
             sessionStorage.setItem("person",JSON.stringify(temp))
             window.location.assign("/")
         }
+      }
+      catch(e){
+        console.log("password Wrong")
+      }
     }
     const [showPassword, setShowPassword] = useState(false);
 
@@ -127,27 +132,7 @@ export const Login=()=>{
             value={logger.id}
             onChange={gather}
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="pass"
-            label="Password"
-            type={showPassword ? 'id' : 'password'}
-            id="password"
-            autoComplete="current-password"
-            value={logger.pass}
-            onChange={gather}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={handleTogglePasswordVisibility} edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
+          
 
           
 
