@@ -728,9 +728,9 @@ newPdf.text('Principal', 155, 290);
 
     const handleDownload1= async (table) => {
         try {
-          
-          
-          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
+         
+         
+          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
         //   var atten = `/Project_images/attendence.jpg`;
@@ -1750,89 +1750,97 @@ newPdf.text('Principal', 167, 234);
                   <h2 className="topic-heading">IV</h2>
                 </div>
               </a>
-            </div>
+            </div> */}
           </div>
-                    <div className="hodfilter-dropdowns">
-
-                        <label for="acdyr_id">Academic Year : </label>
-                        <Select
-                            className="form1group"
-                            id="acdyr_id"
-                            isMulti
-                            name="acdyr_id"
-                            options={years}
-                            // value={selectedAcd}
-                            onChange={infoCollect}
-                            isSearchable
-                            placeholder="Select options..."
-                            closeMenuOnSelect={true}
-                        />
-                        {/* <input type="" name="acdyr_id" onChange={handleChange} value={selectedAcd} /> */}
-
-
-                        <label for="sem_id">Semester : </label>
-                        <Select
-                            className="form1group"
-                            // isMulti
-                            name="sem_id"
-                            options={sems}
-                            // value={selectedSem}
-                            onChange={infoCollect}
-                            isSearchable
-                            placeholder="Select options..."
-                            closeMenuOnSelect={true}
-                        />
-                        {/* <input type="" name="sem_id" onChange={handleChange} value={selectedSem} /> */}
-
-
-                        <label for="major_id">Major Type : </label>
-                        <Select
-                            className="form1group"
-                            isMulti
-                            name="major_id"
-                            options={majors}
-                            // value={selectedMajor}
-                            onChange={infoCollect}
-                            isSearchable
-                            placeholder="Select options..."
-                            closeMenuOnSelect={false}
-                        />
-                        {/* <input type="" name="major_id" onChange={handleChange} value={selectedMajor} /> */}
-
-                        <label for="sub_id">Sub Type : </label>
-                        <Select
-                            className="form1group"
-                            isMulti
-                            name="sub_id"
-                            options={subs}
-                            // value={selectedSub}
-                            onChange={infoCollect}
-                            isSearchable
-                            placeholder="Select options..."
-                            closeMenuOnSelect={true}
-                        />
-
-                        <label for="emp_id">Faculty : </label>
-                        <Select
-                            className="form1group"
-                            isMulti
-                            name="emp_id"
-                            options={facs}
-                            // value={selectedSub}
-                            onChange={infoCollect}
-                            isSearchable
-                            placeholder="Select options..."
-                            closeMenuOnSelect={true}
-                        />
-
-
-                        <div>
-                            <input className='filter-button' type='button' value="Filter" onClick={onClickFilter} />
-                        </div>
-
-                    </div>
+          <>
+         </>
+                   
                 </>
+              <>
+              <div className="boxContainer1" >
+              <a href="/hodecr">
+          <div className="boxx1" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
+        <div className="card-body">
+          <div className="row">
+            <div className="col-9">
+              <div className="d-flex align-items-center align-self-start">
+                <h3 className="mb-0">ECR</h3>
+                <p className="text-success ml-2 mb-0 font-weight-medium"></p>
+              </div>
+            </div>
+            <div className="col-3"></div>
+          </div>
+          {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
+        </div>
+        <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
+          <span className="dashIcon">50</span>
+        </div>
+     
+          </div>
+          </a>
+         
+          <div className="boxx2" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
+        <div className="card-body">
+          <div className="row">
+            <div className="col-9">
+              <div className="d-flex align-items-center align-self-start">
+                <h3 className="mb-0">SeSTA</h3>
+                <p className="text-success ml-2 mb-0 font-weight-medium"></p>
+              </div>
+            </div>
+            <div className="col-3"></div>
+          </div>
+          {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
+        </div>
+        <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
+          <span className="dashIcon">5</span>
+        </div>
+     
+          </div>
 
+          <div className="boxx3" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
+        <div className="card-body">
+          <div className="row">
+            <div className="col-9">
+              <div className="d-flex align-items-center align-self-start">
+                <h3 className="mb-0">SeTAF</h3>
+                <p className="text-success ml-2 mb-0 font-weight-medium"></p>
+              </div>
+            </div>
+            <div className="col-3"></div>
+          </div>
+          {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
+        </div>
+        <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
+          <span className="dashIcon">2</span>
+        </div>
+     
+          </div>
+         
+          <div className="boxx4" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
+        <div className="card-body">
+          <div className="row">
+            <div className="col-9">
+              <div className="d-flex align-items-center align-self-start">
+                <h3 className="mb-0">IV</h3>
+                <p className="text-success ml-2 mb-0 font-weight-medium"></p>
+              </div>
+            </div>
+            <div className="col-3"></div>
+          </div>
+          {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
+        </div>
+        <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
+          <span className="dashIcon">100</span>
+        </div>
+     
+          </div>
+        </div>
+        </>
+        <>
+       
+         
+             </>
 
 
                 <div className="report-container1">
@@ -1946,4 +1954,3 @@ newPdf.text('Principal', 167, 234);
         </>
     )
 }
-

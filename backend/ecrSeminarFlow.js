@@ -232,61 +232,169 @@ route.post('/report/:report_id/:table',async(req,res)=>{
 // });
 
 
+// route.get('/dept/:empId', async (req, res) => {
+//     const eId = req.query.empId;
+//     const page = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
+//     const limit = 3; // Number of records per page
+//     const offset = (page - 1) * limit; // Calculate offset based on current page
+
+//     try {
+//         let recordsArr = [];
+//         let totalCount = 0;
+
+//         const tableNamesQuery = 'SELECT table_name FROM data_sub_report_type WHERE head_report_id = 1001';
+//         const tableNamesResult = await queryAsync(tableNamesQuery);
+
+//         for (const table of tableNamesResult) {
+//             const tableName = table.table_name;
+
+//             const sql = `
+//                 SELECT * FROM ${tableName} AS seminar
+//                 INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
+//                 INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
+//                 WHERE event_coordinator LIKE ?
+//                 ORDER BY report_id DESC
+//                 LIMIT ? OFFSET ?`;
+
+//             const rows = await queryAsync(sql, [`%${eId}%`, limit, offset]);
+//             recordsArr.push(...rows);
+
+//             // Count total number of records for this table
+//             const countQuery = `
+//                 SELECT COUNT(*) AS totalCount 
+//                 FROM ${tableName} AS seminar
+//                 INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
+//                 INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
+//                 WHERE event_coordinator LIKE ?`;
+//             const countResult = await queryAsync(countQuery, [`%${eId}%`]);
+//             totalCount += countResult[0].totalCount;
+//         }
+
+//         // Calculate total number of pages
+//         const totalPages = Math.ceil(totalCount / limit);
+
+//         res.status(200).json({ recordsArr, currentPage: page, totalPages });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
+
+
+/////////////////////
+
+
 route.get('/dept/:empId', async (req, res) => {
+    // const eId = req.params.empId;
+    // const page = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
+    // const limit = 3; // Number of records per page
+    // const offset = (page - 1) * limit; // Calculate offset based on current page
+    // let recordsArr = [];
+    
+    // const tableNamesQuery = 'SELECT table_name FROM data_sub_report_type WHERE head_report_id = 1001';
+    // base.query(tableNamesQuery, (err, result) => {
+    //     if (err) {
+    //         console.error(err);
+    //         res.status(500).json({ error: 'Internal Server Error' });
+    //         return;
+    //     }
+    
+    //     const queries = result.map(row => {
+    //         const tableName = row.table_name;
+    //         const sql = `
+    //             SELECT * FROM ${tableName} AS seminar
+    //             INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
+    //             INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
+    //             WHERE event_coordinator LIKE ?
+    //             ORDER BY report_id DESC
+    //             LIMIT ? OFFSET ?`;
+    
+    //         return new Promise((resolve, reject) => {
+    //             base.query(sql, [`%${eId}%`, limit, offset], (err, rows) => {
+    //                 if (err) {
+    //                     console.error(err);
+    //                     reject(err);
+    //                     return;
+    //                 }
+    //                 resolve({ rows });
+    //             });
+    //         });
+    //     });
+    
+    //     Promise.all(queries)
+    //         .then(results => {
+    //             results.forEach(({ tableName, rows }) => {
+    //                 if (rows.length > 0) {
+    //                     recordsArr.push({ tableName, rows });
+    //                 } else {
+    //                     console.log(`No records in ${tableName}`);
+    //                 }
+    //             });
+    //             res.status(200).json({ recordsArr });
+    //         })
+    //         .catch(error => {
+    //             console.error(error);
+    //             res.status(500).json({ error: 'Internal Server Error' });
+    //         });
+    // });
+
+
+    const eId = req.params.empId;
+    const page = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
+    const limit = 3; // Number of records per page
+    const offset = (page - 1) * limit; // Calculate offset based on current page
+
     try {
-        const eId = req.params.empId;
-        const page = parseInt(req.query.page, 10) || 1; // Ensure base 10 parsing and default page value
-        const limit = 3; // Number of records per page
-        const offset = (page - 1) * limit; // Calculate offset based on current page
+        let recordsArr = [];
+        let totalRecords = 0; // Total number of records
+        let totalPages = 0; // Total number of pages
 
-        if (page < 1) {
-            return res.status(400).json({ error: 'Invalid page number' });
-        }
-
-        // Sanitize empId to prevent SQL injection
-        // if (!/^\d+$/.test(eId)) {
-        //     return res.status(400).json({ error: 'Invalid employee ID' });
-        // }
-
-        // Query to get total count of records
-        const countQuery = 'SELECT COUNT(*) AS totalRecords FROM data_sub_report_type WHERE head_report_id = 1001';
-        // Query to fetch paginated records
         const tableNamesQuery = 'SELECT table_name FROM data_sub_report_type WHERE head_report_id = 1001';
+        const tableNamesResult = await queryAsync(tableNamesQuery);
 
-        const [countResult, tableNamesResult] = await Promise.all([
-            queryAsync(countQuery),
-            queryAsync(tableNamesQuery)
-        ]);
-
-        let totalRecords=0;
-
-        const recordsArr = await Promise.all(tableNamesResult.map(async (table) => {
+        for (const table of tableNamesResult) {
             const tableName = table.table_name;
-            totalRecords = ` SELECT COUNT(*) FROM ${tableName} AS seminar
-            INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
-            INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
-            WHERE event_coordinator LIKE ?`;
+
+            const countQuery = `SELECT COUNT(*) AS totalRecords FROM ${tableName} AS seminar
+                                INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
+                                INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
+                                WHERE event_coordinator LIKE ?`;
+            
+            // Execute count query for each table
+            const countResult = await queryAsync(countQuery, [`%${eId}%`]);
+            totalRecords += countResult[0].totalRecords;
+
             const sql = `
                 SELECT * FROM ${tableName} AS seminar
                 INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
                 INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
                 WHERE event_coordinator LIKE ?
                 ORDER BY report_id DESC
-                LIMIT ? OFFSET ?`; // Add LIMIT and OFFSET clauses
+                LIMIT ? OFFSET ?`;
 
-            return queryAsync(sql, [`%${eId}%`, limit, offset]);
-        }));
+            const rows = await queryAsync(sql, [`%${eId}%`, limit, offset]);
 
-        const mergedRecordsArr = [].concat(...recordsArr);
+            if (rows.length > 0) {
+                recordsArr.push(...rows);
+            }
+        }
 
-        const totalPages = Math.ceil(totalRecords / limit); // Calculate total pages
+        // Calculate total number of pages
+        totalPages = Math.ceil(totalRecords / limit)-1;
 
-        res.status(200).json({ recordsArr: mergedRecordsArr, totalPages });
+        res.status(200).json({ recordsArr, totalPages }); // Send records array and total pages
     } catch (error) {
-        console.error('Error:', error.message);
+        console.error(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+    
+
+
+
+
+
+///////////////////////////////
 
 // Assuming you have a function to perform asynchronous database queries (e.g., using mysql2 or a similar library)
 function queryAsync(sql, params = []) {

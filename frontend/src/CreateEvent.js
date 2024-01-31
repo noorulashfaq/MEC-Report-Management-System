@@ -31,23 +31,27 @@ const [totalPages, setTotalPages] = useState(1);
         
     fetchData(currentPage);
 },[currentPage])
-
 const fetchData = async (page) => {
+  try {
+    const logged = JSON.parse(sessionStorage.getItem("person"));
+    const empId = logged.faculty_id;
     
-        
-      try {
-        const logged = JSON.parse(sessionStorage.getItem("person"));
-        let empId=logged.faculty_id;
-      const response = await axios.get(`http://localhost:1234/seminar/dept/${empId}?page=${page}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch data');
-        }
-        const responseData = await response.json();
-        setCurrentRecords(responseData.recordsArr[0]);
-        setTotalPages(responseData.totalPages);
-    } catch (error) {
-        console.error('Error fetching data:', error);
+    // Fetch data from backend API
+    const response = await axios.get(`http://localhost:1234/seminar/dept/${empId}?page=${page}`);
+
+   
+    if (response.status === 200) {
+    
+      setCurrentRecords(response.data.recordsArr);
+      
+      setTotalPages(response.data.totalPages);
+      setLoading(false);
+    } else {
+      throw new Error('Failed to fetch data');
     }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
 }
 
 const logged=sessionStorage.getItem("person")
@@ -88,6 +92,7 @@ const[selectedSub,setSelectedSub]=useState([])
       
 const handleNextPage = () => {
     if (currentPage < totalPages) {
+      setLoading(true);
       setCurrentPage(currentPage + 1);
       fetchData(currentPage); // Increment currentPage by 1
     }
@@ -95,6 +100,7 @@ const handleNextPage = () => {
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
+      setLoading(true);
       setCurrentPage(currentPage - 1);
       fetchData(currentPage); // Decrement currentPage by 1
     }
@@ -354,7 +360,7 @@ const viewPdf1=async(report_id)=>{
 
   const handleDownload = async (table) => {
     try {
-      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
+      const res = await axios.get(`http://localhost:1234/seminar/data/${id}/${table}`);
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
@@ -648,7 +654,7 @@ newPdf.text('Principal', 155, 290);
         try {
           
           
-          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
+          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
         //   var atten = `/Project_images/attendence.jpg`;
@@ -1620,7 +1626,7 @@ newPdf.text('Principal', 167, 234);
 
 
       ///////////////////////
-     
+      const [loading, setLoading] = useState(false);
 
 
 
@@ -1922,7 +1928,12 @@ className="form1group"
           Next
         </button>
       </div>
-    
+      {loading && (
+  <div className="loading-overlay">
+    <div className="loading-spinner"></div>
+    <div className="loading-text">Loading...</div>
+  </div>
+)}
       </div>
                 </div>
                 </div>
