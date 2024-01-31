@@ -47,7 +47,7 @@ console.log(finalArr)
 
 const CheckRollWithDb=async(roll)=>{
 try{
- const temp=await axios.get(`http://10.167.1.2:1234/seminar/compare/${roll}`)
+ const temp=await axios.get(`http://localhost:1234/seminar/compare/${roll}`)
  if((temp.data.results[0].number)!=0){
  if(!(finalArr.includes(roll))){
  setFinalArr(prevArr => [
@@ -73,7 +73,7 @@ try{
  label: val.faculty_id+'-'+val.faculty_name+'-'+val.dept,
  }));
 
- axios.get('http://10.167.1.2:1234/seminar/find')
+ axios.get('http://localhost:1234/seminar/find')
  .then((response) => {
  // console.log(response);
  setOptions(response.data.rows);
@@ -336,7 +336,7 @@ try{
  
  formData1.append('file',selectedFile1,formData.event_photo_1.concat('.jpg') );
  
- fetch('http://10.167.1.2:1234/ecr/upload1', {
+ fetch('http://localhost:1234/ecr/upload1', {
  method: 'POST',
  body: formData1,
  })
@@ -356,7 +356,7 @@ try{
  formData2.append('file', selectedFile2,formData.event_photo_2.concat('.jpg') );
  
  
- fetch('http://10.167.1.2:1234/ecr/upload1', {
+ fetch('http://localhost:1234/ecr/upload1', {
  method: 'POST',
  body: formData2,
  })
@@ -376,7 +376,7 @@ try{
 
  formData3.append('file', selectedFile3,formData.event_photo_3.concat('.jpg') );
 
- fetch('http://10.167.1.2:1234/ecr/upload1', {
+ fetch('http://localhost:1234/ecr/upload1', {
  method: 'POST',
  body: formData3,
  })
@@ -395,7 +395,7 @@ try{
  
 
  formData4.append('file', selectedFile4,formData.event_photo_4.concat('.jpg') );
- fetch('http://10.167.1.2:1234/ecr/upload1', {
+ fetch('http://localhost:1234/ecr/upload1', {
  method: 'POST',
  body: formData4,
  })
@@ -413,7 +413,7 @@ try{
  if (selectedFile5 ) {
  const formData5 = new FormData();
  formData5.append('file', selectedFile5,formData.event_photo_5.concat('.jpg'));
- fetch('http://10.167.1.2:1234/ecr/upload1', {
+ fetch('http://localhost:1234/ecr/upload1', {
  method: 'POST',
  body: formData5,
  })
@@ -441,7 +441,7 @@ try{
  
 
 
-  fetch('http://10.167.1.2:1234/ecr/uploadPdf', {
+  fetch('http://localhost:1234/ecr/uploadPdf', {
     method: 'POST',
     body: formData6,
   })
@@ -516,7 +516,7 @@ try{
  
  // event_photo_2: name2,
  // });
- // fetch('http://10.167.1.2:1234/ecr/upload1', {
+ // fetch('http://localhost:1234/ecr/upload1', {
  // method: 'POST',
  // body: formData2,
  // })
@@ -556,7 +556,7 @@ try{
  // event_photo_3: name3,
  // })
 
- // fetch('http://10.167.1.2:1234/ecr/upload1', {
+ // fetch('http://localhost:1234/ecr/upload1', {
  // method: 'POST',
  // body: formData3,
  // })
@@ -595,7 +595,7 @@ try{
 // ...formData,
 // event_photo_4: name4,
 // })
-// fetch('http://10.167.1.2:1234/ecr/upload1', {
+// fetch('http://localhost:1234/ecr/upload1', {
 // method: 'POST',
 // body: formData4,
 // })
@@ -637,7 +637,7 @@ try{
  
  // event_photo_5: name5,
  // });
- // fetch('http://10.167.1.2:1234/ecr/upload1', {
+ // fetch('http://localhost:1234/ecr/upload1', {
  // method: 'POST',
  // body: formData5,
  // })

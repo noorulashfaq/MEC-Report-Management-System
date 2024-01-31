@@ -199,34 +199,91 @@ route.post('/report/:report_id/:table',async(req,res)=>{
 //     })
 // })
 
+// route.get('/dept/:empId', async (req, res) => {
+//     try {
+//         const eId = req.params.empId;
+//         let recordsArr = [];
+
+//         const tableNamesQuery = 'SELECT table_name FROM data_sub_report_type WHERE head_report_id = 1001';
+//         const tableNamesResult = await queryAsync(tableNamesQuery);
+
+//         for (const table of tableNamesResult) {
+//             const tableName = table.table_name;
+
+//             const sql = `
+//                 SELECT * FROM ${tableName} AS seminar
+//                 INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
+//                 INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
+//                 WHERE event_coordinator LIKE ?
+//                 ORDER BY report_id DESC`;
+
+//             const rows = await queryAsync(sql, [`%${eId}%`]);
+
+//             if (rows.length > 0) {
+//                 recordsArr.push(...rows);
+//             }
+//         }
+
+//         res.status(200).json({ recordsArr });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//     }
+// });
+
+
 route.get('/dept/:empId', async (req, res) => {
     try {
         const eId = req.params.empId;
-        let recordsArr = [];
+        const page = parseInt(req.query.page, 10) || 1; // Ensure base 10 parsing and default page value
+        const limit = 3; // Number of records per page
+        const offset = (page - 1) * limit; // Calculate offset based on current page
 
+        if (page < 1) {
+            return res.status(400).json({ error: 'Invalid page number' });
+        }
+
+        // Sanitize empId to prevent SQL injection
+        // if (!/^\d+$/.test(eId)) {
+        //     return res.status(400).json({ error: 'Invalid employee ID' });
+        // }
+
+        // Query to get total count of records
+        const countQuery = 'SELECT COUNT(*) AS totalRecords FROM data_sub_report_type WHERE head_report_id = 1001';
+        // Query to fetch paginated records
         const tableNamesQuery = 'SELECT table_name FROM data_sub_report_type WHERE head_report_id = 1001';
-        const tableNamesResult = await queryAsync(tableNamesQuery);
 
-        for (const table of tableNamesResult) {
+        const [countResult, tableNamesResult] = await Promise.all([
+            queryAsync(countQuery),
+            queryAsync(tableNamesQuery)
+        ]);
+
+        let totalRecords=0;
+
+        const recordsArr = await Promise.all(tableNamesResult.map(async (table) => {
             const tableName = table.table_name;
-
+            totalRecords = ` SELECT COUNT(*) FROM ${tableName} AS seminar
+            INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
+            INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
+            WHERE event_coordinator LIKE ?`;
             const sql = `
                 SELECT * FROM ${tableName} AS seminar
                 INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
                 INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
                 WHERE event_coordinator LIKE ?
-                ORDER BY report_id DESC`;
+                ORDER BY report_id DESC
+                LIMIT ? OFFSET ?`; // Add LIMIT and OFFSET clauses
 
-            const rows = await queryAsync(sql, [`%${eId}%`]);
+            return queryAsync(sql, [`%${eId}%`, limit, offset]);
+        }));
 
-            if (rows.length > 0) {
-                recordsArr.push(...rows);
-            }
-        }
+        const mergedRecordsArr = [].concat(...recordsArr);
 
-        res.status(200).json({ recordsArr });
+        const totalPages = Math.ceil(totalRecords / limit); // Calculate total pages
+
+        res.status(200).json({ recordsArr: mergedRecordsArr, totalPages });
     } catch (error) {
-        console.error(error);
+        console.error('Error:', error.message);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });

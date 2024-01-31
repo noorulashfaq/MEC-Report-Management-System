@@ -13,18 +13,42 @@ import './facultyEcrFilter.css';
 import Select from 'react-select';
 //import Img6001 from'./6001.jpeg';
 
-// 10.167.1.2
+// localhost
 export const CreateEvent=()=>{
 // --------------------------------------------------
+
+
+const [currentPage, setCurrentPage] = useState(1);
+const [currentRecords, setCurrentRecords] = useState([]);
+const [totalPages, setTotalPages] = useState(1);
   useEffect(()=>{
     doSomething();
     sessionStorage.removeItem("report_id")
     Maj()
     Acad()
     GetCurrAcd()
-    // Dept()
-    // alert(JSON.stringify(currAcd.acd_yr_id))
-},[])
+    
+        
+    fetchData(currentPage);
+},[currentPage])
+
+const fetchData = async (page) => {
+    
+        
+      try {
+        const logged = JSON.parse(sessionStorage.getItem("person"));
+        let empId=logged.faculty_id;
+      const response = await axios.get(`http://localhost:1234/seminar/dept/${empId}?page=${page}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch data');
+        }
+        const responseData = await response.json();
+        setCurrentRecords(responseData.recordsArr[0]);
+        setTotalPages(responseData.totalPages);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
 
 const logged=sessionStorage.getItem("person")
 const loggedUser = JSON.parse(logged)
@@ -38,7 +62,7 @@ const[allvalues,setAllvalues]=useState([]);
         // console.log(allvalues)
 
 const GetCurrAcd=async()=>{
-    const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+    const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
     // alert(JSON.stringify(t.data.result))
     const temp=t.data.result
     let valueYr=0
@@ -60,23 +84,20 @@ const[selectedSem,setSelectedSem]=useState([])
 const[selectedMajor,setSelectedMajor]=useState([])
 const[selectedSub,setSelectedSub]=useState([])
 
-const [currentPage, setCurrentPage] = useState(1);
-      const recordsPerPage = 15;
-    
-      // Calculate the index of the first and last records to display on the current page
-      const indexOfLastRecord = currentPage * recordsPerPage;
-      const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-      const currentRecords = allvalues.slice(indexOfFirstRecord, indexOfLastRecord);
-    
-      const totalPages = Math.ceil(allvalues.length / recordsPerPage);
-    
-      const handleNextPage = () => {
-        setCurrentPage((prevPage) => prevPage + 1);
-      };
-    
-      const handlePrevPage = () => {
-        setCurrentPage((prevPage) => prevPage - 1);
-      };
+      
+const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      fetchData(currentPage); // Increment currentPage by 1
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      fetchData(currentPage); // Decrement currentPage by 1
+    }
+  };
 
 const[filter,setFilter]=useState({
     "acdyr_id":"",
@@ -94,7 +115,7 @@ const onClickFilter=async()=>{
     // alert(JSON.stringify(filter))
     try{
         // alert("hi")
-        const filteredRecords=await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001",filter)
+        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
         // alert(filteredRecords.data)
         setAllvalues(filteredRecords.data)
     }
@@ -175,7 +196,7 @@ let [subs,setSubs]=useState([])
 
     const[year,setYear]=useState([])
     const Acad=async()=>{
-        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -332,7 +353,7 @@ const viewPdf1=async(report_id)=>{
 
   const handleDownload = async (table) => {
     try {
-      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
+      const res = await axios.get(`http://localhost:1234/seminar/data/${id}/${table}`);
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
@@ -626,7 +647,7 @@ newPdf.text('Principal', 155, 290);
         try {
           
           
-          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
+          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
         //   var atten = `/Project_images/attendence.jpg`;
@@ -1594,6 +1615,16 @@ newPdf.text('Principal', 167, 234);
           console.error(err);
         }
       }
+
+
+
+      ///////////////////////
+     
+
+
+
+
+
    
 // console.log(allvalues)
     return(
@@ -1881,14 +1912,16 @@ className="form1group"
                     </tbody>
                 </table>
                 <div className="pagination" style={{gap:"50px", alignItems:"center", marginLeft:'35%'}}>
+                <div className="pagination">
         <button className='page-btn' onClick={handlePrevPage} disabled={currentPage === 1}>
           Prev
         </button>
-        
         <span>{`Page ${currentPage} of ${totalPages}`}</span>
         <button className='page-btn' onClick={handleNextPage} disabled={currentPage === totalPages}>
           Next
         </button>
+      </div>
+    
       </div>
                 </div>
                 </div>

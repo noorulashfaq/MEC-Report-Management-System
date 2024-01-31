@@ -1,48 +1,48 @@
-GET http://10.167.1.2:1234/ecrFilter/getAcdYrList
+GET http://localhost:1234/ecrFilter/getAcdYrList
 
 ###
 
-GET http://10.167.1.2:1234/ecrFilter/getSemList
+GET http://localhost:1234/ecrFilter/getSemList
 
 ###
 
-GET http://10.167.1.2:1234/ecrFilter/getDeptList
+GET http://localhost:1234/ecrFilter/getDeptList
 
 ###
 
-GET http://10.167.1.2:1234/ecrFilter/getFacultiesList/1
+GET http://localhost:1234/ecrFilter/getFacultiesList/1
 
 ###
 
-GET http://10.167.1.2:1234/ecrFilter/getMajorList
+GET http://localhost:1234/ecrFilter/getMajorList
 
 ###
 
-GET http://10.167.1.2:1234/ecrFilter/getSubList/2001
+GET http://localhost:1234/ecrFilter/getSubList/2001
 
 ###
 
-# GET http://10.167.1.2:1234/ecrFilter/getHodFilter
+# GET http://localhost:1234/ecrFilter/getHodFilter
 
 ###
 
-# GET http://10.167.1.2:1234/ecrFilter/filterReportsWithAcdYr/3
+# GET http://localhost:1234/ecrFilter/filterReportsWithAcdYr/3
 
 ###
 
-# GET http://10.167.1.2:1234/ecrFilter/filterReportsWithAcdYrAndSem/3/1
+# GET http://localhost:1234/ecrFilter/filterReportsWithAcdYrAndSem/3/1
 
 ###
 
-# GET http://10.167.1.2:1234/ecrFilter/filterReportsWithMajor/2001
+# GET http://localhost:1234/ecrFilter/filterReportsWithMajor/2001
 
 ###
 
-# GET http://10.167.1.2:1234/ecrFilter/filterReportsWithMajorAndSub/2001/3001
+# GET http://localhost:1234/ecrFilter/filterReportsWithMajorAndSub/2001/3001
 
 ###
 
-POST http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001
+POST http://localhost:1234/cfilter/filterReportsWithParticulars/1001
 Content-Type: application/json
 
 {
@@ -56,4 +56,8 @@ Content-Type: application/json
 
 ###
 
-GET http://10.167.1.2:1234/cfilter/deltables
+GET http://localhost:1234/cfilter/deltables
+
+###
+GET http://localhost:1234/seminar/dept/60CS03?page=2
+###

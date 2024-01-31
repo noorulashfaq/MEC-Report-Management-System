@@ -1,7 +1,6 @@
 import {Major, SubReport, Table,onTable} from './connect';
 import React, { useState, useEffect} from 'react';
 import "./sty.css"
-import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import { getDocument } from 'pdfjs-dist/webpack';
 import jsPDF from 'jspdf';
@@ -10,11 +9,34 @@ import Image2 from './logo2.png';
 import Image3 from './logo3.jpg';
 import Image4 from './logo4.jpg';
 import './facultyEcrFilter.css';
-import Select from 'react-select';
+// import Select from 'react-select';
+import { makeStyles } from '@material-ui/core/styles';
+
+import { FormControl, InputLabel, MenuItem, Select, Button } from '@mui/material';
+
+const useStyles = makeStyles((theme) => ({
+  filterDropdowns: {
+    display: 'flex',
+    width: '100%',
+    marginLeft: '-100px',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    width: '100%',
+  },
+  filterButton: {
+    marginTop: theme.spacing(2),
+    width: '100%',
+  },
+}));
 //import Img6001 from'./6001.jpeg';
 
-// 10.167.1.2
+// localhost
 export const HodECRPage=()=>{
+  
 // --------------------------------------------------
   useEffect(()=>{
     doSomething();
@@ -38,7 +60,7 @@ const[allvalues,setAllvalues]=useState([]);
         // console.log(allvalues)
 
 const GetCurrAcd=async()=>{
-    const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+    const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
     // alert(JSON.stringify(t.data.result))
     const temp=t.data.result
     let valueYr=0
@@ -94,7 +116,7 @@ const onClickFilter=async()=>{
     // alert(JSON.stringify(filter))
     try{
         // alert("hi")
-        const filteredRecords=await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001",filter)
+        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
         // alert(filteredRecords.data)
         setAllvalues(filteredRecords.data)
     }
@@ -175,7 +197,7 @@ let [subs,setSubs]=useState([])
 
     const[year,setYear]=useState([])
     const Acad=async()=>{
-        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -332,7 +354,7 @@ const viewPdf1=async(report_id)=>{
 
   const handleDownload = async (table) => {
     try {
-      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
+      const res = await axios.get(`http://localhost:1234/seminar/data/${id}/${table}`);
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
@@ -626,7 +648,7 @@ newPdf.text('Principal', 155, 290);
         try {
           
           
-          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
+          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
         //   var atten = `/Project_images/attendence.jpg`;
@@ -1594,14 +1616,14 @@ newPdf.text('Principal', 167, 234);
           console.error(err);
         }
       }
-   
+      const classes = useStyles();
 // console.log(allvalues)
     return(
         <>
       
         <div class="main">
- 
-            <div class="searchbar2">
+ <div>
+ <div class="searchbar2">
                 <input type="text"
                        name=""
                        id=""
@@ -1612,84 +1634,14 @@ newPdf.text('Principal', 167, 234);
                         class="icn srchicn"
                         alt="search-button"/>
                     </div>
-            </div>
-<div class="sel">
-<style>
-    </style>
-        <div class="button-container">
-          {/* <FacultyEcrFilter/> */}
-        <>
-        <div className="filter-dropdowns">
+                    </div>
+ </div>
 
-<label for="acdyr_id">Academic Year : </label>
+  <div>
 
+  </div>
+   
 
-    <Select
-        className="form1group"
-        id="acdyr_id"
-
-        isMulti
-        name="acdyr_id"
-        options={years}
-        // value={selectedAcd}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
-    />
-    {/* <input type="" name="acdyr_id" onChange={handleChange} value={selectedAcd} /> */}
-
-
-<label for="sem_id">Semester : </label>
-<Select
-        className="form1group"
-        // isMulti
-        name="sem_id"
-        options={sems}
-        // value={selectedSem}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
-        />
-            {/* <input type="" name="sem_id" onChange={handleChange} value={selectedSem} /> */}
-
-
-<label for="major_id">Major Type : </label>
-<Select
-        className="form1group"
-        isMulti
-        name="major_id"
-        options={majors}
-        // value={selectedMajor}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={false}
-/>
-{/* <input type="" name="major_id" onChange={handleChange} value={selectedMajor} /> */}
-
-<label for="sub_id">Sub Type : </label>
-<Select
-className="form1group"
-        isMulti
-        name="sub_id"
-        options={subs}
-        // value={selectedSub}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
-        />
-                    {/* <input type="" name="sub_id" onChange={handleChange} value={selectedSub} /> */}
-        <div>
-            <input className='filter-button' type='button' value="Filter" onClick={onClheaderickFilter}/>
-        </div>
-
-            </div>
-    </>
-        </div>
-</div>
             <div class="report-container1">
                 <div class="report-header">
                     <h1 class="recent-Articles">Your Reports</h1>
@@ -1709,21 +1661,25 @@ className="form1group"
                             <th>Proposal</th>
                             
 
-                            <th>Completion</th><th></th><th>Status</th><th>Details</th>
+                            <th>Completion</th><th>Status</th><th></th><th>Details</th>
                             </tr>
                             {/* <tr><th></th><th></th><th></th> <th></th><th></th><th>Submitted on</th><th>Hod</th><th>Principal</th><th>Submitted on</th><th>Hod</th><th>Principal</th><th></th>
                         </tr> */}
                     </thead>
                     <tbody>
+                 
                         {
                             currentRecords.map((data)=>
                             (
+                          
                                 <tr>
-                                    <td>{data.report_id}</td>
-                                    <td>{data.event_title}</td>
-                                    <td>{data.event_date.split('-').reverse().join('-')}</td>
-                                    <td>{data.major_report}</td>
-                                    <td>{(data.sub_report)}</td>
+                                    
+                                    <td><br></br>{data.report_id}</td>
+                                    <td><br></br>{data.event_title}</td>
+                                    <td><br></br>{data.event_date.split('-').reverse().join('-')}</td>
+                                    <td><br></br>{data.major_report}</td>
+                                    
+                                    <td style={{justifyContent:'center',justifyItems:'center'}}><br></br>{(data.sub_report)}</td>
                                     {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
                                     
                                    
@@ -1868,7 +1824,7 @@ className="form1group"
                                 <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
                                 Submitted On : {data.proposal_date}
                                 </tr>
-                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
                                 <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
                                         {/* <td></td> */}
                                         </td>
@@ -1891,7 +1847,7 @@ className="form1group"
     backgroundColor: ' #f29b44', // Background color
     color: 'white', // Text color
     width: '90%', // Button width
-    
+   
     padding: '10px', // Padding
     borderRadius: '5px', // Border radius
     cursor: 'pointer', // Cursor style
@@ -1911,22 +1867,24 @@ className="form1group"
                                 <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
                                 Submitted On : {data.proposal_date}
                                 </tr>
-                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
-                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
                                         {/* <td></td> */}
                                         </td>
                                         <td>    
                                         <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
                                 Submitted On : {data.proposal_date}
                                 </tr>
-                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
-                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
                                 </td>
                                 <td >
-                                <button type="button" style={{width:'80px'}} onClick={async () => {
+                                <button type="button" style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px',width:'80px'}} onClick={async () => {
 
 }} className="btn btn-success col-4">Accept</button></td>
-<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+<td><button type="button" style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
 
                     
                                         <td><button
@@ -1934,7 +1892,9 @@ className="form1group"
     backgroundColor: '#f29b44', // Background color
     color: 'white', // Text color
     width: '90%', // Button width
-    
+    justifyContent:'center',
+    justifyItems:'center',
+    marginTop:'8px',
     padding: '10px', // Padding
     borderRadius: '5px', // Border radius
     cursor: 'pointer', // Cursor style
