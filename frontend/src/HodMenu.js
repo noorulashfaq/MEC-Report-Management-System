@@ -7,14 +7,7 @@ export const HodMenu=()=>{
         <>
         <head>
  
- <div class="logosec">
-         
-         <div class="logo">Welcome ,  {
-         logged.faculty_name
-         } </div> 
 
-         
-     </div>
      <a href="/">
      <img src=
 "https://mec.edu.in/wp-content/uploads/2021/02/main-logo.png"
@@ -22,6 +15,9 @@ export const HodMenu=()=>{
              id="menuicn"
              alt="menu-icon"/>
             </a>
+            <div class="logo">Welcome ,  {
+         logged.faculty_name
+         } </div> 
             <Navbar bg="light" expand="lg">
                 <Container>
                     <Navbar.Brand href="/">
@@ -31,10 +27,10 @@ export const HodMenu=()=>{
                     <Navbar.Collapse id="hod">
                         <Nav className="ms-auto">
                             <a className="me-2 btn btn-outline-success" href="/ecr">View ECR</a>
-                            <a className="me-2 btn btn-outline-success" href="/setaf">View SetAf</a>
+                            {/* <a className="me-2 btn btn-outline-success" href="/setaf">View SetAf</a>
                             <a className="me-2 btn btn-outline-success" href="/faculties">Filter Faculties</a>
                             <a className="me-2 btn btn-outline-success" href="/shortecr">Filter ECR</a>
-                            <a className="me-2 btn btn-outline-success" href="/shortsetaf">Filter SetAf</a>
+                            <a className="me-2 btn btn-outline-success" href="/shortsetaf">Filter SetAf</a> */}
                             <button className="me-2 btn btn-outline-danger" onClick={()=>{
                                 sessionStorage.removeItem("person")
                                 window.location.assign("/")

@@ -16,15 +16,43 @@ import Select from 'react-select';
 // localhost
 export const CreateEvent=()=>{
 // --------------------------------------------------
+
+
+const [currentPage, setCurrentPage] = useState(1);
+const [currentRecords, setCurrentRecords] = useState([]);
+const [totalPages, setTotalPages] = useState(1);
   useEffect(()=>{
     doSomething();
     sessionStorage.removeItem("report_id")
     Maj()
     Acad()
     GetCurrAcd()
-    // Dept()
-    // alert(JSON.stringify(currAcd.acd_yr_id))
-},[])
+    
+        
+    fetchData(currentPage);
+},[currentPage])
+const fetchData = async (page) => {
+  try {
+    const logged = JSON.parse(sessionStorage.getItem("person"));
+    const empId = logged.faculty_id;
+    
+    // Fetch data from backend API
+    const response = await axios.get(`http://localhost:1234/seminar/dept/${empId}?page=${page}`);
+
+   
+    if (response.status === 200) {
+    
+      setCurrentRecords(response.data.recordsArr);
+      
+      setTotalPages(response.data.totalPages);
+      setLoading(false);
+    } else {
+      throw new Error('Failed to fetch data');
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
 
 const logged=sessionStorage.getItem("person")
 const loggedUser = JSON.parse(logged)
@@ -61,23 +89,22 @@ const[selectedSem,setSelectedSem]=useState([])
 const[selectedMajor,setSelectedMajor]=useState([])
 const[selectedSub,setSelectedSub]=useState([])
 
-const [currentPage, setCurrentPage] = useState(1);
-      const recordsPerPage = 15;
-    
-      // Calculate the index of the first and last records to display on the current page
-      const indexOfLastRecord = currentPage * recordsPerPage;
-      const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-      const currentRecords = allvalues.slice(indexOfFirstRecord, indexOfLastRecord);
-    
-      const totalPages = Math.ceil(allvalues.length / recordsPerPage);
-    
-      const handleNextPage = () => {
-        setCurrentPage((prevPage) => prevPage + 1);
-      };
-    
-      const handlePrevPage = () => {
-        setCurrentPage((prevPage) => prevPage - 1);
-      };
+      
+const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setLoading(true);
+      setCurrentPage(currentPage + 1);
+      fetchData(currentPage); // Increment currentPage by 1
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setLoading(true);
+      setCurrentPage(currentPage - 1);
+      fetchData(currentPage); // Decrement currentPage by 1
+    }
+  };
 
 const[filter,setFilter]=useState({
     "acdyr_id":"",
@@ -333,8 +360,7 @@ const viewPdf1=async(report_id)=>{
 
   const handleDownload = async (table) => {
     try {
-      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
-
+      const res = await axios.get(`http://localhost:1234/seminar/data/${id}/${table}`);
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
@@ -628,8 +654,7 @@ newPdf.text('Principal', 155, 290);
         try {
           
           
-          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
-
+          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
         //   var atten = `/Project_images/attendence.jpg`;
@@ -1597,6 +1622,16 @@ newPdf.text('Principal', 167, 234);
           console.error(err);
         }
       }
+
+
+
+      ///////////////////////
+      const [loading, setLoading] = useState(false);
+
+
+
+
+
    
 // console.log(allvalues)
     return(
@@ -1884,14 +1919,21 @@ className="form1group"
                     </tbody>
                 </table>
                 <div className="pagination" style={{gap:"50px", alignItems:"center", marginLeft:'35%'}}>
+                <div className="pagination">
         <button className='page-btn' onClick={handlePrevPage} disabled={currentPage === 1}>
           Prev
         </button>
-        
         <span>{`Page ${currentPage} of ${totalPages}`}</span>
         <button className='page-btn' onClick={handleNextPage} disabled={currentPage === totalPages}>
           Next
         </button>
+      </div>
+      {loading && (
+  <div className="loading-overlay">
+    <div className="loading-spinner"></div>
+    <div className="loading-text">Loading...</div>
+  </div>
+)}
       </div>
                 </div>
                 </div>
