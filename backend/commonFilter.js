@@ -872,7 +872,6 @@ route.post('/filterReportsWithParticulars/:head',async(req,res)=>{
 //         }
 //     })
 // })
-
 route.get('/deltables', async (req, res) => {
     let sql = `SELECT table_name FROM data_sub_report_type`;
     base.query(sql, (err, rows) => {
@@ -886,14 +885,26 @@ route.get('/deltables', async (req, res) => {
                 continue;
             }
 
-            let triggerSql = `truncate ${rows[i].table_name}`;
+            let triggerSql = `
+                CREATE TRIGGER update_update_data_centre_for_aaa_guest_lecture
+                BEFORE INSERT ON data_centre_for_academic_and_administrative_audit_guest_lecture
+                FOR EACH ROW
+                BEGIN
+                    DECLARE next_rep_id varchar(100);
+                    DECLARE unique_rep_id int;
+                    SELECT CONCAT("RPT", COALESCE(MAX(rep_id), 5000) + 1) INTO next_rep_id FROM unique_ids;
+                    SELECT COALESCE(MAX(rep_id), 5000) + 1 INTO unique_rep_id FROM unique_ids;
+                    SET NEW.report_id = next_rep_id;
+                    INSERT INTO unique_ids VALUES (unique_rep_id);
+                END;
+            `;
 
             base.query(triggerSql, (err, result) => {
                 if (err) {
                     console.log(err);
                     return;
                 }
-                console.log(`${rows[i].table_name} dropped`);
+                console.log(`${rows[i].table_name} trigger created`);
             });
         }
     });
