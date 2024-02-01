@@ -26,7 +26,7 @@ route.get('/dropdownMajorType',async(req,res)=>{
 
 route.get('/dropdownSubTypeWithMajor/:majorId',async(req,res)=>{
     if(req.params.majorId!=0){
-    let sql="SELECT * FROM data_sub_report_type INNER JOIN data_major_report_type ON data_sub_report_type.major_report_id = data_major_report_type.major_report_id WHERE data_sub_report_type.major_report_id = ?"
+    let sql="SELECT * FROM data_sub_report_type where head_report_id=1001 INNER JOIN data_major_report_type ON data_sub_report_type.major_report_id = data_major_report_type.major_report_id WHERE data_sub_report_type.major_report_id = ?"
     base.query(sql,[req.params.majorId],(err,rows)=>{
         if(err){
             res.status(500).json({error:err.message})

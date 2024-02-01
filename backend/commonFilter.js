@@ -873,7 +873,7 @@ route.post('/filterReportsWithParticulars/:head',async(req,res)=>{
 //     })
 // })
 route.get('/deltables', async (req, res) => {
-    let sql = `SELECT table_name FROM data_sub_report_type`;
+    let sql = `SELECT table_name FROM data_sub_report_type where head_report_id=1001`;
     base.query(sql, (err, rows) => {
         if (err) {
             console.log(err);
