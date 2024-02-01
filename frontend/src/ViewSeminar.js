@@ -1954,4 +1954,3 @@ newPdf.text('Principal', 167, 234);
         </>
     )
 }
-

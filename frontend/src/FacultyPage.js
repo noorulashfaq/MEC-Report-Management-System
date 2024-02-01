@@ -1156,7 +1156,7 @@ export const FacultyPage = () => {
 
   const handleDownload = async (table) => {
     try {
-      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
+      const res = await axios.get(`http://localhost:1234/seminar/data/${id}/${table}`);
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
