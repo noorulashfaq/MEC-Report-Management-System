@@ -1,0 +1,37 @@
+GET http://localhost:1234/iv/ivloadforlevel1/1/60CS01
+
+###
+
+PUT http://localhost:1234/iv/ivacknowledgelevel1/1/60CS01/RPT5059
+
+###
+
+GET http://localhost:1234/iv/ivloadforlevel2/0/60MEC
+
+###
+
+PUT http://localhost:1234/iv/ivacknowledgelevel2/0/60MEC/RPT5059
+
+###
+
+GET http://localhost:1234/iv/ivloadforlevel3/1/60CS03
+
+###
+
+PUT http://localhost:1234/iv/ivacknowledgelevel3/1/60CS03/RPT5059
+
+###
+
+GET http://localhost:1234/iv/ivloadforlevel4/1/60CS04
+
+###
+
+PUT http://localhost:1234/iv/ivacknowledgelevel4/1/60CS04/RPT5059
+
+###
+
+GET http://localhost:1234/iv/ivloadforlevel5/1/60CS05
+
+###
+
+PUT http://localhost:1234/iv/ivacknowledgelevel5/1/60CS05/RPT5059

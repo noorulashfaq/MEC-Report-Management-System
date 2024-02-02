@@ -1,5 +1,5 @@
 const express=require('express')
-const router=express.Router()
+const route=express.Router()
 const cors=require('cors')
 const base=require('./db')
 const fs=require('fs')
@@ -7,7 +7,7 @@ const multer = require('multer');
 const path = require('path');
 
 
-router.use(cors())
+// route.use(cors())
 
 
 // Set up the storage for uploaded files
@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
   
   const upload = multer({ storage });
   
-  router.post('/upload1', upload.any(), (req, res) => {
+  route.post('/upload1', upload.any(), (req, res) => {
     if (!req.file) {
       return res.status(400).send('No file uploaded.');
     }
@@ -47,7 +47,7 @@ const storage = multer.diskStorage({
 
 const upload1 = multer({ storage: storage1 });
 
-router.post('/uploadPdf', upload1.any(), (req, res) => {
+route.post('/uploadPdf', upload1.any(), (req, res) => {
     if (!req.files || req.files.length === 0) {
         return res.status(400).send('No file uploaded.');
     }
@@ -59,7 +59,7 @@ router.post('/uploadPdf', upload1.any(), (req, res) => {
 
 
 
-router.get('/dept/:obj',async(req,res)=>{
+route.get('/dept/:obj',async(req,res)=>{
     // console.log(req.params.obj)
     let received=req.params.obj.split("-")
     console.log(received)
@@ -77,7 +77,7 @@ router.get('/dept/:obj',async(req,res)=>{
 
 })
 
-router.get('/find/:deptId',async(req,res)=>{
+route.get('/find/:deptId',async(req,res)=>{
     const dId=req.params.deptId
     const sql="select faculty_id,faculty_name from data_faculties where dept_id=? and not faculty_desig in(403,404)"
     base.query(sql,[dId],(err,rows)=>{
@@ -93,7 +93,7 @@ router.get('/find/:deptId',async(req,res)=>{
     })
 })
 
-router.post('/propose/:tableName',async(req,res)=>{
+route.post('/propose/:tableName',async(req,res)=>{
     // receive the request from client
 
     const{event_name,event_title,event_organizer,event_sponsor,event_date,event_venue,guest_name,guest_designation,guest_address,guest_number,guest_email,student_count,faculty_count,others_count,proposal_date,proposal_hod,proposal_principal,event_budget,event_coordinator,coordinator_phno,coordinator_designation,acdyr_id,dept_id,sem_id}=req.body
@@ -107,7 +107,7 @@ router.post('/propose/:tableName',async(req,res)=>{
         })
 })
 
-router.get('/loadforlevel1/:deptId/:empId',async(req,res)=>{
+route.get('/loadforlevel1/:deptId/:empId',async(req,res)=>{
     const dId=req.params.deptId
     const eId=req.params.empId
     let sql="select report_lvl1 from data_approval_ecr where dept_id=? and report_lvl1 like ?"
@@ -129,7 +129,7 @@ router.get('/loadforlevel1/:deptId/:empId',async(req,res)=>{
     })
 })
 
-router.get('/loadforlevel2',async(req,res)=>{
+route.get('/loadforlevel2',async(req,res)=>{
     const dId=req.params.deptId
     let sql="select * from data_ecr_workshop where approval_status=1 and is_eve_completed=0 "
     base.query(sql,[dId],(err,row)=>{
@@ -146,7 +146,7 @@ router.get('/loadforlevel2',async(req,res)=>{
 })
 
 
-router.put('/acknowledgelevel1/:deptId/:empId/:sno',async(req,res)=>{
+route.put('/acknowledgelevel1/:deptId/:empId/:sno',async(req,res)=>{
     const dId=req.params.deptId
     const eId=req.params.empId
     const sno=req.params.sno
@@ -204,7 +204,7 @@ router.put('/acknowledgelevel1/:deptId/:empId/:sno',async(req,res)=>{
 
 //Principal Approval
 
-// router.put('/acknowledgelevel2/:deptId/:empId/:sno',async(req,res)=>{
+// route.put('/acknowledgelevel2/:deptId/:empId/:sno',async(req,res)=>{
 //     const dId=req.params.deptId
 //     const eId=req.params.empId
 //     const sno=req.params.sno
@@ -259,7 +259,7 @@ router.put('/acknowledgelevel1/:deptId/:empId/:sno',async(req,res)=>{
 // })
 
 
-router.put('/acknowedgelevel2/:deptId/:sno',async(req,res)=>{
+route.put('/acknowedgelevel2/:deptId/:sno',async(req,res)=>{
     const dId=req.params.deptId
     const sno=req.params.sno
     let sql="update data_ecr_workshop set report_lvl2=6000, approval_status=approval_status+1 where dept_id=? and sno=?"
@@ -304,4 +304,4 @@ router.put('/acknowedgelevel2/:deptId/:sno',async(req,res)=>{
 
 
 
-module.exports=router
+module.exports=route

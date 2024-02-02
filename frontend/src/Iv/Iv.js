@@ -42,7 +42,7 @@ const Iv=()=>{
      const report=JSON.parse(sessionStorage.getItem("report_id"))
      setId(report.report_id)
      // alert("view Working")
-    //  handleDownload();
+    // handleDownload();
      
  }
  const [id1, setId1] = useState('');
@@ -50,7 +50,7 @@ const Iv=()=>{
    const report=JSON.parse(sessionStorage.getItem("report_id"))
    setId1(report.report_id)
    // alert("view Working")
-//    handleDownload1();
+// handleDownload1();
    
  }
 
@@ -91,8 +91,8 @@ const Iv=()=>{
             <button class="menu-buttons" data-category="iv_proposal">+ADD</button>
             </a>
 
-            <a href="/ivinput">
-            <button class="menu-buttons" data-category="iv_report">Create </button></a>
+            <a href="/ivcreate">
+            <button class="menu-buttons" data-category="iv_create">Create </button></a>
 
             </div>
             <table className='table table-striped '>
@@ -210,7 +210,7 @@ const Iv=()=>{
   type="button" onClick={async()=>{
                                                         // alert(val.workshop_id+" "+val.dept_id)
                                                         accept(data.report_id,data.event_name);
-                                                    }} >Create ECR</button></a></td>
+                                                    }} >Create IVR</button></a></td>
                                         </>
                                         :
                                         (data.report_proposal_status===-1) ?

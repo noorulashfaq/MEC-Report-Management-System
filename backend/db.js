@@ -4,14 +4,14 @@ const db = mysql.createConnection({
 
     // "host":"localhost",
     // "port":3306,
-    // "user":"testuser",
-    // "password":"testuser",
+    // "user":"root",
+    // "password":"",
     // "database":"mec_report_management",
     // "connectTimeout":3000000
-    "host":"localhost",
+    "host":"10.167.1.2",
     "port":3306,
-    "user":"root",
-    "password":"",
+    "user":"testuser",
+    "password":"testuser",
     "database":"mec_report_management",
     "connectTimeout":3000000
 

@@ -315,6 +315,7 @@ export const Academic=async(sid)=>{
     // const si=3003;
     const re=await axios.get(`${url}/seminar/getAcdYrWithSubType/${sid}`)
     let ids=[]
+    console.log(re)
     re.data.map((v)=>{
         ids.push(v)
     })

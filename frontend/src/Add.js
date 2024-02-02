@@ -69,8 +69,8 @@ export const Add=()=>{
         "event_date_to":"0000-00-00",
         "proposal_date":"",
         "completion_date":"",
-        "acdyr_id":1,
-        "dept_id":1,
+        "acdyr_id":0,
+        "dept_id":0,
         "sem_id":0
         
     })

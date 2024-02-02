@@ -1,96 +1,202 @@
-import { useEffect, useState } from "react"
-import { approveLevel1, approveLevel2, approveLevel3, approveLevel4, approveLevel5,loadComForLevel2,loadComForLevel3,loadComForLevel4,loadComForLevel5, loadForLevel1, loadForLevel2, loadForLevel3, loadForLevel4, loadForLevel5, loadComForLevel1, approveComLevel1, approveComLevel2, approveComLevel3, approveComLevel4, approveComLevel5, Table, Major, SubReport } from "./connect"
-import './sty.css';
-import './hodEcrFilter.css'
-import { onTable } from "./connect";
-import axios from 'axios'
-import jsPDF from 'jspdf';
+import {Major, SubReport, Table,onTable} from '../connect';
+import React, { useState, useEffect} from 'react';
+import "../sty.css"
+import axios from 'axios';
 import { getDocument } from 'pdfjs-dist/webpack';
-import Image from './logo.png';
-import Image2 from './logo2.png';
-import Image3 from './logo3.jpg';
-import Image4 from './logo4.jpg';
-import Select from 'react-select';
-import Grid from "@mui/material/Grid";
+import jsPDF from 'jspdf';
+import Image from '../logo.png';
+import Image2 from '../logo2.png';
+import Image3 from '../logo3.jpg';
+import Image4 from '../logo4.jpg';
+import '../facultyEcrFilter.css';
+// import Select from 'react-select';
+import { makeStyles } from '@material-ui/core/styles';
 
-const Box = ({ link, text }) => (
-  <a href={link} style={{ textDecoration: 'none', color: 'inherit' }}>
-    <div style={{ border: '1px solid black', padding: '20px', textAlign: 'center' }}>
-      <h2 style={{ margin: '0' }}>{text}</h2>
-    </div>
-  </a>
-);
+import { FormControl, InputLabel, MenuItem, Select, Button } from '@mui/material';
 
+const useStyles = makeStyles((theme) => ({
+  filterDropdowns: {
+    display: 'flex',
+    width: '100%',
+    marginLeft: '-100px',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    width: '100%',
+  },
+  filterButton: {
+    marginTop: theme.spacing(2),
+    width: '100%',
+  },
+}));
+//import Img6001 from'./6001.jpeg';
 
-export const ViewSeminar = () => {
-    const [ecr, setEcr] = useState([]);
-    const [ecr1, setEcr1] = useState([]);
+// localhost
+const HodIv=()=>{
+  
+// --------------------------------------------------
+  useEffect(()=>{
+    doSomething();
+    sessionStorage.removeItem("report_id")
+    Maj()
+    Acad()
+    GetCurrAcd()
+    // Dept()
+    // alert(JSON.stringify(currAcd.acd_yr_id))
+},[])
 
+const logged=sessionStorage.getItem("person")
+const loggedUser = JSON.parse(logged)
 
-    const logged = sessionStorage.getItem("person")
-    const loggedUser = JSON.parse(logged)
+const[allvalues,setAllvalues]=useState([]);
 
-    useEffect(() => {
-        doSomething();
-        Maj()
-        Acad()
-        GetCurrAcd()
-        // Dept()
-        Faculty(loggedUser.dept_id)
-        sessionStorage.removeItem("report_id")
-    }, [])
+    const doSomething = async() =>{
+        const res=await Table(`${loggedUser.faculty_id}`)
+            setAllvalues(res.data.recordsArr)
+        }
+        // console.log(allvalues)
 
-
-
-    const [selectedAcd, setSelectedAcd] = useState([])
-    const [selectedSem, setSelectedSem] = useState([])
-    const [selectedMajor, setSelectedMajor] = useState([])
-    const [selectedSub, setSelectedSub] = useState([])
-
-    const [filter, setFilter] = useState({
-        "acdyr_id": null,
-        "sem_id": null,
-        "major_id": null,
-        "sub_id": null,
-        "dept_id": `${loggedUser.dept_id}`,
-        "emp_id": null
-        // "dept_id":null,
-        // "emp_id":null
+const GetCurrAcd=async()=>{
+    const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+    // alert(JSON.stringify(t.data.result))
+    const temp=t.data.result
+    let valueYr=0
+    temp.map(item=>{
+        // console.log(item.acd_status)
+        if(item.acd_status==1){
+            valueYr = JSON.stringify(item.acd_yr_id)
+            setFilter(old=>{
+                return{
+                    ...old,
+                    "acdyr_id":valueYr
+                }
+            })
+        }
     })
+}
+const[selectedAcd,setSelectedAcd]=useState([])
+const[selectedSem,setSelectedSem]=useState([])
+const[selectedMajor,setSelectedMajor]=useState([])
+const[selectedSub,setSelectedSub]=useState([])
 
+const [currentPage, setCurrentPage] = useState(1);
+      const recordsPerPage = 15;
+    
+      // Calculate the index of the first and last records to display on the current page
+      const indexOfLastRecord = currentPage * recordsPerPage;
+      const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+      const currentRecords = allvalues.slice(indexOfFirstRecord, indexOfLastRecord);
+    
+      const totalPages = Math.ceil(allvalues.length / recordsPerPage);
+    
+      const handleNextPage = () => {
+        setCurrentPage((prevPage) => prevPage + 1);
+      };
+    
+      const handlePrevPage = () => {
+        setCurrentPage((prevPage) => prevPage - 1);
+      };
 
-    const [major, setMajor] = useState([])
-    const Maj = async () => {
-        const t = await Major()
-        // alert(JSON.stringify(t))
-        setMajor(t)
-        // alert(JSON.stringify(major))
-
+const[filter,setFilter]=useState({
+    "acdyr_id":"",
+    "sem_id":"",
+    "major_id":"",
+    "sub_id":"",
+    "dept_id":`${loggedUser.dept_id}`,
+    "emp_id":`${loggedUser.faculty_id}`
+    // "dept_id":null,
+    // "emp_id":null
+})
+// console.log(filter)
+const onClickFilter=async()=>{
+    // alert("clicked")
+    // alert(JSON.stringify(filter))
+    try{
+        // alert("hi")
+        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
+        // alert(filteredRecords.data)
+        setAllvalues(filteredRecords.data)
     }
-    const majors = major.map((val) => ({
-        value: val.major_report_id,
-        label: val.major_report,
-        extraInfo: "major_id"
-    }))
+    catch(err){
+        alert("No Reports in the selected filter")
+        console.log(err)
+    }
+}
+function test(n) {
+    if (n < 0)
+      return false;
+    let single_digit = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine']
+    let double_digit = ['Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen']
+    let below_hundred = ['Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety']
+    if (n === 0) return 'Zero'
+    function translate(n) {
+        let word = ""
+        if (n < 10) {
+            word = single_digit[n] + ' '
+        }
+        else if (n < 20) {
+            word = double_digit[n - 10] + ' '
+        }
+        else if (n < 100) {
+            let rem = translate(n % 10)
+            word = below_hundred[(n - n % 10) / 10 - 2] + ' ' + rem
+        }
+        else if (n < 1000) {
+            word = single_digit[Math.trunc(n / 100)] + ' Hundred ' + translate(n % 100)
+        }
+        else if (n < 100000) {
+            word = translate(Math.trunc(n / 1000)) + ' Thousand ' + translate(n % 1000)
+        }
+        else if (n < 10000000) {
+            word = translate(Math.trunc(n / 100000)) + ' Lakh ' + translate(n % 100000)
+        }
+        else {
+            word = translate(Math.trunc(n / 10000000)) + ' Crore ' + translate(n % 10000000)
+        }
+        return word
+    }
+    let result = translate(n)
+    return result.trim()+''
+}
 
 
-    const [sub, setSub] = useState([])
-    let [subs, setSubs] = useState([])
+const[major,setMajor]=useState([])
+const Maj=async()=>{
+    const t = await Major()
+    // alert(JSON.stringify(t))
+    setMajor(t)
+    // alert(JSON.stringify(major))
 
-    const Sub = async (mid) => {
+}
+const majors=major.map((val)=>({
+    value: val.major_report_id,
+    label: val.major_report,
+    extraInfo: "major_id"
+}))
+// alert("HIII"+JSON.stringify(majors))
+
+// console.log(majors)
+
+const[sub,setSub]=useState([])
+let [subs,setSubs]=useState([])
+
+    const Sub=async(mid)=>{
         const t = await SubReport(mid)
         // alert(t)
         // alert(JSON.stringify(t))
         setSub(t)
     }
-    subs = sub.map((val) => ({
-        value: val.sub_report_id,
+    subs=sub.map((val)=>({
+        value: val.table_name,
         label: val.sub_report,
         extraInfo: "sub_id"
     }))
 
-    const [year, setYear] = useState([])
-    const Acad = async () => {
+    const[year,setYear]=useState([])
+    const Acad=async()=>{
         const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
@@ -99,216 +205,153 @@ export const ViewSeminar = () => {
         value: val.acd_yr_id,
         label: val.acd_yr,
         extraInfo: "acdyr_id"
-    }));
+        }));
+    // console.log(years)
+    // alert(JSON.stringify(years))
 
     const semester = [
-        { sem_id: 1, sem: "Odd" },
-        { sem_id: 2, sem: "Even" },
-        { sem_id: 3, sem: "Both" },
+        {sem_id:1,sem:"Odd"},
+        {sem_id:2,sem:"Even"},
+        {sem_id:3,sem:"Both"},
     ]
-    let sems = semester.map((val) => ({
+    let sems = semester.map((val)=>({
         value: val.sem_id,
         label: val.sem,
         extraInfo: "sem_id"
     }))
+let [majorVals,setMajorVals]=useState("")
+let [AcdVals,setAcdVals]=useState("")
+let [subVals,setSubVals]=useState("")
 
-    const [fac, setFac] = useState([])
-    let [facs, setFacs] = useState([])
+const infoCollect=(eve)=>{
 
-    const Faculty = async (fid) => {
-        const t = await axios.get(`http://localhost:1234/ecrFilter/getFacultiesList/${fid}
-            `)
-        // alert(t)
-        // alert(JSON.stringify(t.data.result))
-        setFac(t.data.result)
-    }
-    facs = fac.map((val) => ({
-        value: val.faculty_id,
-        label: val.faculty_name,
-        extraInfo: "emp_id"
-    }))
+    const label = eve.label
+    const value = eve.value
+    const extraInfo = eve.extraInfo
 
-    let [majorVals, setMajorVals] = useState("")
-    let [AcdVals, setAcdVals] = useState("")
-    let [subVals, setSubVals] = useState("")
-
-    const infoCollect = (eve) => {
-
-        const label = eve.label
-        const value = eve.value
-        const extraInfo = eve.extraInfo
-
-        let isArray = Array.isArray(eve);
-        if (eve.length == 1) {
-            alert(JSON.stringify(eve))
-            if (eve[0].extraInfo == "major_id") {
-                // alert(eve[0].value)
-                Sub(eve[0].value)
-            }
-            setFilter((old) => ({
+    let isArray = Array.isArray(eve);
+    // alert(JSON.stringify(eve))
+    if(eve.length==1){
+        if(eve[0].extraInfo=="major_id"){
+            // alert(eve[0].value)
+            Sub(eve[0].value)
+        }
+        if(typeof eve[0].value === 'string'){
+            setFilter((old)=>({
                 ...old,
-                [eve[0].extraInfo]: JSON.stringify(eve[0].value)
+                [eve[0].extraInfo]:eve[0].value
+            }))
+        }else{
+        setFilter((old)=>({
+            ...old,
+            [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+        }))}
+    }
+    if(isArray){
+        // if(eve.length==1){
+        //     if(eve[0].extraInfo=="major_id"){
+        //         Sub(eve[0].value)
+        //     }
+        //     setFilter((old)=>({
+        //         ...old,
+        //         [eve[0].extraInfo]:eve[0].value
+        //     }))
+        // }
+        if(eve.length!=1){
+        if(eve[0].extraInfo=="major_id"){
+            Sub(0)
+            for(let i=0;i<eve.length;i++){
+                majorVals+=eve[i].value
+                if(i!=eve.length-1){
+                    majorVals+=","
+                }
+                setFilter((old)=>({
+                    ...old,
+                    [eve[i].extraInfo]:majorVals,
+                    sub_id:""
+                }))
+            }
+            // alert(majorVals)
+        
+    }
+    if(eve[0].extraInfo=="acdyr_id"){
+        
+            // alert(JSON.stringify(eve))
+            for(let i=0;i<eve.length;i++){
+                // alert(JSON.stringify(eve[i].value))
+                AcdVals+=eve[i].value
+                if(i!=eve.length-1){
+                    AcdVals+=","
+                }
+                setFilter((old)=>({
+                    ...old,
+                    [eve[i].extraInfo]:AcdVals
+                }))
+            }
+            // alert(majorVals)
+        
+    }
+    if(eve[0].extraInfo=="sub_id"){
+        
+        // alert(JSON.stringify(eve))
+        for(let i=0;i<eve.length;i++){
+            // alert(JSON.stringify(eve[i].value))
+            subVals+=eve[i].value
+            if(i!=eve.length-1){
+                subVals+=","
+            }
+            setFilter((old)=>({
+                ...old,
+                [eve[i].extraInfo]:subVals
             }))
         }
-        if (isArray) {
-            // if(eve.length==1){
-            //     if(eve[0].extraInfo=="major_id"){
-            //         Sub(eve[0].value)
-            //     }
-            //     setFilter((old)=>({
-            //         ...old,
-            //         [eve[0].extraInfo]:eve[0].value
-            //     }))
-            // }
-            if (eve.length != 1) {
-                if (eve[0].extraInfo == "major_id") {
-                    Sub(0)
-                    for (let i = 0; i < eve.length; i++) {
-                        majorVals += eve[i].value
-                        if (i != eve.length - 1) {
-                            majorVals += ","
-                        }
-                        setFilter((old) => ({
-                            ...old,
-                            [eve[i].extraInfo]: majorVals,
-                            sub_id: ""
-                        }))
-                    }
-                    // alert(majorVals)
-
-                }
-                if (eve[0].extraInfo == "acdyr_id") {
-
-                    // alert(JSON.stringify(eve))
-                    for (let i = 0; i < eve.length; i++) {
-                        // alert(JSON.stringify(eve[i].value))
-                        AcdVals += eve[i].value
-                        if (i != eve.length - 1) {
-                            AcdVals += ","
-                        }
-                        setFilter((old) => ({
-                            ...old,
-                            [eve[i].extraInfo]: AcdVals
-                        }))
-                    }
-                    // alert(majorVals)
-
-                }
-                if (eve[0].extraInfo == "sub_id") {
-
-                    // alert(JSON.stringify(eve))
-                    for (let i = 0; i < eve.length; i++) {
-                        // alert(JSON.stringify(eve[i].value))
-                        subVals += eve[i].value
-                        if (i != eve.length - 1) {
-                            subVals += ","
-                        }
-                        setFilter((old) => ({
-                            ...old,
-                            [eve[i].extraInfo]: subVals
-                        }))
-                    }
-                    // alert(majorVals)
-
-                }
-                if (eve[0].extraInfo == "emp_id") {
-                    // alert(JSON.stringify(eve))
-                    for (let i = 0; i < eve.length; i++) {
-                        // alert(JSON.stringify(eve[i].value))
-                        AcdVals += eve[i].value
-                        if (i != eve.length - 1) {
-                            AcdVals += ","
-                        }
-                        setFilter((old) => ({
-                            ...old,
-                            [eve[i].extraInfo]: AcdVals
-                        }))
-                    }
-                }
-            }
-        }
-        if (extraInfo == "sem_id") {
-            setSelectedSem(value)
-            // handleChange(value)
-            setFilter((old) => ({
-                ...old,
-                [extraInfo]: JSON.stringify(value)
-            }))
-        }
-        else if (extraInfo == "sub_id") {
-            setSelectedSub(value)
-            // handleChange(value)
-            setFilter((old) => ({
-                ...old,
-                [extraInfo]: JSON.stringify(value)
-            }))
-        }
+        // alert(majorVals)
+    
+}
     }
-    console.log(filter)
-
-    const GetCurrAcd = async () => {
-        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
-        // alert(JSON.stringify(t.data.result))
-        const temp = t.data.result
-        let valueYr = 0
-        temp.map(item => {
-            // console.log(item.acd_status)
-            if (item.acd_status == 1) {
-                // console.log(item)
-                // setCurrAcd(item)
-                valueYr = JSON.stringify(item.acd_yr_id)
-                // alert(valueYr)
-                setFilter(old => {
-                    return {
-                        ...old,
-                        "acdyr_id": valueYr
-                    }
-                })
-            }
-        })
-        // alert(JSON.stringify(valueYr))
-        // let newAcd = JSON.stringify(valueYr.acd_yr_id)
-        // let newAcdYr = parseInt(newAcd)
-        // alert(newAcdYr)
-        // setCurrAcd(newAcdYr)
     }
-
-
-    const onClickFilter = async () => {
-        // alert("clicked")
-        // alert(JSON.stringify(filter))
-        try {
-            // alert("hi")
-            const filteredRecords = await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001", filter)
-            // alert(filteredRecords.data)
-            setAllvalues(filteredRecords.data)
-        }
-        catch (err) {
-            alert("No Reports in the selected filter")
-            console.log(err)
-        }
+    else if(extraInfo=="sem_id"){
+        setSelectedSem(value)
+        // handleChange(value)
+        setFilter((old)=>({
+            ...old,
+            [extraInfo]:JSON.stringify(value)
+        }))
     }
-
-    const [allvalues, setAllvalues] = useState([]);
-    const doSomething = async () => {
-        const res = await Table()
-        setAllvalues(res.data)
+    else if(extraInfo=="sub_id"){
+        setSelectedSub(value)
+        // handleChange(value)
+        setFilter((old)=>({
+            ...old,
+            [extraInfo]:value
+        }))
     }
+}
+
+console.log(filter)
+// ---------------------------------------------------
+
+
     const [id, setId] = useState('');
 
-    const viewPdf = async (report_id) => {
-        const report = JSON.parse(sessionStorage.getItem("report_id"))
-        setId(report.report_id)
-        // alert("view Working")
-        handleDownload();
-
-    }
-
-
-
-
+   const viewPdf=async(report_id)=>{
+    const report=JSON.parse(sessionStorage.getItem("report_id"))
+    setId(report.report_id)
+    // alert("view Working")
+    handleDownload(report.event_name);
+    
+}
+const [id1, setId1] = useState('');
+const viewPdf1=async(report_id)=>{
+  const report=JSON.parse(sessionStorage.getItem("report_id"))
+  setId1(report.report_id)
+  // alert("view Working")
+  handleDownload1(report.event_name);
+  
+}
 
    
+
   const handleDownload = async (table) => {
     try {
       const res = await axios.get(`http://localhost:1234/seminar/data/${id}/${table}`);
@@ -317,10 +360,10 @@ export const ViewSeminar = () => {
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
       var sign = `/Project_images/${data.lvl_1_proposal_sign}.jpeg`;
       // alert(sign);
-     
+      
       const newPdf = new jsPDF();
        
-     
+      
    
     newPdf.addImage(Image, 'PNG', 10, 3, 20, 20);
 newPdf.addImage(Image2, 'PNG', 12,23, 15, 15);
@@ -405,7 +448,7 @@ newPdf.text('Details of the Guest',22, 141);
 newPdf.rect(110, 125, 23, 10).stroke();
 newPdf.text('Name', 111, 131);
 newPdf.rect(133, 125,67, 10).stroke();
-newPdf.text(`${data.guest_name}`, 135, 131);///Name of the Guest
+newPdf.text(`${data.guest_name}`, 135, 131);///Name of the Guest 
 newPdf.rect(110, 135, 23, 10).stroke();
 newPdf.text('Designation', 111, 141);
 newPdf.rect(133, 135,67, 10).stroke();
@@ -513,7 +556,7 @@ newPdf.rect(80, 250, 60, 10).stroke();
 newPdf.text('', 100, 229);//coordinator Desgination
 
 newPdf.rect(140, 250, 60, 10).stroke();
-newPdf.text('', 155, 229);//coordinator
+newPdf.text('', 155, 229);//coordinator 
 
 // newPdf.rect(10, 225, 70, 5).stroke();
 // newPdf.text('Name', 35, 229);
@@ -548,9 +591,9 @@ newPdf.text('Principal', 155, 290);
     // Open the PDF in a new tab or window
     const newWindow = window.open();
     newWindow.document.write(`<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`);
- 
+  
   }
-     
+      
      catch (err) {
       console.error(err);
     }
@@ -558,191 +601,66 @@ newPdf.text('Principal', 155, 290);
 
 
 
-    const [info, setInfo] = useState("")
+      // conts[getname(variable),setname(FUNCTION)]=useState(initialized)
+      
 
+        // const onClicked=async(report)=>{
+            
+        //     const temp=await onTable(report)
+        //     sessionStorage.setItem("report_id",JSON.stringify(temp))
+        //     // window.location.assign("/ecr")
+        // }
+        const accept=async(report_id,table)=>{
+            const temp=await onTable(report_id,table)
 
-    const accept = async (name, dept_id, report_id, com, report_proposal_status, report_completion_status) => {
-        // alert(com);
-        // alert(com);
-        if (com === 1) {
-
-            const log = JSON.parse(sessionStorage.getItem("person"))
-            let data;
-            if (report_completion_status === 0) {
-                data = await approveComLevel1(name, dept_id, log.faculty_id, report_id)
-            }
-            else if (report_completion_status === 1) {
-                data = await approveComLevel2(name, dept_id, log.faculty_id, report_id)
-            }
-            else if (report_completion_status === 2) {
-                data = await approveComLevel3(name, dept_id, log.faculty_id, report_id)
-            }
-            else if (report_completion_status === 3) {
-                data = await approveComLevel4(name, dept_id, log.faculty_id, report_id)
-            }
-            else if (report_completion_status === 4) {
-                data = await approveComLevel5(name, dept_id, log.faculty_id, report_id)
-            }
-            setInfo(data)
-            window.location.assign("/")
+        if(temp.report_id){
+            // alert(temp.report_id)
+            sessionStorage.setItem("report_id",JSON.stringify(temp))
+            
         }
-        else {
-            const log = JSON.parse(sessionStorage.getItem("person"))
-            let data;
-            // alert(report_proposal_status);
-            if (report_proposal_status === 0) {
 
-
-                data = await approveLevel1(name, dept_id, log.faculty_id, report_id)
-            }
-            else if (report_proposal_status === 1) {
-                data = await approveLevel2(name, dept_id, log.faculty_id, report_id)
-            }
-            else if (report_proposal_status === 2) {
-                data = await approveLevel3(name, dept_id, log.faculty_id, report_id)
-            }
-            else if (report_proposal_status === 3) {
-                data = await approveLevel4(name, dept_id, log.faculty_id, report_id)
-            }
-            else if (report_proposal_status === 4) {
-                data = await approveLevel5(name, dept_id, log.faculty_id, report_id)
-            }
-            setInfo(data)
-            window.location.assign("/")
         }
-    }
+        const pdfAccept=async(report_id,table)=>{
+            const temp=await onTable(report_id,table)
+        if(temp.report_id){
+            sessionStorage.setItem("report_id",JSON.stringify(temp))
+            
+        }
+        viewPdf(temp.report_id);
 
-    const load = async () => {
-        const logged = JSON.parse(sessionStorage.getItem("person"))
-        let temp;
+        }   
+        const ecr=async(report_id,table)=>{
+          const temp=await onTable(report_id,table)
+      if(temp.report_id){
+          sessionStorage.setItem("report_id",JSON.stringify(temp))
+          
+          setId1(temp.report_id)
+        //   alert(temp.report_id)
+          
+      }
+      viewPdf1(temp.report_id);
+
+      } 
+      
+      
+
+      const handleDownload1= async (table) => {
         try {
-           
-         temp = await loadComForLevel1(logged.dept_id, logged.faculty_id)
-         
-       
-            setEcr1(temp)
-        }
-        catch (e) {
-            console.log("Error in load For Level 1")
-        }
-        try {
-           
-            temp = await loadComForLevel2(logged.dept_id, logged.faculty_id)
-               setEcr1(temp)
-           }
-           catch (e) {
-               console.log("Error in load For Level 2")
-           }
-           try {
-           
-            temp = await loadComForLevel3(logged.dept_id, logged.faculty_id)
-               setEcr1(temp)
-           }
-           catch (e) {
-               console.log("Error in load For Level 3")
-           }
-           try {
-           
-            temp = await loadComForLevel4(logged.dept_id, logged.faculty_id)
-               setEcr1(temp)
-           }
-           catch (e) {
-               console.log("Error in load For Level 4")
-           }
-           try {
-           
-            temp = await loadComForLevel5(logged.dept_id, logged.faculty_id)
-               setEcr1(temp)
-           }
-           catch (e) {
-               console.log("Error in load For Level 5")
-           }
-    }
-    const loadSeminars = async () => {
-        const logged = JSON.parse(sessionStorage.getItem("person"))
-        let temp;
-        try {
-            temp = await loadForLevel1(logged.dept_id, logged.faculty_id)
-
-            setEcr(temp)
-        }
-        catch (e) {
-            console.log("Error in loadforLevel1");
-        } try {
-            temp = await loadForLevel2(logged.dept_id, logged.faculty_id)
-
-            setEcr(temp)
-        }
-        catch (e) {
-            console.log("Error in loadforLevel2");
-        }
-        try {
-            temp = await loadForLevel3(logged.dept_id, logged.faculty_id)
-
-            setEcr(temp)
-        } catch (e) {
-            console.log("Error in loadforLevel3");
-        }
-        try {
-            temp = await loadForLevel4(logged.dept_id, logged.faculty_id)
-
-            setEcr(temp)
-        }
-        catch (e) {
-            console.log("Error in loadforLevel4");
-        }
-        try {
-            temp = await loadForLevel5(logged.dept_id, logged.faculty_id)
-
-            setEcr(temp)
-
-        }
-        catch (e) {
-            console.log("Error in loadforLevel5");
-        }
-    }
-
-
-    useEffect(() => {
-        loadSeminars()
-        load()
-    }, [])
-
-    const [id1, setId1] = useState('');
-    const viewPdf1 = async (report_id) => {
-        const report = JSON.parse(sessionStorage.getItem("report_id"))
-        setId1(report.report_id)
-        // alert("view Working")
-        handleDownload1();
-    }
-    const ecrs = async (report_id,table) => {
-        const temp = await onTable(report_id,table)
-        if (temp.report_id) {
-            sessionStorage.setItem("report_id", JSON.stringify(temp))
-
-        }
-        viewPdf1(temp.report_id);
-
-    }
-
-
-    const handleDownload1= async (table) => {
-        try {
-         
-         
+          
+          
           const res = await axios.get(`http://localhost:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
         //   var atten = `/Project_images/attendence.jpg`;
           const picture1 = `/Project_Images/${data.event_photo_1}.jpg`;
           const picture2 = `/Project_Images/${data.event_photo_2}.jpg`;
-   
+    
           const newPdf = new jsPDF();
          
           const POs = `${data.event_po}`;
         //   console.log(data.event_po);
           let arr=POs.split(",");
-       
+        
            arr=arr.sort();
         //    alert(arr[1]);
            let pdfDocument;
@@ -750,7 +668,7 @@ newPdf.text('Principal', 155, 290);
             const pdfUrl = `/Pdf/${data.pdf}`;
             const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
           const pdfData = pdfResponse.data;
-   
+    
          pdfDocument = await getDocument({ data: pdfData }).promise;
            }catch(e){
             console.log(e)
@@ -764,14 +682,14 @@ newPdf.text('Principal', 155, 290);
             newPdf.setTextColor(color[0],color[1],color[2]);
             newPdf.text(text,textcenter,y);
           }
-   
-   
+    
+    
     //////////////////////////////////////////////// First Page ///////////////////////////
     newPdf.addImage(Image, 'PNG', 10, 3, 20, 20);
       newPdf.addImage(Image2, 'PNG', 12,23, 15, 15);
       newPdf.addImage(Image3, 'JPG', 175, 3, 20, 15);
       newPdf.addImage(Image4, 'JPG', 175, 20, 20, 15);
-     
+      
       newPdf.setFontSize(18);
       newPdf.setFont("times", "bold");
       newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
@@ -799,7 +717,7 @@ newPdf.text('1.', 12, 65);
 newPdf.rect(20, 55, 90, 15).stroke();
 newPdf.text('Nature of the Event:\nConference/Technical Symposium/Workshop/\nSeminar/Guest/Lecture/FDP/Any other',22, 61);
 newPdf.rect(110, 55, 90, 15).stroke();
-newPdf.text(`${data.sub_report}`, 113, 65);///Nature of the Event
+newPdf.text(`${data.sub_report}`, 113, 65);///Nature of the Event 
 newPdf.setFontSize(11);
 
 
@@ -809,7 +727,7 @@ newPdf.rect(20, 70, 90, 10).stroke();
 newPdf.text('Title of the event',22, 78);
 newPdf.rect(110, 70, 90, 10).stroke();
 
-const event_title = `${data.event_title}`;
+const event_title = `${data.event_title}`; 
 const title = newPdf.splitTextToSize(event_title, 80);
 newPdf.text(title, 113, 74);///Title of the Event
 
@@ -836,7 +754,7 @@ newPdf.text('5.', 12, 108);
 newPdf.rect(20, 100, 90, 10).stroke();
 newPdf.text('Date of the Event Planned',22, 108);
 newPdf.rect(110, 100, 90, 10).stroke();
-newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`, 113, 108);////Date of the Event
+newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`, 113, 108);////Date of the Event 
 
 newPdf.rect(10, 110, 10, 10).stroke();
 newPdf.text('6.', 12, 118);
@@ -974,7 +892,7 @@ for(let i=0;i<12;i++){
   {
     x1=x1+10;
     y1=y1+13;
-   
+    
   }
   else{
     x1=x1+12;
@@ -998,7 +916,7 @@ for(let i=0;i<12;i++){
 // let j1=0;
 
 for(let i=0;i<arr.length;i++){
- 
+  
   let temp2='PSO1'
   let temp3='PSO2'
   let temp4='PSO3'
@@ -1016,10 +934,10 @@ for(let i=0;i<arr.length;i++){
   {
     newPdf.text("X",193,273);
   }
- 
+  
    
 }
-   
+    
 
 newPdf.rect(154, 267, 15, 9).stroke();
 newPdf.rect(169, 267, 15, 9).stroke();
@@ -1281,7 +1199,7 @@ newPdf.text('Details of the Guest',22, 141);
 newPdf.rect(110, 125, 23, 10).stroke();
 newPdf.text('Name', 111, 131);
 newPdf.rect(133, 125,67, 10).stroke();
-newPdf.text(`${data.guest_name}`, 135, 131);///Name of the Guest
+newPdf.text(`${data.guest_name}`, 135, 131);///Name of the Guest 
 newPdf.rect(110, 135, 23, 10).stroke();
 newPdf.text('Designation', 111, 141);
 newPdf.rect(133, 135,67, 10).stroke();
@@ -1367,7 +1285,7 @@ newPdf.rect(80, 250, 60, 10).stroke();
 newPdf.text('', 100, 229);//coordinator Desgination
 
 newPdf.rect(140, 250, 60, 10).stroke();
-newPdf.text('', 155, 229);//coordinator
+newPdf.text('', 155, 229);//coordinator 
 
 
 // newPdf.rect(140, 230, 60, 35).stroke();newPdf.setFont("times","bold");
@@ -1376,7 +1294,7 @@ newPdf.text('HoD', 15, 290);
 
 newPdf.text('Principal', 155, 290);
 
-     
+      
      try{
 
       // Add pages from the original PDF
@@ -1418,7 +1336,7 @@ newPdf.text('Budget Proposal', 80, 45);
 newPdf.setFontSize(18);
 newPdf.text('Date of the Event:', 15, 60);
 newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,67, 60);
-newPdf.setFont("times", "");
+newPdf.setFont("times", ""); 
 newPdf.setFontSize(10);
 newPdf.text('To the Management through Principle', 15, 70);
 newPdf.setFontSize(15);
@@ -1487,7 +1405,7 @@ console.log(centerX);
 newPdf.setFont('times', 'roman');
 newPdf.rect(8,58,50,10).stroke();
 newPdf.text('Event Date:',10,65);
-newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,35,65);////Event Date
+newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,35,65);////Event Date 
 newPdf.rect(165,58,30,10);
 newPdf.text(`${data.acd_yr}`,170,65);///Academic Year
 
@@ -1676,282 +1594,342 @@ newPdf.setFont("times","bold");
 newPdf.text('Event Coordinator(s)', 15, 234);
 newPdf.text('HOD', 100, 234);
 newPdf.text('Principal', 167, 234);
-   
+    
     ////////////////////////////////////////////////////////    
-   
-     
-   
-   
-   
-   
+    
+      
+    
+    
+    
+    
 
         // Generate a data URI for the PDF
         const pdfDataUri = newPdf.output('datauristring');
-   
+    
         // Open the PDF in a new tab or window
         const newWindow = window.open();
         newWindow.document.write(`<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`);
-     
+      
       }
-         
+          
          catch (err) {
           console.error(err);
         }
       }
-
-    // const acceptAll=async()=>{
-    //     const logged=JSON.parse(sessionStorage.getItem("person"))
-    //     const temp = await approveLevel1(logged.dept_id,logged.faculty_id)
-    //     setInfo(temp)
-    // }
-    const pdfAccept = async (report_id,table) => {
-        const temp = await onTable(report_id,table)
-        if (temp.report_id) {
-            sessionStorage.setItem("report_id", JSON.stringify(temp))
-
-        }
-        viewPdf(temp.report_id);
-
-    }
-
-
-    return (
+      const classes = useStyles();
+// console.log(allvalues)
+    return(
         <>
-            <body>
-            </body>
-            <div className="main">
-                <>
-                <div style={{ marginTop: "100px" }}>
-            {/* <div className="box-container">
-              <a className="topic-heading" href="/hodecr">
-                <div className="box box1" id="ecr">
-                  ECR
-                </div>
-              </a>
-
-              <a className="topic-heading" href="/setaf">
-                <div className="box box4" id="set">
-                  <h2 className="topic-heading" id="tt">
-                    SeTAF
-                  </h2>
-                </div>
-              </a>
-
-              <a className="topic-heading" href="/sesta">
-                <div className="box box4" id="set">
-                  <h2 className="topic-heading" id="tt">
-                    SeSTA
-                  </h2>
-                </div>
-              </a>
-
-              <a className="topic-heading" href="/iv">
-                <div className="box box3" id="ecr">
-                  <h2 className="topic-heading">IV</h2>
-                </div>
-              </a>
-            </div> */}
-          </div>
-          <>
-         </>
-                   
-                </>
-              <>
-              <div className="boxContainer1" >
-              <a href="/hodecr">
-          <div className="boxx1" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
-        <div className="card-body">
-          <div className="row">
-            <div className="col-9">
-              <div className="d-flex align-items-center align-self-start">
-                <h3 className="mb-0">ECR</h3>
-                <p className="text-success ml-2 mb-0 font-weight-medium"></p>
-              </div>
-            </div>
-            <div className="col-3"></div>
-          </div>
-          {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
-        </div>
-        <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
-          <span className="dashIcon">50</span>
-        </div>
-     
-          </div>
-          </a>
-         
-          <div className="boxx2" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
-        <div className="card-body">
-          <div className="row">
-            <div className="col-9">
-              <div className="d-flex align-items-center align-self-start">
-                <h3 className="mb-0">SeSTA</h3>
-                <p className="text-success ml-2 mb-0 font-weight-medium"></p>
-              </div>
-            </div>
-            <div className="col-3"></div>
-          </div>
-          {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
-        </div>
-        <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
-          <span className="dashIcon">5</span>
-        </div>
-     
-          </div>
-
-          <div className="boxx3" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
-        <div className="card-body">
-          <div className="row">
-            <div className="col-9">
-              <div className="d-flex align-items-center align-self-start">
-                <h3 className="mb-0">SeTAF</h3>
-                <p className="text-success ml-2 mb-0 font-weight-medium"></p>
-              </div>
-            </div>
-            <div className="col-3"></div>
-          </div>
-          {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
-        </div>
-        <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
-          <span className="dashIcon">2</span>
-        </div>
-     
-          </div>
-         
-         <a href="/hodiv">
-          <div className="boxx4" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
-        <div className="card-body">
-          <div className="row">
-            <div className="col-9">
-              <div className="d-flex align-items-center align-self-start">
-                <h3 className="mb-0">IV</h3>
-                <p className="text-success ml-2 mb-0 font-weight-medium"></p>
-              </div>
-            </div>
-            <div className="col-3"></div>
-          </div>
-          {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
-        </div>
-        <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
-          <span className="dashIcon">100</span>
-        </div>
-     
-          </div></a>
-        </div>
-        </>
-        <>
-       
-         
-             </>
-
-
-                <div className="report-container1">
-                    <div className="report-header">
-                        <h1 className="recent-Articles">Requests</h1>
+      
+        <div class="main">
+ <div>
+ <div class="searchbar2">
+                <input type="text"
+                       name=""
+                       id=""
+                       placeholder="Search"/>
+                <div class="searchbtn">
+                    <img src=
+"https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
+                        class="icn srchicn"
+                        alt="search-button"/>
                     </div>
-                    <table className="table table-stripped text-nowrap">
-                        <thead>
-                            <tr>
-                                <th>Report ID</th><tH>Title</tH><th>Major Type</th><th>Sub Type</th><th>Co-ordinator</th>
-                                <th>Action</th><th>Event</th>
+                    </div>
+ </div>
+
+  <div>
+
+  </div>
+   
+
+            <div class="report-container1">
+                <div class="report-header">
+                    <h1 class="recent-Articles">Your Reports</h1>
+                    {/* <a className="topic-heading" href="/add"><button class="view" id="addButton">+ Add</button></a> */}
+                              </div>
+                              <div className='table-responsive text-nowrap'>
+   <table className='table table-striped '>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Event Title</th>
+                            <th>Date</th>
+                            <th>Major Type</th>
+                            <th>Sub Type</th>
+                            {/* <th></th> */}
+                            
+                            <th>Proposal</th>
+                            
+
+                            <th>Completion</th><th>Status</th><th></th><th>Details</th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {
-                            ecr?.length ||0 > 0 ? (
-
-                                ecr.map((val, key) => (
-                                    <tr>
-                                        <td>{val.report_id}</td>
-                                        <td>{val.event_title}</td>
-                                        <td>{val.major_report}</td>
-                                        <td>{val.sub_report}</td>
-
-                                        <td>{val.event_coordinator}</td>
-                                        <td className="row justify-content-evenly">
-                                            <button type="button" onClick={async () => {
-
-                                                accept(val.event_name, val.dept_id, val.report_id, val.final_proposal_status, val.report_proposal_status, val.report_completion_status);
-                                            }} className="btn btn-success col-4"  >Accept</button>
-                                            <button type="button" className="btn btn-dark col-4">Reject</button>
-                                        </td>
-                                        <td><button className="btn btn-dark col-4"
-                                            style={{
-                                                backgroundColor: '#0000ff',
-                                                color: 'white',
-                                                width: '90%',
-
-                                                padding: '10px',
-                                                borderRadius: '5px',
-                                                cursor: 'pointer',
-                                                border: 'none',
-                                            }} type="button" onClick={async () => {
-
-                                                pdfAccept(val.report_id,val.event_name);
-
-                                            }} >View Proposal</button></td>
-                                    </tr>
-                               
-                             
-                                ))):( <tr>
-                                    <td colSpan="7" style={{ textAlign: 'center' }}>
-                         No Proposal requests Found
-                         </td>
-                                </tr>)
-                                        }
-                            {ecr1?.length ||0  > 0 ? (
-                                ecr1.map((val, key) => (
-                                    <tr>
-                                        <td>{val.report_id}</td>
-                                        <td>{val.event_title}</td>
-                                        <td>{val.major_report}</td>
-                                        <td>{val.sub_report}</td>
-
-                                        <td>{val.event_coordinator}</td>
-                                        <td className="row justify-content-evenly">
-                                            <button type="button" onClick={async () => {
-
-                                                accept(val.event_name,
-                                                    val.dept_id, val.report_id, val.final_proposal_status, val.report_proposal_status, val.report_completion_status);
-                                            }} className="btn btn-success col-4">Accept</button>
-                                            <button type="button" className="btn btn-dark col-4">Reject</button>
-                                        </td>
-                                        <td><button className="btn btn-dark col-4"
-                                            style={{
-                                                backgroundColor: '#f29b44', // Background color
-                                                color: 'white',
-                                                // size:'10px',// Text color
-                                                // height:'4 px',
-                                                width: '90%', // Button width
-
-                                                padding: '10px', // Padding
-                                                borderRadius: '5px', // Border radius
-                                                cursor: 'pointer', // Cursor style
-                                                border: 'none', // Remove the border
-                                            }}
-                                            type="button" onClick={async () => {
-                                                // alert(val.workshop_id+" "+val.dept_id)
-                                                ecrs(val.report_id,val.event_name);
-                                            }} >View ECR</button></td>
-                                    </tr>
-                                ))
-                            ) : (
+                            {/* <tr><th></th><th></th><th></th> <th></th><th></th><th>Submitted on</th><th>Hod</th><th>Principal</th><th>Submitted on</th><th>Hod</th><th>Principal</th><th></th>
+                        </tr> */}
+                    </thead>
+                    <tbody>
+                 
+                        {
+                            currentRecords.map((data)=>
+                            (
+                          
                                 <tr>
-                                    <td colSpan="7" style={{ textAlign: 'center' }}>
-                         No Completion requests Found
-                         </td>
+                                    
+                                    <td><br></br>{data.report_id}</td>
+                                    <td><br></br>{data.event_title}</td>
+                                    <td><br></br>{data.event_date.split('-').reverse().join('-')}</td>
+                                    <td><br></br>{data.major_report}</td>
+                                    
+                                    <td style={{justifyContent:'center',justifyItems:'center'}}><br></br>{(data.sub_report)}</td>
+                                    {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
+                                    
+                                   
+                                  
+                                    {
+                                (data.report_proposal_status===0) ?
+                                <>
+                                <td>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
                                 </tr>
-                            )
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                        {/* <td></td> */}
+                                        </td>
+                                        <td>    
+                                        <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                </td>
+                                <td >
+                                <button type="button" style={{width:'80px'}} onClick={async () => {
 
-                            }
-                        </tbody>
-                    </table>
+}} className="btn btn-success col-4">Accept</button></td>
+<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
 
+                                    <td><button
+  style={{
+    backgroundColor: '#0000ff', // Background color
+    color: 'white', // Text color
+    width: '90%', // Button width
+    
+    padding: '10px', // Padding
+    borderRadius: '5px', // Border radius
+    cursor: 'pointer', // Cursor style
+    border: 'none', // Remove the border
+  }} type="button" onClick={async()=>{
+                                                        // alert(val.workshop_id+" "+val.dept_id)
+                                                        pdfAccept(data.report_id,data.event_name);
+                                                       
+                                                    }} >View Proposal</button></td>
+                                        </>
+                                        :
+                                        (data.report_proposal_status===1 && data.report_completion_status===0 ) ? 
+                                        <>
+                                        
+                                        <td>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                        {/* <td></td> */}
+                                        </td>
+                                        <td>    
+                                        <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                </td>
+                                <td >
+                                <button type="button" style={{width:'80px'}} onClick={async () => {
 
+}} className="btn btn-success col-4">Accept</button></td>
+<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+
+                                    <td><button
+  style={{
+    backgroundColor: '#0000ff', // Background color
+    color: 'white', // Text color
+    width: '90%', // Button width
+    
+    padding: '10px', // Padding
+    borderRadius: '5px', // Border radius
+    cursor: 'pointer', // Cursor style
+    border: 'none', // Remove the border
+  }} type="button" onClick={async()=>{
+                                                        // alert(val.workshop_id+" "+val.dept_id)
+                                                        pdfAccept(data.report_id,data.event_name);
+                                                       
+                                                    }} >View Proposal</button></td>
+                                        </>
+                                        :
+                                        (data.report_proposal_status===2 && data.report_completion_status===0 ) ?
+                                        <>
+                                        <td>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                        {/* <td></td> */}
+                                        </td>
+                                        <td>    
+                                        <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                </td>
+                                <td >
+                                <button type="button" style={{width:'80px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accept</button></td>
+<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+
+                                 
+                                        <td><a className="topic-heading" href="/ecrInput"><button
+  style={{
+    backgroundColor: ' #00997a', // Background color
+    color: 'white', // Text color
+    width: '90%', // Button width
+    
+    padding: '10px', // Padding
+    borderRadius: '5px', // Border radius
+    cursor: 'pointer', // Cursor style
+    border: 'none', // Remove the border
+  }}
+  type="button" onClick={async()=>{
+                                                        // alert(val.workshop_id+" "+val.dept_id)
+                                                        accept(data.report_id,data.event_name);
+                                                    }} >Create IV</button></a></td>
+                                        </>
+                                        :
+                                        (data.report_proposal_status===-1) ?
+                                        <>
+                                           <td><h3 style={{color:'red'}}>Rejected</h3></td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+
+                                        </>
+                                        :
+                                        (data.report_completion_status===1)?
+
+                                        <>
+                                       <td>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                        {/* <td></td> */}
+                                        </td>
+                                        <td>    
+                                        <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                </td>
+                                <td >
+                                <button type="button" style={{width:'80px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accept</button></td>
+<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+
+     
+                                        <td><button
+  style={{
+    backgroundColor: ' #f29b44', // Background color
+    color: 'white', // Text color
+    width: '90%', // Button width
+   
+    padding: '10px', // Padding
+    borderRadius: '5px', // Border radius
+    cursor: 'pointer', // Cursor style
+    border: 'none', // Remove the border
+  }}
+  type="button" onClick={async()=>{
+                                                        // alert(val.workshop_id+" "+val.dept_id)
+                                                       ecr(data.report_id,data.event_name);
+                                                    }} >View ECR</button></td>
+                                        </>
+                                       
+                                        :
+                                        (data.report_completion_status===2)?
+
+                                        <>
+                                     <td>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
+                                        {/* <td></td> */}
+                                        </td>
+                                        <td>    
+                                        <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
+                                </td>
+                                <td >
+                                <button type="button" style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px',width:'80px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accept</button></td>
+<td><button type="button" style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+
+                    
+                                        <td><button
+  style={{
+    backgroundColor: '#f29b44', // Background color
+    color: 'white', // Text color
+    width: '90%', // Button width
+    justifyContent:'center',
+    justifyItems:'center',
+    marginTop:'8px',
+    padding: '10px', // Padding
+    borderRadius: '5px', // Border radius
+    cursor: 'pointer', // Cursor style
+    border: 'none', // Remove the border
+  }}
+  type="button" onClick={async()=>{
+                                                        // alert(val.workshop_id+" "+val.dept_id)
+                                                       ecr(data.report_id,data.event_name);
+                                                    }} >View ECR</button></td>
+                                        </>
+                                        :
+                                        <></>
+}
+                                    
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+                <div className="pagination" style={{gap:"50px", alignItems:"center", marginLeft:'35%'}}>
+        <button className='page-btn' onClick={handlePrevPage} disabled={currentPage === 1}>
+          Prev
+        </button>
+        
+        <span>{`Page ${currentPage} of ${totalPages}`}</span>
+        <button className='page-btn' onClick={handleNextPage} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
                 </div>
-            </div>
-
-
-
+                </div>
+                   </div>
+       
         </>
     )
 }
+
+export default HodIv

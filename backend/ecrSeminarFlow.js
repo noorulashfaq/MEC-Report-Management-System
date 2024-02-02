@@ -495,7 +495,7 @@ route.get('/loadforlevel1/:deptId/:empId', async (req, res) => {
     const dId = req.params.deptId;
     const eId = req.params.empId;
     if(dId==0||dId=="0"){
-        let sql = `select report_lvl1, data_table_name from data_approval where report_lvl1 like ?`;
+        let sql = `select report_lvl1, data_table_name from data_approval where report_lvl1 like ? and data_table_name!="data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
