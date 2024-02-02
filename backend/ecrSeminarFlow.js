@@ -42,7 +42,7 @@ route.get('/proposalSub/:table',async(req,res)=>{
 
 route.get('/dropdownSubTypeWithMajor/:majorId',async(req,res)=>{
     if(req.params.majorId!=0){
-    let sql="SELECT * FROM data_sub_report_type where head_report_id=1001 INNER JOIN data_major_report_type ON data_sub_report_type.major_report_id = data_major_report_type.major_report_id WHERE data_sub_report_type.major_report_id = ?"
+    let sql="SELECT * FROM data_sub_report_type INNER JOIN data_major_report_type ON data_sub_report_type.major_report_id = data_major_report_type.major_report_id WHERE data_sub_report_type.major_report_id = ? and data_sub_report_type.head_report_id=1001"
     base.query(sql,[req.params.majorId],(err,rows)=>{
         if(err){
             res.status(500).json({error:err.message})
@@ -510,7 +510,7 @@ route.get('/loadforlevel1/:deptId/:empId', async (req, res) => {
     const dId = req.params.deptId;
     const eId = req.params.empId;
     if(dId==0||dId=="0"){
-        let sql = `select report_lvl1, data_table_name from data_approval where report_lvl1 like ?`;
+        let sql = `select report_lvl1, data_table_name from data_approval where report_lvl1 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {

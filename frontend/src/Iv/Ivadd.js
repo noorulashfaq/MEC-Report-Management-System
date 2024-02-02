@@ -202,7 +202,7 @@ const Ivadd=()=>{
         // console.log(typeof(data))
         try{
             console.log(data)
-            info = await axios.post(`http://10.167.1.2:1234/iv/proposeIV`,data)
+            info = await axios.post(`http://localhost:1234/iv/proposeIV`,data)
         }
         catch(err){
             console.log(err)

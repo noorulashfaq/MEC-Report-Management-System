@@ -83,7 +83,7 @@ const fetchData = async (page) => {
     const empId = logged.faculty_id;
     
     // Fetch data from backend API
-    const response = await axios.get(`http://10.167.1.2:1234/seminar/dept/${empId}?page=${page}`);
+    const response = await axios.get(`http://localhost:1234/seminar/dept/${empId}?page=${page}`);
 
    
     if (response.status === 200) {
@@ -113,7 +113,7 @@ const[allvalues,setAllvalues]=useState([]);
         // console.log(allvalues)
 
 const GetCurrAcd=async()=>{
-    const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+    const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
     // alert(JSON.stringify(t.data.result))
     const temp=t.data.result
     let valueYr=0
@@ -168,8 +168,8 @@ const onClickFilter=async()=>{
     // alert(JSON.stringify(filter))
     try{
         // alert("hi")
-        const filteredRecords=await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001",filter)
-        // alert(filteredRecords.data)
+        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticular/1001",filter)
+        console.log(filteredRecords.data)
         setAllvalues(filteredRecords.data)
     }
     catch(err){
@@ -249,7 +249,7 @@ let [subs,setSubs]=useState([])
 
     const[year,setYear]=useState([])
     const Acad=async()=>{
-        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -406,7 +406,7 @@ const viewPdf1=async(report_id)=>{
 
   const handleDownload = async (table) => {
     try {
-      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
+      const res = await axios.get(`http://localhost:1234/seminar/data/${id}/${table}`);
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
@@ -700,7 +700,7 @@ newPdf.text('Principal', 155, 290);
         try {
           
           
-          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
+          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
         //   var atten = `/Project_images/attendence.jpg`;
@@ -1705,42 +1705,123 @@ newPdf.text('Principal', 167, 234);
         <>
         <div className="filter-dropdowns" style={{width:'100%',display:'flex',alignItems:'center',marginLeft:'-5%',justifyContent:'center'}}>
        
+{/* Filter of Academic year--------------------------------------------------- */}
 
-        <Select
+        <label for="acdyr_id">Academic Year : </label>
+{/* <Select
+    className="form1group"
+    id="acdyr_id"
+
+    isMulti
+    name="acdyr_id"
+    options={years}
+    value={selectedAcd}
+    onChange={infoCollect}
+    isSearchable
+    placeholder="Select options..."
+    closeMenuOnSelect={true}
+/> */}
+<Select
       closeMenuOnSelect={false}
       components={{ ClearIndicator }}
       styles={{ clearIndicator: ClearIndicatorStyles }}
-      defaultValue={[options[0], options[1]]}
+      defaultValue={selectedAcd}
+      name="acdyr_id"
+      onChange={infoCollect}
+      isSearchable
       isMulti
-      options={options}
+      options={years}
     />
+       
+    
+
+{/* Filter of Sem--------------------------------------------------------- */}
+<label for="sem_id">Semester : </label>
+
+
+{/* 
+<label for="sem_id">Semester : </label>
+<Select
+        className="form1group"
+        isMulti
+        name="sem_id"
+        options={sems}
+        value={selectedSem}
+        onChange={infoCollect}
+        isSearchable
+        placeholder="Select options..."
+        closeMenuOnSelect={true}
+        /> */}
+
     
     <Select
       closeMenuOnSelect={false}
       components={{ ClearIndicator }}
       styles={{ clearIndicator: ClearIndicatorStyles }}
-      defaultValue={[options[0], options[1]]}
+      defaultValue={selectedSem}
+      name="sem_id"
+      onChange={infoCollect}
+      isSearchable
+      // isMulti
+      options={sems}
+    />
+
+    
+
+    {/* Filter of Major Id-------------------------------------------------- */}
+    <label for="major_id">Major Type : </label>
+{/* <Select
+        className="form1group"
+        isMulti
+        name="major_id"
+        options={majors}
+        value={selectedMajor}
+        onChange={infoCollect}
+        isSearchable
+        placeholder="Select options..."
+        closeMenuOnSelect={false}
+/> */}
+<Select
+      closeMenuOnSelect={false}
+      components={{ ClearIndicator }}
+      styles={{ clearIndicator: ClearIndicatorStyles }}
+      defaultValue={selectedMajor}
+      name="major_id"
+      onChange={infoCollect}
+      isSearchable
       isMulti
-      options={options}
+      options={majors}
     />
     
+    {/* Filter of Sub ID---------------------------------------------------- */}
+    
+
+    <label for="sub_id">Sub Type : </label>
+{/* <Select
+className="form1group"
+        isMulti
+        name="sub_id"
+        options={subs}
+        value={selectedSub}
+        onChange={infoCollect}
+        isSearchable
+        placeholder="Select options..."
+        closeMenuOnSelect={true}
+        />
+       */}
+
     <Select
       closeMenuOnSelect={false}
       components={{ ClearIndicator }}
       styles={{ clearIndicator: ClearIndicatorStyles }}
-      defaultValue={[options[0], options[1]]}
+      defaultValue={selectedSub}
+      name="sub_id"
+      onChange={infoCollect}
+      isSearchable
       isMulti
-      options={options}
+      options={subs}
     />
     
-    <Select
-      closeMenuOnSelect={false}
-      components={{ ClearIndicator }}
-      styles={{ clearIndicator: ClearIndicatorStyles }}
-      defaultValue={[options[0], options[1]]}
-      isMulti
-      options={options}
-    />
            <input
   className='filter-button'
   type='button'
@@ -1765,67 +1846,8 @@ newPdf.text('Principal', 167, 234);
 
 
 
-{/* <label for="acdyr_id">Academic Year : </label>
 
 
-    <Select
-        className="form1group"
-        id="acdyr_id"
-
-        isMulti
-        name="acdyr_id"
-        options={years}
-        value={selectedAcd}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
-    />
-    <input type="" name="acdyr_id" onChange={handleChange} value={selectedAcd} />
-
-
-<label for="sem_id">Semester : </label>
-<Select
-        className="form1group"
-        isMulti
-        name="sem_id"
-        options={sems}
-        value={selectedSem}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
-        />
-            <input type="" name="sem_id" onChange={handleChange} value={selectedSem} />
-
-
-<label for="major_id">Major Type : </label>
-<Select
-        className="form1group"
-        isMulti
-        name="major_id"
-        options={majors}
-        value={selectedMajor}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={false}
-/>
-<input type="" name="major_id" onChange={handleChange} value={selectedMajor} />
-
-<label for="sub_id">Sub Type : </label>
-<Select
-className="form1group"
-        isMulti
-        name="sub_id"
-        options={subs}
-        value={selectedSub}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
-        />
-                    <input type="" name="sub_id" onChange={handleChange} value={selectedSub} /> */}
       
         
 
