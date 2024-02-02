@@ -132,6 +132,28 @@ export const Login=()=>{
             value={logger.id}
             onChange={gather}
           />
+
+<TextField
+            margin="normal"
+            required
+            fullWidth
+            name="pass"
+            label="Password"
+            type={showPassword ? 'id' : 'password'}
+            id="password"
+            autoComplete="current-password"
+            value={logger.pass}
+            onChange={gather}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleTogglePasswordVisibility} edge="end">
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
           
 
           

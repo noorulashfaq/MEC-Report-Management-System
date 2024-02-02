@@ -21,7 +21,7 @@ const InputPage = () => {
     try {
       
       
-      const res = await axios.get(`http://localhost:1234/seminar/data/${id}`);
+      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}`);
       // console.log("hai");
       const data = res.data;
 
