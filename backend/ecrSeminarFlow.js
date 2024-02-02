@@ -23,6 +23,22 @@ route.get('/dropdownMajorType',async(req,res)=>{
         res.status(200).json({rows})
     })
 })
+route.get('/proposalSub/:table',async(req,res)=>{
+    let sql="select * from data_sub_report_type where table_name=?"
+    base.query(sql,[req.params.table],(err,rows)=>{
+        if(err){
+            res.status(500).json({error:err.message})
+            return
+        }
+        else if(rows.length==0){
+            res.status(201).json({error:"No matches found"})
+            return
+        }
+        // console.log(rows[0].sub_report)
+        // const found=rows[0].sub_report
+        res.status(200).json({rows})
+    })
+})
 
 route.get('/dropdownSubTypeWithMajor/:majorId',async(req,res)=>{
     if(req.params.majorId!=0){
@@ -285,60 +301,7 @@ route.post('/report/:report_id/:table',async(req,res)=>{
 
 
 route.get('/dept/:empId', async (req, res) => {
-    // const eId = req.params.empId;
-    // const page = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
-    // const limit = 3; // Number of records per page
-    // const offset = (page - 1) * limit; // Calculate offset based on current page
-    // let recordsArr = [];
     
-    // const tableNamesQuery = 'SELECT table_name FROM data_sub_report_type WHERE head_report_id = 1001';
-    // base.query(tableNamesQuery, (err, result) => {
-    //     if (err) {
-    //         console.error(err);
-    //         res.status(500).json({ error: 'Internal Server Error' });
-    //         return;
-    //     }
-    
-    //     const queries = result.map(row => {
-    //         const tableName = row.table_name;
-    //         const sql = `
-    //             SELECT * FROM ${tableName} AS seminar
-    //             INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
-    //             INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
-    //             WHERE event_coordinator LIKE ?
-    //             ORDER BY report_id DESC
-    //             LIMIT ? OFFSET ?`;
-    
-    //         return new Promise((resolve, reject) => {
-    //             base.query(sql, [`%${eId}%`, limit, offset], (err, rows) => {
-    //                 if (err) {
-    //                     console.error(err);
-    //                     reject(err);
-    //                     return;
-    //                 }
-    //                 resolve({ rows });
-    //             });
-    //         });
-    //     });
-    
-    //     Promise.all(queries)
-    //         .then(results => {
-    //             results.forEach(({ tableName, rows }) => {
-    //                 if (rows.length > 0) {
-    //                     recordsArr.push({ tableName, rows });
-    //                 } else {
-    //                     console.log(`No records in ${tableName}`);
-    //                 }
-    //             });
-    //             res.status(200).json({ recordsArr });
-    //         })
-    //         .catch(error => {
-    //             console.error(error);
-    //             res.status(500).json({ error: 'Internal Server Error' });
-    //         });
-    // });
-
-
     const eId = req.params.empId;
     const page = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
     const limit = 3; // Number of records per page
@@ -389,7 +352,59 @@ route.get('/dept/:empId', async (req, res) => {
     }
 });
     
+///////////////////HOD ECR //////////////////
 
+route.get('/hodecr/:empId', async (req, res) => {
+    
+    const eId = req.params.empId;
+    const page = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
+    const limit = 3; // Number of records per page
+    const offset = (page - 1) * limit; // Calculate offset based on current page
+
+    try {
+        let recordsArr = [];
+        let totalRecords = 0; // Total number of records
+        let totalPages = 0; // Total number of pages
+
+        const tableNamesQuery = 'SELECT table_name FROM data_sub_report_type WHERE head_report_id = 1001';
+        const tableNamesResult = await queryAsync(tableNamesQuery);
+
+        for (const table of tableNamesResult) {
+            const tableName = table.table_name;
+
+            const countQuery = `SELECT COUNT(*) AS totalRecords FROM ${tableName} AS seminar
+                                INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
+                                INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
+                                WHERE lvl_1_proposal_sign LIKE ?`;
+            
+            // Execute count query for each table
+            const countResult = await queryAsync(countQuery, [`%${eId}%`]);
+            totalRecords += countResult[0].totalRecords;
+
+            const sql = `
+                SELECT * FROM ${tableName} AS seminar
+                INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
+                INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
+                WHERE lvl_1_proposal_sign LIKE ?
+                ORDER BY report_id DESC
+                LIMIT ? OFFSET ?`;
+
+            const rows = await queryAsync(sql, [`%${eId}%`, limit, offset]);
+
+            if (rows.length > 0) {
+                recordsArr.push(...rows);
+            }
+        }
+
+        // Calculate total number of pages
+        totalPages = Math.ceil(totalRecords / limit)-1;
+
+        res.status(200).json({ recordsArr, totalPages }); // Send records array and total pages
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 
 
@@ -495,7 +510,7 @@ route.get('/loadforlevel1/:deptId/:empId', async (req, res) => {
     const dId = req.params.deptId;
     const eId = req.params.empId;
     if(dId==0||dId=="0"){
-        let sql = `select report_lvl1, data_table_name from data_approval where report_lvl1 like ? and data_table_name!="data_iv"`;
+        let sql = `select report_lvl1, data_table_name from data_approval where report_lvl1 like ?`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -541,7 +556,7 @@ route.get('/loadforlevel1/:deptId/:empId', async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
     }else{
-        let sql = `select report_lvl1, data_table_name from data_approval where dept_id=? and report_lvl1 like ?`;
+        let sql = `select report_lvl1, data_table_name from data_approval where dept_id=? and report_lvl1 like ? and data_table_name != "data_iv"`;
 
         try {
         const rows = await new Promise((resolve, reject) => {
@@ -890,7 +905,7 @@ route.get('/loadforlevel2/:deptId/:empId', async (req, res) => {
     const eId = req.params.empId;
     let resultArr = [];
     if(dId==0||dId=="0"){
-        let sql = `select report_lvl2, data_table_name from data_approval where report_lvl2 like ?`;
+        let sql = `select report_lvl2, data_table_name from data_approval where report_lvl2 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -935,7 +950,7 @@ route.get('/loadforlevel2/:deptId/:empId', async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
     }else{
-        let sql = `select report_lvl2, data_table_name from data_approval where dept_id=? and report_lvl2 like ?`;
+        let sql = `select report_lvl2, data_table_name from data_approval where dept_id=? and report_lvl2 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -1281,7 +1296,7 @@ route.get('/loadforlevel3/:deptId/:empId', async (req, res) => {
     const eId = req.params.empId;
     let resultArr = [];
     if(dId==0||dId=="0"){
-        let sql = `select report_lvl3, data_table_name from data_approval where report_lvl3 like ?`;
+        let sql = `select report_lvl3, data_table_name from data_approval where report_lvl3 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -1326,7 +1341,7 @@ route.get('/loadforlevel3/:deptId/:empId', async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
     }else{
-        let sql = `select report_lvl3, data_table_name from data_approval where dept_id=? and report_lvl3 like ?`;
+        let sql = `select report_lvl3, data_table_name from data_approval where dept_id=? and report_lvl3 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -1669,7 +1684,7 @@ route.get('/loadforlevel4/:deptId/:empId', async (req, res) => {
     const eId = req.params.empId;
     let resultArr = [];
     if(dId==0||dId=="0"){
-        let sql = `select report_lvl4, data_table_name from data_approval where report_lvl4 like ?`;
+        let sql = `select report_lvl4, data_table_name from data_approval where report_lvl4 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -1714,7 +1729,7 @@ route.get('/loadforlevel4/:deptId/:empId', async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
     }else{
-        let sql = `select report_lvl4, data_table_name from data_approval where dept_id=? and report_lvl4 like ?`;
+        let sql = `select report_lvl4, data_table_name from data_approval where dept_id=? and report_lvl4 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -2059,7 +2074,7 @@ route.get('/loadforlevel5/:deptId/:empId', async (req, res) => {
     const eId = req.params.empId;
     let resultArr = [];
     if(dId==0||dId=="0"){
-        let sql = `select report_lvl5, data_table_name from data_approval where report_lvl5 like concat("%",${eId},"%")`;
+        let sql = `select report_lvl5, data_table_name from data_approval where report_lvl5 like concat("%",${eId},"%") and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -2104,7 +2119,7 @@ route.get('/loadforlevel5/:deptId/:empId', async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
     }else{
-        let sql = `select report_lvl5, data_table_name from data_approval where dept_id=? and report_lvl5 like ?`;
+        let sql = `select report_lvl5, data_table_name from data_approval where dept_id=? and report_lvl5 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -2351,7 +2366,7 @@ route.get('/completionloadforlevel1/:deptId/:empId', async (req, res) => {
     const dId = req.params.deptId;
     const eId = req.params.empId;
     if(dId==0||dId=="0"){
-        let sql = `select report_lvl1,data_table_name from data_approval where report_lvl1 like ?`;
+        let sql = `select report_lvl1,data_table_name from data_approval where report_lvl1 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -2397,7 +2412,7 @@ route.get('/completionloadforlevel1/:deptId/:empId', async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
     }else{
-        let sql = `select report_lvl1,data_table_name from data_approval where dept_id=? and report_lvl1 like ?`;
+        let sql = `select report_lvl1,data_table_name from data_approval where dept_id=? and report_lvl1 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -2744,7 +2759,7 @@ route.get('/completionloadforlevel2/:deptId/:empId', async (req, res) => {
     const eId = req.params.empId;
     let resultArr = [];  // Declare resultArr before the loop
     if(dId==0||dId=="0"){
-        let sql = `select report_lvl2, data_table_name from data_approval where report_lvl2 like ?`;
+        let sql = `select report_lvl2, data_table_name from data_approval where report_lvl2 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -2789,7 +2804,7 @@ route.get('/completionloadforlevel2/:deptId/:empId', async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
     }else{
-        let sql = `select report_lvl2, data_table_name from data_approval where dept_id=? and report_lvl2 like ?`;
+        let sql = `select report_lvl2, data_table_name from data_approval where dept_id=? and report_lvl2 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -3133,7 +3148,7 @@ route.get('/completionloadforlevel3/:deptId/:empId', async (req, res) => {
     const dId = req.params.deptId;
     const eId = req.params.empId;
     if(dId==0||dId=="0"){
-        let sql = `select report_lvl3, data_table_name from data_approval where report_lvl3 like ?`;
+        let sql = `select report_lvl3, data_table_name from data_approval where report_lvl3 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -3181,7 +3196,7 @@ route.get('/completionloadforlevel3/:deptId/:empId', async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
     }else{
-        let sql = `select report_lvl3, data_table_name from data_approval where dept_id=? and report_lvl3 like ?`;
+        let sql = `select report_lvl3, data_table_name from data_approval where dept_id=? and report_lvl3 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -3526,7 +3541,7 @@ route.get('/completionloadforlevel4/:deptId/:empId', async (req, res) => {
     const dId = req.params.deptId;
     const eId = req.params.empId;
     if(dId==0||dId=="0"){
-        let sql = `select report_lvl4, data_table_name from data_approval where report_lvl4 like ?`;
+        let sql = `select report_lvl4, data_table_name from data_approval where report_lvl4 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -3572,7 +3587,7 @@ route.get('/completionloadforlevel4/:deptId/:empId', async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
     }else{
-        let sql = `select report_lvl4, data_table_name from data_approval where dept_id=? and report_lvl4 like ?`;
+        let sql = `select report_lvl4, data_table_name from data_approval where dept_id=? and report_lvl4 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -3915,7 +3930,7 @@ route.get('/completionloadforlevel5/:deptId/:empId', async (req, res) => {
     const dId = req.params.deptId;
     const eId = req.params.empId;
     if(dId==0||dId=="0"){
-        let sql = `select report_lvl5, data_table_name from data_approval where report_lvl5 like ?`;
+        let sql = `select report_lvl5, data_table_name from data_approval where report_lvl5 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {
@@ -3961,7 +3976,7 @@ route.get('/completionloadforlevel5/:deptId/:empId', async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
     }else{
-        let sql = `select report_lvl5, data_table_name from data_approval where dept_id=? and report_lvl5 like ?`;
+        let sql = `select report_lvl5, data_table_name from data_approval where dept_id=? and report_lvl5 like ? and data_table_name != "data_iv"`;
 
     try {
         const rows = await new Promise((resolve, reject) => {

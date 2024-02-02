@@ -15,7 +15,7 @@ function FacultyEcrFilter() {
     },[])
 
     const GetCurrAcd=async()=>{
-        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         const temp=t.data.result
         let valueYr=0
@@ -69,7 +69,7 @@ function FacultyEcrFilter() {
 
     const[year,setYear]=useState([])
        const Acad=async()=>{
-            const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+            const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
             // alert(JSON.stringify(t.data.result))
             setYear(t.data.result)
         }
