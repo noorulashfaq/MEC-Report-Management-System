@@ -1773,7 +1773,7 @@ newPdf.text('Principal', 167, 234);
           {/* <h6 className="text-muted font-weight-normal">Potential growth</h6> */}
         </div>
         <div className="icon icon-box-success" style={{ position: 'absolute', top: '10px', right: '10px',borderRadius:'20%',width:'20%',height:'35%',backgroundColor:'white',justifyContent:'center',textAlign:'center',justifyItems:'center',display:'flex' }}>
-          <span className="dashIcon">50</span>
+          <span className="dashIcon">{ecr?.length||0+ecr1?.length||0}</span>
         </div>
      
           </div>

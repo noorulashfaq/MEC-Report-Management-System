@@ -1,5 +1,5 @@
 import {Major, SubReport, Table,onTable} from './connect';
-import React, { useState, useEffect} from 'react';
+import React,{ useState,useEffect,CSSProperties, FunctionComponent } from 'react'; 
 import "./sty.css"
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
@@ -11,25 +11,71 @@ import Image3 from './logo3.jpg';
 import Image4 from './logo4.jpg';
 import './facultyEcrFilter.css';
 import Select from 'react-select';
+import { CSSObject } from '@emotion/serialize';
+// import { colourOptions } from '../data';
+// import { ColourOption, colourOptions } from './data';
+
+
 //import Img6001 from'./6001.jpeg';
+const CustomClearText = () => <>X</>;
 
-// localhost
+const ClearIndicator = (props) => {
+  const {
+    children = <CustomClearText />,
+    getStyles,
+    innerProps: { ref, ...restInnerProps },
+  } = props;
+  return (
+    <div
+      {...restInnerProps}
+      ref={ref}
+      style={getStyles('clearIndicator', props)}
+    >
+      <div style={{ padding: '0px 5px' }}>{children}</div>
+    </div>
+  );
+};
+
+const ClearIndicatorStyles = (base, state) => ({
+  ...base,
+  cursor: 'pointer',
+  color: state.isFocused ? 'blue' : 'black',
+});
+
+
 export const CreateEvent=()=>{
-// --------------------------------------------------
+///______________________
 
+
+
+//////
+
+const options = [
+  { value: 'option1', label: 'Option 1' },
+  { value: 'option2', label: 'Option 2' },
+  // Add more options as needed
+];
+
+/////////////////////
 
 const [currentPage, setCurrentPage] = useState(1);
 const [currentRecords, setCurrentRecords] = useState([]);
 const [totalPages, setTotalPages] = useState(1);
   useEffect(()=>{
+    try{
     doSomething();
     sessionStorage.removeItem("report_id")
     Maj()
     Acad()
     GetCurrAcd()
     
-        
+       
     fetchData(currentPage);
+    }
+    catch(e){
+      console.log(e)
+    }
+ 
 },[currentPage])
 const fetchData = async (page) => {
   try {
@@ -47,7 +93,7 @@ const fetchData = async (page) => {
       setTotalPages(response.data.totalPages);
       setLoading(false);
     } else {
-      throw new Error('Failed to fetch data');
+      console.log('Failed to fetch data');
     }
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -122,8 +168,8 @@ const onClickFilter=async()=>{
     // alert(JSON.stringify(filter))
     try{
         // alert("hi")
-        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
-        // alert(filteredRecords.data)
+        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticular/1001",filter)
+        console.log(filteredRecords.data)
         setAllvalues(filteredRecords.data)
     }
     catch(err){
@@ -377,17 +423,17 @@ newPdf.addImage(Image3, 'JPG', 175, 3, 20, 15);
 newPdf.addImage(Image4, 'JPG', 175, 20, 20, 15);
 
 newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
 newPdf.setFontSize(10);
-newPdf.setFont("times", "");
+newPdf.setFont("calibri", "");
 newPdf.text('(An Autonomous Institution)', 80, 20);
 newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
 newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
 
 
 newPdf.setFontSize(12);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.rect(10, 40, 20, 7);
 newPdf.text(`${data.event_organizer}`, 15, 45);///Department
 
@@ -397,7 +443,7 @@ newPdf.text('EVENT PROPOSAL', 85, 45);
 newPdf.rect(170, 40, 30, 7);
 newPdf.text(`${data.acd_yr}`, 173, 45);//academic year
 
-newPdf.setFont("times","")
+newPdf.setFont("calibri","")
 newPdf.rect(10, 55, 10, 20).stroke();
 newPdf.text('1.', 12, 65);
 newPdf.rect(20, 55, 90, 20).stroke();
@@ -584,7 +630,7 @@ newPdf.text('', 155, 229);//coordinator
 
 
 
-newPdf.setFont("times","bold");
+newPdf.setFont("calibri","bold");
 
 newPdf.text('HoD', 15, 290);
 
@@ -697,17 +743,17 @@ newPdf.text('Principal', 155, 290);
       newPdf.addImage(Image4, 'JPG', 175, 20, 20, 15);
       
       newPdf.setFontSize(18);
-      newPdf.setFont("times", "bold");
+      newPdf.setFont("calibri", "bold");
       newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
       newPdf.setFontSize(10);
-      newPdf.setFont("times", "");
+      newPdf.setFont("calibri", "");
       newPdf.text('(An Autonomous Institution)', 80, 20);
       newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
       newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
       // newPdf.rect(10,40,20,7);
       // newPdf.text('hello',15,45);
       newPdf.setFontSize(12);
-      newPdf.setFont("times", "bold");
+      newPdf.setFont("calibri", "bold");
       newPdf.rect(10, 40, 20, 7);
       newPdf.text(`${data.event_organizer}`, 15, 45);//Department
       newPdf.rect(70, 40, 65, 7);
@@ -716,7 +762,7 @@ newPdf.text('Principal', 155, 290);
 newPdf.rect(170, 40, 30, 7);
 newPdf.text(`   ${data.acd_yr}`, 173, 45);//Academic year
 
-newPdf.setFont("times","")
+newPdf.setFont("calibri","")
 newPdf.setFontSize(10);
 newPdf.rect(10, 55, 10, 15).stroke();
 newPdf.text('1.', 12, 65);
@@ -950,11 +996,11 @@ newPdf.rect(169, 267, 15, 9).stroke();
 newPdf.rect(184, 267, 16, 9).stroke();
 
 
-newPdf.setFont("times");
+newPdf.setFont("calibri");
 newPdf.setFontSize(8);
 
 // newPdf.text('* Attach enclosures', 15, 280);
-newPdf.setFont("times","bold");
+newPdf.setFont("calibri","bold");
 newPdf.setFontSize(11);
 newPdf.text('HoD', 100, 295);
 newPdf.text('Event Coordinator(s)', 10, 295);
@@ -967,26 +1013,26 @@ newPdf.addPage();
 newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
 newPdf.addImage(Image2, 'PNG', 173, 7, 25, 25);
 newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
 newPdf.setFontSize(10);
-newPdf.setFont("times", "");
+newPdf.setFont("calibri", "");
 newPdf.text('(An Autonomous Institution)', 80, 20);
 newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
 newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
 
  
 newPdf.setFontSize(13);
-newPdf.setFont('times', 'bold');
+newPdf.setFont('calibri', 'bold');
 newPdf.text("ECR-Enclosures", 90, 40);
 newPdf.text("Name of the Event:", 10, 50);
-newPdf.setFont('times', '');
+newPdf.setFont('calibri', '');
 let arr1=data.sub_report.split('-');
 
 newPdf.text(`${arr1.reverse()}`, 50, 50); //name of the event
-newPdf.setFont('times', 'bold');
+newPdf.setFont('calibri', 'bold');
 newPdf.text("Date of the Event Conducted:", 10, 57);
-newPdf.setFont('times', '');
+newPdf.setFont('calibri', '');
 newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`, 70, 57); //Date
 
 newPdf.rect(10, 65, 10, 10).stroke();
@@ -996,7 +1042,7 @@ newPdf.text('Description', 50, 71);
 newPdf.rect(110, 65, 90, 10).stroke();
 newPdf.text('Please tick Enclosure', 140, 71);
 
-newPdf.setFont('times', '');
+newPdf.setFont('calibri', '');
 newPdf.rect(10, 75, 10, 10).stroke();
 newPdf.text('1.', 13, 81);
 newPdf.rect(20, 75, 90, 10).stroke();
@@ -1117,7 +1163,7 @@ newPdf.text('One PPT slide about the program', 22, 241);
 newPdf.rect(110, 235, 90, 10).stroke();
 newPdf.text('', 155, 241);
 
-newPdf.setFont('times', 'bold');
+newPdf.setFont('calibri', 'bold');
 newPdf.text('Event Coordinator', 20, 267);
 newPdf.text('HoD', 160, 267);
 ///////////////////////////////////////////Event Proposal //////////////////////////////
@@ -1128,17 +1174,17 @@ newPdf.addPage();
 newPdf.addImage(Image4, 'JPG', 175, 20, 20, 15);
 
 newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
 newPdf.setFontSize(10);
-newPdf.setFont("times", "");
+newPdf.setFont("calibri", "");
 newPdf.text('(An Autonomous Institution)', 80, 20);
 newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
 newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
 
 
 newPdf.setFontSize(12);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.rect(10, 40, 20, 7);
 newPdf.text(`${data.event_organizer}`, 15, 45);///Department
 
@@ -1148,7 +1194,7 @@ newPdf.text('EVENT PROPOSAL', 85, 45);
 newPdf.rect(170, 40, 30, 7);
 newPdf.text(`${data.acd_yr}`, 173, 45);//academic year
 
-newPdf.setFont("times","")
+newPdf.setFont("calibri","")
 newPdf.rect(10, 55, 10, 20).stroke();
 newPdf.text('1.', 12, 65);
 newPdf.rect(20, 55, 90, 20).stroke();
@@ -1294,7 +1340,7 @@ newPdf.rect(140, 250, 60, 10).stroke();
 newPdf.text('', 155, 229);//coordinator 
 
 
-// newPdf.rect(140, 230, 60, 35).stroke();newPdf.setFont("times","bold");
+// newPdf.rect(140, 230, 60, 35).stroke();newPdf.setFont("calibri","bold");
 
 newPdf.text('HoD', 15, 290);
 
@@ -1329,24 +1375,24 @@ newPdf.addPage();
 newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
 newPdf.addImage(Image2, 'PNG', 173, 7, 25, 25);
 newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
 newPdf.setFontSize(10);
-newPdf.setFont("times", "");
+newPdf.setFont("calibri", "");
 newPdf.text('(An Autonomous Institution)', 80, 20);
 newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
 newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.setFontSize(19);
 newPdf.text('Budget Proposal', 80, 45);
 newPdf.setFontSize(18);
 newPdf.text('Date of the Event:', 15, 60);
 newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,67, 60);
-newPdf.setFont("times", ""); 
+newPdf.setFont("calibri", ""); 
 newPdf.setFontSize(10);
 newPdf.text('To the Management through Principle', 15, 70);
 newPdf.setFontSize(15);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.text('Total Paticipants:', 15, 90);
 newPdf.text(`${data.student_count}`, 58, 90);
 
@@ -1356,7 +1402,7 @@ newPdf.rect(30, 100, 125, 12).stroke();
 newPdf.text('Details', 60, 106);
 newPdf.rect(155, 100, 45, 12).stroke();
 newPdf.text('Cost (in Rs)', 157, 106);
-newPdf.setFont("times", "");
+newPdf.setFont("calibri", "");
 newPdf.rect(15, 112, 15, 12).stroke();
 newPdf.text('1.', 19, 120);
 newPdf.rect(30, 112, 125, 12).stroke();
@@ -1373,7 +1419,7 @@ newPdf.rect(15, 136, 185, 12).stroke();
 newPdf.text('In Words:', 19, 144);
 newPdf.text(`${test(data.event_budget)+' only'}`,45,144);//In words budget
 newPdf.setFontSize(12);
-newPdf.setFont('times','bold');
+newPdf.setFont('calibri','bold');
 newPdf.text('Event Coordinator(s)', 15, 234);
 newPdf.text('HOD', 90, 234);
 newPdf.text('Principal', 167, 234);
@@ -1384,16 +1430,16 @@ newPdf.addPage();
 newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
 newPdf.addImage(Image2, 'PNG', 173, 7, 25, 25);
 newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
 newPdf.setFontSize(10);
-newPdf.setFont("times", "");
+newPdf.setFont("calibri", "");
 newPdf.text('(An Autonomous Institution)', 80, 20);
 newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
 newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
 
 newPdf.setFontSize(13);
-newPdf.setFont('times', 'bold');
+newPdf.setFont('calibri', 'bold');
 newPdf.text('Event Planner',83,45 );
 newPdf.setFontSize(14);
 var Dept = `DEPARTMENT OF ${data.event_organizer}`
@@ -1408,7 +1454,7 @@ console.log(roundedValue);
 console.log(textWidth);
 console.log(centerX);
 // newPdf.text(Dept,centerX,54);//dept full name
-newPdf.setFont('times', 'roman');
+newPdf.setFont('calibri', 'roman');
 newPdf.rect(8,58,50,10).stroke();
 newPdf.text('Event Date:',10,65);
 newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,35,65);////Event Date 
@@ -1444,7 +1490,7 @@ newPdf.text('permission & Report Preparation \nInvitation Flux Designing',33,143
 newPdf.rect(100,137,60,17).stroke()
 newPdf.text(`${data.event_organizing_secretary.split('-')[1]}`,102,146)////Event Report Preparation
 
-newPdf.setFont('times', 'bold');
+newPdf.setFont('calibri', 'bold');
 newPdf.text('Coordinated',30,220)
 newPdf.text('HOD',170,220)
 
@@ -1453,38 +1499,38 @@ newPdf.addPage();
 newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
     newPdf.addImage(Image2, 'PNG', 173, 7, 25, 25);
     newPdf.setFontSize(18);
-    newPdf.setFont("times", "bold");
+    newPdf.setFont("calibri", "bold");
     newPdf.setTextColor(0, 32, 96);
     newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
     newPdf.setFontSize(10);
-    newPdf.setFont("times", "");
+    newPdf.setFont("calibri", "");
     newPdf.text('(An Autonomous Institution)', 80, 20);
     newPdf.setTextColor(0,0,0);
     newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
     newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
-    generateCenteredText(newPdf,'Department of Electrical and Communication Engineering',15,45,'times','bold',[254,0,102]);
-    generateCenteredText(newPdf,'in Association with',12,50,'times','bolditalic',[151, 92, 203]);
-    generateCenteredText(newPdf,'Computer Society of India(CSI)',15,55,'times','bold',[151, 92, 203]);
-    generateCenteredText(newPdf,'The Management, Principal, Faculty and Students Cardially Invite you to the',14,65,'times','bolditalic',[0, 0, 255]);
-    generateCenteredText(newPdf,`${data.sub_report}`,16,75,'times','bold',[150, 6, 6]);
-    generateCenteredText(newPdf,'On',14,80,'times','regular',[202, 37, 197]);
-    generateCenteredText(newPdf,`${data.event_title}`,17,85,'times','bold',[202, 37, 197]);
-    generateCenteredText(newPdf,'Resource Person',16,95,'times','bold',[150,6,6]);
-    generateCenteredText(newPdf,`${data.guest_name}`,17,105,'times','bold',[0, 0, 153]);
-    generateCenteredText(newPdf,'Student',15,112,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Dr.K.Gunasekaran',17,125,'times','bold',[0, 0, 153]);/////Secretary
-    generateCenteredText(newPdf,'Secretary & Managing Trustee ',15,132,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Muthayammal Educational Trust and Research Foundation ',15,138,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'will preside over the function',15,144,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Dr.M. Madheshwaran',17,157,'times','bold',[0, 0, 153]);/////Principal
-    generateCenteredText(newPdf,'Principal',15,164,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Muthayammal Engineering College',15,170,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'will feliciate the function',15,176,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Dr.G. Kavitha',17,190,'times','bold',[0, 0, 153]);/////HOD
-    generateCenteredText(newPdf,'HoD-CSE',15,197,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Will Welcome The Gathering',15,203,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Time: 10:00 AM to 4:30 PM',12,220,'times','bolditalic',[180, 0, 0]);//////Time of the Event
-    newPdf.setFont('times','bolditalic');
+    generateCenteredText(newPdf,'Department of Electrical and Communication Engineering',15,45,'calibri','bold',[254,0,102]);
+    generateCenteredText(newPdf,'in Association with',12,50,'calibri','bolditalic',[151, 92, 203]);
+    generateCenteredText(newPdf,'Computer Society of India(CSI)',15,55,'calibri','bold',[151, 92, 203]);
+    generateCenteredText(newPdf,'The Management, Principal, Faculty and Students Cardially Invite you to the',14,65,'calibri','bolditalic',[0, 0, 255]);
+    generateCenteredText(newPdf,`${data.sub_report}`,16,75,'calibri','bold',[150, 6, 6]);
+    generateCenteredText(newPdf,'On',14,80,'calibri','regular',[202, 37, 197]);
+    generateCenteredText(newPdf,`${data.event_title}`,17,85,'calibri','bold',[202, 37, 197]);
+    generateCenteredText(newPdf,'Resource Person',16,95,'calibri','bold',[150,6,6]);
+    generateCenteredText(newPdf,`${data.guest_name}`,17,105,'calibri','bold',[0, 0, 153]);
+    generateCenteredText(newPdf,'Student',15,112,'calibri','bolditalic',[0, 102, 0]);
+    generateCenteredText(newPdf,'Dr.K.Gunasekaran',17,125,'calibri','bold',[0, 0, 153]);/////Secretary
+    generateCenteredText(newPdf,'Secretary & Managing Trustee ',15,132,'calibri','bolditalic',[0, 102, 0]);
+    generateCenteredText(newPdf,'Muthayammal Educational Trust and Research Foundation ',15,138,'calibri','bolditalic',[0, 102, 0]);
+    generateCenteredText(newPdf,'will preside over the function',15,144,'calibri','bolditalic',[0, 102, 0]);
+    generateCenteredText(newPdf,'Dr.M. Madheshwaran',17,157,'calibri','bold',[0, 0, 153]);/////Principal
+    generateCenteredText(newPdf,'Principal',15,164,'calibri','bolditalic',[0, 102, 0]);
+    generateCenteredText(newPdf,'Muthayammal Engineering College',15,170,'calibri','bolditalic',[0, 102, 0]);
+    generateCenteredText(newPdf,'will feliciate the function',15,176,'calibri','bolditalic',[0, 102, 0]);
+    generateCenteredText(newPdf,'Dr.G. Kavitha',17,190,'calibri','bold',[0, 0, 153]);/////HOD
+    generateCenteredText(newPdf,'HoD-CSE',15,197,'calibri','bolditalic',[0, 102, 0]);
+    generateCenteredText(newPdf,'Will Welcome The Gathering',15,203,'calibri','bolditalic',[0, 102, 0]);
+    generateCenteredText(newPdf,'Time: 10:00 AM to 4:30 PM',12,220,'calibri','bolditalic',[180, 0, 0]);//////Time of the Event
+    newPdf.setFont('calibri','bolditalic');
     newPdf.setFontSize(12);
     newPdf.setTextColor(180, 0, 0);
     newPdf.text('Date:',15,220);
@@ -1494,7 +1540,7 @@ newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
     const venueline = newPdf.splitTextToSize(venue, 50);//////////////Venue Variable store
     newPdf.text(165,220,venueline);
     //////////////// Last Left Green wordings /////
-    newPdf.setFont('times','bolditalic');
+    newPdf.setFont('calibri','bolditalic');
     newPdf.setFontSize(14);
     newPdf.setTextColor(0,102,0);
     newPdf.text('Dr. G.Kavitha, Professor & Head',15,245);
@@ -1509,16 +1555,16 @@ newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
 newPdf.addImage(Image2, 'PNG', 173, 7, 25, 25);
 
 newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
 newPdf.setFontSize(10);
-newPdf.setFont("times", "");
+newPdf.setFont("calibri", "");
 newPdf.text('(An Autonomous Institution)', 80, 20);
 newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
 newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
 
 newPdf.setFontSize(12);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 
 newPdf.rect(10,40,25,10)
 newPdf.text(`${data.event_organizer}`,17.5, 46); //department
@@ -1545,31 +1591,31 @@ newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
 newPdf.addImage(Image2, 'PNG', 173, 7, 25, 25);
 
 newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
 newPdf.setFontSize(10);
-newPdf.setFont("times", "");
+newPdf.setFont("calibri", "");
 newPdf.text('(An Autonomous Institution)', 80, 20);
 newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
 newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
 
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.setFontSize(19);
 newPdf.text('Budget Utilized', 80, 45);
 newPdf.setFontSize(18);
 newPdf.text('Date of the Event:', 15, 60);
-newPdf.setFont("times","");
+newPdf.setFont("calibri","");
 newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,65, 60);//date
 
-newPdf.setFont("times", "");
+newPdf.setFont("calibri", "");
 newPdf.setFontSize(15);
 newPdf.text('To the Management through Principle', 15, 70);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.text('Total Paticipants:', 15, 90);
 newPdf.text(`${data.student_count}`, 58, 90);
-newPdf.setFont("times","");
+newPdf.setFont("calibri","");
 newPdf.text('',57, 90);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri", "bold");
 newPdf.rect(15, 100, 15, 12).stroke();
 newPdf.text('S.no', 17, 108);
 newPdf.rect(30, 100, 125, 12).stroke();
@@ -1577,7 +1623,7 @@ newPdf.text('Details', 80, 108);
 newPdf.rect(155, 100, 45, 12).stroke();
 newPdf.text('Cost (in Rs)', 165, 108);
 
-newPdf.setFont("times", "");
+newPdf.setFont("calibri", "");
 newPdf.rect(15, 112, 15, 12).stroke();
 newPdf.text('1', 19, 120);
 newPdf.rect(30, 112, 125, 12).stroke();
@@ -1596,7 +1642,7 @@ newPdf.rect(15, 136, 185, 12).stroke();
 newPdf.text('In Words', 19, 144);
 newPdf.text(`${test(data.event_budget)+' only'}`,45,144);//In words budget
 
-newPdf.setFont("times","bold");
+newPdf.setFont("calibri","bold");
 newPdf.text('Event Coordinator(s)', 15, 234);
 newPdf.text('HOD', 100, 234);
 newPdf.text('Principal', 167, 234);
@@ -1657,72 +1703,153 @@ newPdf.text('Principal', 167, 234);
         <div class="button-container">
           {/* <FacultyEcrFilter/> */}
         <>
-        <div className="filter-dropdowns">
+        <div className="filter-dropdowns" style={{width:'100%',display:'flex',alignItems:'center',marginLeft:'-5%',justifyContent:'center'}}>
+       
+{/* Filter of Academic year--------------------------------------------------- */}
 
-<label for="acdyr_id">Academic Year : </label>
+        <label for="acdyr_id">Academic Year : </label>
+{/* <Select
+    className="form1group"
+    id="acdyr_id"
 
-
-    <Select
-        className="form1group"
-        id="acdyr_id"
-
-        isMulti
-        name="acdyr_id"
-        options={years}
-        // value={selectedAcd}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
+    isMulti
+    name="acdyr_id"
+    options={years}
+    value={selectedAcd}
+    onChange={infoCollect}
+    isSearchable
+    placeholder="Select options..."
+    closeMenuOnSelect={true}
+/> */}
+<Select
+      closeMenuOnSelect={false}
+      components={{ ClearIndicator }}
+      styles={{ clearIndicator: ClearIndicatorStyles }}
+      defaultValue={selectedAcd}
+      name="acdyr_id"
+      onChange={infoCollect}
+      isSearchable
+      isMulti
+      options={years}
     />
-    {/* <input type="" name="acdyr_id" onChange={handleChange} value={selectedAcd} /> */}
+       
+    
+
+{/* Filter of Sem--------------------------------------------------------- */}
+<label for="sem_id">Semester : </label>
 
 
+{/* 
 <label for="sem_id">Semester : </label>
 <Select
         className="form1group"
-        // isMulti
+        isMulti
         name="sem_id"
         options={sems}
-        // value={selectedSem}
+        value={selectedSem}
         onChange={infoCollect}
         isSearchable
         placeholder="Select options..."
         closeMenuOnSelect={true}
-        />
-            {/* <input type="" name="sem_id" onChange={handleChange} value={selectedSem} /> */}
+        /> */}
 
+    
+    <Select
+      closeMenuOnSelect={false}
+      components={{ ClearIndicator }}
+      styles={{ clearIndicator: ClearIndicatorStyles }}
+      defaultValue={selectedSem}
+      name="sem_id"
+      onChange={infoCollect}
+      isSearchable
+      // isMulti
+      options={sems}
+    />
 
-<label for="major_id">Major Type : </label>
-<Select
+    
+
+    {/* Filter of Major Id-------------------------------------------------- */}
+    <label for="major_id">Major Type : </label>
+{/* <Select
         className="form1group"
         isMulti
         name="major_id"
         options={majors}
-        // value={selectedMajor}
+        value={selectedMajor}
         onChange={infoCollect}
         isSearchable
         placeholder="Select options..."
         closeMenuOnSelect={false}
-/>
-{/* <input type="" name="major_id" onChange={handleChange} value={selectedMajor} /> */}
-
-<label for="sub_id">Sub Type : </label>
+/> */}
 <Select
+      closeMenuOnSelect={false}
+      components={{ ClearIndicator }}
+      styles={{ clearIndicator: ClearIndicatorStyles }}
+      defaultValue={selectedMajor}
+      name="major_id"
+      onChange={infoCollect}
+      isSearchable
+      isMulti
+      options={majors}
+    />
+    
+    {/* Filter of Sub ID---------------------------------------------------- */}
+    
+
+    <label for="sub_id">Sub Type : </label>
+{/* <Select
 className="form1group"
         isMulti
         name="sub_id"
         options={subs}
-        // value={selectedSub}
+        value={selectedSub}
         onChange={infoCollect}
         isSearchable
         placeholder="Select options..."
         closeMenuOnSelect={true}
         />
-                    {/* <input type="" name="sub_id" onChange={handleChange} value={selectedSub} /> */}
-        <div>
-            <input className='filter-button' type='button' value="Filter" onClick={onClickFilter}/>
-        </div>
+       */}
+
+    <Select
+      closeMenuOnSelect={false}
+      components={{ ClearIndicator }}
+      styles={{ clearIndicator: ClearIndicatorStyles }}
+      defaultValue={selectedSub}
+      name="sub_id"
+      onChange={infoCollect}
+      isSearchable
+      isMulti
+      options={subs}
+    />
+    
+           <input
+  className='filter-button'
+  type='button'
+  value="Filter"
+  onClick={onClickFilter}
+  style={{
+  
+    backgroundColor: '#4CAF50', /* Green */
+    border: 'none',
+    color: 'white',
+    padding: '10px 15px',
+    textAlign: 'center',
+    textDecoration: 'none',
+    display: 'inline-block',
+    fontSize: '16px',
+    margin: '4px 2px',
+    cursor: 'pointer',
+    borderRadius: '12px'
+  }}
+/>
+
+
+
+
+
+
+      
+        
 
             </div>
     </>
@@ -1756,7 +1883,7 @@ className="form1group"
                         </tr>
                     </thead>
                     <tbody>
-                        {
+                        {   currentRecords?.length ||0  > 0 ? (
                             currentRecords.map((data)=>
                             (
                                 <tr>
@@ -1915,16 +2042,29 @@ className="form1group"
                                     
                                 </tr>
                             ))
+                            ) : (
+                              <tr>
+                                  <td colSpan="7" style={{ textAlign: 'center' }}>
+                       No ECRs Found
+                       </td>
+                              </tr>
+                          )
+
                         }
                     </tbody>
                 </table>
-                <div className="pagination" style={{gap:"50px", alignItems:"center", marginLeft:'35%'}}>
+                <div className="pagination" style={{gap:"50px", alignItems:"center", marginLeft:'35%',textAlign:'bottom'}}>
                 <div className="pagination">
         <button className='page-btn' onClick={handlePrevPage} disabled={currentPage === 1}>
           Prev
         </button>
-        <span>{`Page ${currentPage} of ${totalPages}`}</span>
+        <span>&nbsp;&nbsp;</span>
+     
+        <span style={{marginTop:'8px'}}>{`Page ${currentPage} of ${totalPages}`}</span>
+        
+        <span>&nbsp;&nbsp;</span>
         <button className='page-btn' onClick={handleNextPage} disabled={currentPage === totalPages}>
+        
           Next
         </button>
       </div>

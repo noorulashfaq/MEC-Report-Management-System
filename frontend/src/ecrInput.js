@@ -722,7 +722,7 @@ console.log(formData);
  type="file"
  id="event_photos"
  name="event_photo_1"
- accept="image/*"
+ accept="image/gif, image/jpeg"
  onChange={handleFileChange1}
  required // Add 'required' if the image is mandatory
  maxSize="2MB" // Maximum allowed size (this is not standard HTML, will need custom handling)
@@ -734,7 +734,7 @@ console.log(formData);
  type="file"
  id="event_photos"
  name="event_photo_2"
- accept="image/*"
+ accept="image/gif, image/jpeg"
  onChange={handleFileChange2}
  required // Add 'required' if the image is mandatory
  maxSize="2MB" // Maximum allowed size (this is not standard HTML, will need custom handling)
@@ -745,7 +745,7 @@ console.log(formData);
  type="file"
  id="event_photos"
  name="event_photo_3"
- accept="image/*"
+ accept="image/gif, image/jpeg"
  onChange={handleFileChange3}
  required // Add 'required' if the image is mandatory
  maxSize="2MB" // Maximum allowed size (this is not standard HTML, will need custom handling)
@@ -756,7 +756,7 @@ console.log(formData);
  type="file"
  id="event_photos"
  name="event_photo_4"
- accept="image/*"
+ accept="image/gif, image/jpeg"
  onChange={handleFileChange4}
  required // Add 'required' if the image is mandatory
  maxSize="2MB" // Maximum allowed size (this is not standard HTML, will need custom handling)
@@ -767,13 +767,13 @@ console.log(formData);
  type="file"
  id="event_photos"
  name="event_photo_5"
- accept="image/*"
+ accept="image/gif, image/jpeg"
  onChange={handleFileChange5}
  required // Add 'required' if the image is mandatory
  maxSize="2MB" // Maximum allowed size (this is not standard HTML, will need custom handling)
 /><br />
 <label htmlFor="event">PDF: (Attendence)</label>
- <input type="file" onChange={handleFilePdf} id="event" name="pdf" /><br />
+ <input type="file" onChange={handleFilePdf} id="event" name="pdf" accept = "application/pdf"/><br />
  <br></br>
  
  {loading && (

@@ -6,9 +6,14 @@ import Form from 'react-bootstrap/Form';
 import { format } from 'date-fns';
 import Select from 'react-select';
 import axios from "axios";
+import jsPDF from 'jspdf';
+import Image from './logo.png';
+import Image2 from './logo2.png';
+import Image3 from './logo3.jpg';
+import Image4 from './logo4.jpg';
 
 export const Add=()=>{
-
+    const[isChecked,setIsChecked]=useState(false);
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [option, setOptions] = useState([]);
     // console.log(option)
@@ -123,6 +128,7 @@ export const Add=()=>{
             // alert(t)
         }
         const[sub,setSub]=useState([])
+        // alert(JSON.stringify(sub))
         const Sub=async(mid)=>{
             const t = await SubReport(mid)
             setSub(t)
@@ -184,12 +190,17 @@ export const Add=()=>{
  
 //   Acad(subid);
 //   console.log(selectedOptions)
-    
+function toCamelCaseWithSpaces(str) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+      return (index > 0 ? " " : "") + word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    });
+  }
+ 
 
     const infoCollect=(eve)=>{
         const{name,value}=eve.target
         setSeminar((old)=>{
-            if(name==="event_name"||name==="event_title"||name==="event_venue"||name==="event_organizer"||name==="event_sponsor"||name==="guest_name"||name==="guest_designation"||name==="guest_address"||name==="guest_email"||name==="proposal_date"||name==="acdyr_id"){
+            if(name==="event_name"||name==="event_venue"||name==="event_sponsor"||name==="guest_name"||name==="guest_designation"||name==="guest_address"||name==="proposal_date"||name==="acdyr_id"){
                 
                 return{
                     ...old,
@@ -197,6 +208,36 @@ export const Add=()=>{
                         event_sponsor:maj,
                         
                     [name]:value
+                }
+            }
+            else if(name==="event_organizer"){
+                return{
+                    ...old,
+                   
+                      
+                        
+                    [name]:value.toUpperCase()
+                }
+            }
+            else if(name==="guest_email"){
+               
+                return{
+                    ...old,
+                        
+                    [name]:value
+                }
+            }
+            else if(name==="event_title"){
+                
+                
+                return{
+                    ...old,
+                   
+                      
+
+                        [name]:value
+                    
+                    // [name]:temp+rest
                 }
             }
             else if(name==="major_id"){
@@ -252,7 +293,29 @@ export const Add=()=>{
                     [name]:value
                 }
             }
+          else if(name==="student_count"){
+            const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(seminar.guest_email);
+            if (!isValidEmail) {
+              alert("Invalid Email ID")
+            }
+            return{
+                ...old,
+                [name]:parseInt(value)
+            }
+          }
           
+          else if(name==="guest_phone_number"){
+            
+
+            if (value.length > 10) {
+                
+                alert("Mobile number cannot be greater than 10 digits.");
+            }
+            return{
+                ...old,
+                [name]:parseInt(value)
+            }
+          }
             else{
                 return{
                     ...old,
@@ -264,13 +327,304 @@ export const Add=()=>{
     // console.log(seminar)
 
     const callPropose=async()=>{
-        const temp = await onPropose(seminar)
+        const result = toCamelCaseWithSpaces(seminar.event_title);
+        setSeminar((old)=>{
+        return{
+            ...old,
+            event_title:result
+        }
+    }
+        )
+        if(seminar.student_count==null ||seminar.faculty_count==null||seminar.event_budget==null || seminar.event_coordinator==""){
+            alert("Please fill all the fields");
+        }
+        else{
+            let temp
+            try{
+            temp = await onPropose(seminar)
+            }
+            catch(e){
+                alert("Error : "+e)
+            }
         if(temp.message===404||temp.message===500){
             alert("Error in entering data")
         }
         setInformation(temp.message)
         window.location.assign("/ecr")
+        }
 
+       
+
+        
+        
+
+    }
+    
+    const handleDownload = async () => {
+        try {
+        
+          // console.log("hai");
+          const data = seminar;
+          //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
+          var sign = `/Project_images/${data.lvl_1_proposal_sign}.jpeg`;
+          // alert(sign);
+          
+          const newPdf = new jsPDF();
+           
+          
+       
+        newPdf.addImage(Image, 'PNG', 10, 3, 20, 20);
+    newPdf.addImage(Image2, 'PNG', 12,23, 15, 15);
+    newPdf.addImage(Image3, 'JPG', 175, 3, 20, 15);
+    newPdf.addImage(Image4, 'JPG', 175, 20, 20, 15);
+    
+    newPdf.setFontSize(18);
+    newPdf.setFont("times", "bold");
+    newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
+    newPdf.setFontSize(10);
+    newPdf.setFont("times", "");
+    newPdf.text('(An Autonomous Institution)', 80, 20);
+    newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
+    newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
+    
+    
+    newPdf.setFontSize(12);
+    newPdf.setFont("times", "bold");
+    newPdf.rect(10, 40, 20, 7);
+    newPdf.text(`${data.event_organizer}`, 15, 45);///Department
+    
+    newPdf.rect(80, 40, 50, 7);
+    newPdf.text('EVENT PROPOSAL', 85, 45);
+    
+    newPdf.rect(170, 40, 30, 7);
+    newPdf.text(`${data.acd_yr}`, 173, 45);//academic year
+    
+    newPdf.setFont("times","")
+    newPdf.rect(10, 55, 10, 20).stroke();
+    newPdf.text('1.', 12, 65);
+    newPdf.rect(20, 55, 90, 20).stroke();
+    newPdf.text('Nature of the Event:\nConference/Technical Symposium/Workshop/\nSeminar/Guest/Lecture/FDP/Any other',22, 61);
+    newPdf.rect(110, 55, 90, 20).stroke();
+try{
+    const found=await axios.get(`http://localhost:1234/seminar/proposalSub/${data.event_name}`)
+   
+    newPdf.text(`${found.data.rows[0].sub_report}`, 113, 65);//Nature of the Event
+
+    
+
+}
+catch(e){
+    console.log(e);
+}
+    
+    newPdf.rect(10, 75, 10, 10).stroke();
+    newPdf.text('2.', 12, 81);
+    newPdf.rect(20, 75, 90, 10).stroke();
+    newPdf.text('Title of the event',22, 81);
+    newPdf.rect(110, 75, 90, 10).stroke();
+    newPdf.text(`${data.event_title}`, 113, 81);//Event Title
+    
+    
+    newPdf.rect(10, 85, 10, 10).stroke();
+    newPdf.text('3.', 12, 91);
+    newPdf.rect(20, 85, 90, 10).stroke();
+    newPdf.text('Organized by',22, 91);
+    newPdf.rect(110, 85, 90, 10).stroke();
+    newPdf.text(`${data.event_organizer}`, 113, 91);//Event Organizer
+    
+    
+    
+    newPdf.rect(10, 95, 10, 10).stroke();
+    newPdf.text('4.', 12, 101);
+    newPdf.rect(20, 95, 90, 10).stroke();
+    newPdf.text('Collaboration/Sponsoring Agency',22, 101);
+    newPdf.rect(110, 95, 90, 10).stroke();
+    newPdf.text(`${data.event_sponsor}`, 113, 101);//Sponsor Name
+    
+    
+    newPdf.rect(10, 105, 10, 10).stroke();
+    newPdf.text('5.', 12, 111);
+    newPdf.rect(20, 105, 90, 10).stroke();
+    newPdf.text('Date of the Event Planned',22, 111);
+    newPdf.rect(110, 105, 90, 10).stroke();
+    newPdf.text(`${data.proposal_date}`, 113, 111);//Event Date
+    
+    newPdf.rect(10, 115, 10, 10).stroke();
+    newPdf.text('6.', 12, 121);
+    newPdf.rect(20, 115, 90, 10).stroke();
+    newPdf.text('Venue',22, 121);
+    newPdf.rect(110, 115, 90, 10).stroke();
+    newPdf.text(`${data.event_venue}`, 113, 121);
+    
+    
+    newPdf.rect(10, 125, 10, 50).stroke();
+    newPdf.text('7.', 12, 141);
+    newPdf.rect(20, 125, 90, 50).stroke();
+    newPdf.text('Details of the Guest',22, 141);
+    
+    newPdf.rect(110, 125, 23, 10).stroke();
+    newPdf.text('Name', 111, 131);
+    newPdf.rect(133, 125,67, 10).stroke();
+    newPdf.text(`${data.guest_name}`, 135, 131);///Name of the Guest 
+    newPdf.rect(110, 135, 23, 10).stroke();
+    newPdf.text('Designation', 111, 141);
+    newPdf.rect(133, 135,67, 10).stroke();
+    newPdf.text(`${data.guest_designation }`, 135, 141);///Guest Designation
+    newPdf.rect(110, 145, 23, 10).stroke();
+    newPdf.text('Address', 111, 151);
+    const x = 133;
+    let y = 145;
+    const address = `${data.guest_address}`;
+    const contentWidth = newPdf.getStringUnitWidth(address) * 12; // Initial font size: 12
+    const contentHeight = newPdf.getTextDimensions(address, { fontSize: 12 }).h;
+    
+    // Determine font size to fit within specified dimensions
+    const maxWidth = 100; // Adjust based on your requirements
+    const maxHeight = 100; // Adjust based on your requirements
+    const fontSize = Math.min(12, (maxWidth / contentWidth) * 35, (maxHeight / contentHeight) * 35);
+     // Adjust the width as needed
+    // Set font size and add text to the PDF
+    newPdf.setFontSize(fontSize);
+    
+    console.log(contentHeight);
+    
+    const textLines = newPdf.splitTextToSize(address, 60);
+    newPdf.rect(x , y , maxWidth-33  , maxHeight - 90);
+    newPdf.text(x+2, y+5, textLines);
+    // newPdf.rect(133, 140,67, 10).stroke();
+    // newPdf.text(textLines,135, 145);/////Address
+    newPdf.setFontSize(12);
+    
+    
+    newPdf.rect(110, 155, 23, 10).stroke();
+    newPdf.text('Contact No', 111, 161);
+    newPdf.rect(133, 155,67, 10).stroke();
+    newPdf.text(`${data.guest_phone_number}`, 135, 161);//Contact no
+    newPdf.rect(110, 165, 23, 10).stroke();
+    newPdf.text('Mail-id', 111, 171);
+    newPdf.rect(133, 165,67, 10).stroke();
+    newPdf.text(`${data.guest_email}`, 135, 171);/////Guest Mail id
+    
+    newPdf.rect(10, 175, 10, 30).stroke();
+    newPdf.text('8.', 12, 190);
+    newPdf.rect(20, 175, 90, 30).stroke();
+    newPdf.text('Total Participants expected',22, 190);
+    
+    newPdf.rect(110, 175, 23, 10).stroke();
+    newPdf.text('MEC\nStudents', 110.5, 179);
+    newPdf.rect(133, 175,67, 10).stroke();
+    newPdf.text(`${data.student_count}`, 135, 181);//Count of the Student
+    
+    newPdf.rect(110, 185, 23, 10).stroke();
+    newPdf.text('MEC\nFaculty', 110.5, 189);
+    newPdf.rect(133, 185,67, 10).stroke();
+    newPdf.text(`${data.faculty_count}`, 135, 191);//COunt of the Faculty
+    
+    newPdf.rect(110, 195, 23, 10).stroke();
+    newPdf.text('Others', 110.5, 201);
+    newPdf.rect(133, 195,67, 10).stroke();
+    newPdf.text(`${data.others_count}`, 135, 201);//Count of Others
+    
+    newPdf.rect(10, 205, 10, 10).stroke();
+    newPdf.text('9.', 12, 211);
+    newPdf.rect(20, 205, 90, 10).stroke();
+    newPdf.text('Proposed Budget',22, 211);
+    newPdf.rect(110, 205, 90, 10).stroke();
+    newPdf.text(`${data.event_budget}`, 113, 211);//Event Budget
+    
+    
+    
+    newPdf.rect(10, 215, 10, 10).stroke();
+    newPdf.text('10.', 12, 220);
+    newPdf.rect(20, 215, 180, 10).stroke();
+    newPdf.text('Co-ordinator of the Event',22, 220);
+    
+    newPdf.rect(10, 225, 70, 5).stroke();
+    newPdf.text('Name', 35, 229);
+    
+    newPdf.rect(80, 225, 60, 5).stroke();
+    newPdf.text('Designation', 100, 229);
+    
+    newPdf.rect(140, 225, 60, 5).stroke();
+    newPdf.text('Phone Number', 155, 229);
+    
+    newPdf.rect(10, 230, 70, 10).stroke();
+    newPdf.text(`${logged.faculty_name}`, 12, 235);//coordinator Name
+    
+    newPdf.rect(80, 230, 60, 10).stroke();
+    newPdf.text(` ${logged.faculty_desig}`, 83, 235);//coordinator Desgination
+    
+    newPdf.rect(140, 230, 60, 10).stroke();
+    newPdf.text(``, 142, 235);//coordinator Phone_num
+    
+    newPdf.rect(10, 240, 70, 10).stroke();
+    newPdf.text('', 35, 229);//coordinator Name
+    
+    newPdf.rect(80, 240, 60, 10).stroke();
+    newPdf.text('', 100, 229);//cordinator  Desgination
+    
+    newPdf.rect(140, 240, 60, 10).stroke();
+    newPdf.text('', 155, 229);//coordinator Phone_num
+    
+    newPdf.rect(10, 250, 70, 10).stroke();
+    newPdf.text('', 35, 229);//coordinator Name
+    
+    newPdf.rect(80, 250, 60, 10).stroke();
+    newPdf.text('', 100, 229);//coordinator Desgination
+    
+    newPdf.rect(140, 250, 60, 10).stroke();
+    newPdf.text('', 155, 229);//coordinator 
+    
+    // newPdf.rect(10, 225, 70, 5).stroke();
+    // newPdf.text('Name', 35, 229);
+    
+    // newPdf.rect(80, 225, 60, 5).stroke();
+    // newPdf.text('Designation', 100, 229);
+    
+    // newPdf.rect(140, 225, 60, 5).stroke();
+    // newPdf.text('Phone Number', 155, 229);
+    // newPdf.rect(10, 225, 70, 5).stroke();
+    // newPdf.text('Name', 35, 229);
+    
+    // newPdf.rect(80, 225, 60, 5).stroke();
+    // newPdf.text('Designation', 100, 229);
+    
+    // newPdf.rect(140, 225, 60, 5).stroke();
+    // newPdf.text('Phone Number', 155, 229);
+    
+    
+    
+    
+    newPdf.setFont("times","bold");
+    
+    newPdf.text('HoD', 15, 290);
+    
+    newPdf.text('Principal', 155, 290);
+    
+    
+        // Generate a data URI for the PDF
+        const pdfDataUri = newPdf.output('datauristring');
+    
+        // Open the PDF in a new tab or window
+        const newWindow = window.open();
+        newWindow.document.write(`<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`);
+      
+      }
+          
+         catch (err) {
+          console.error(err);
+        }
+      }
+    
+    const preview=async()=>{
+        const result = toCamelCaseWithSpaces(seminar.event_title);
+        setSeminar((old)=>{
+        return{
+            ...old,
+            event_title:result
+        }
+    })
+        handleDownload();
     }
 
     return(
@@ -327,12 +681,12 @@ export const Add=()=>{
                 
             
                         <label for="event_title">Title of the Event :</label>
-                        <input onClick={Acad} onChange={infoCollect} value={seminar.event_title} type="text" name="event_title" placeholder="Event Title" className="form-control"/>
+                        <input onClick={Acad} onChange={infoCollect} value={seminar.event_title} type="text" name="event_title" placeholder="Event Title" className="form-control"  required />
                   
                     
                    
                     <label for="event_organizer">Organised By (eg : CSE,ECE):</label>
-                    <input onChange={infoCollect} value={seminar.event_organizer} type="text" name="event_organizer" placeholder="Event Organizer" className="form-control" />
+                    <input onChange={infoCollect} value={seminar.event_organizer} type="text" name="event_organizer" placeholder="Event Organizer" className="form-control"  required  />
                    
 
                  
@@ -344,7 +698,7 @@ export const Add=()=>{
       
      
       <label htmlFor="event_date">Date of The Event Planned:</label>
-      <input type="date" name="event_date" value={seminar.event_date} required onChange={infoCollect} /><br />
+      <input type="date" name="event_date" value={seminar.event_date} required onChange={infoCollect}  /><br />
 
       <label htmlFor="event_venue">Venue:</label>
       <select name="event_venue" value={seminar.event_venue} onChange={infoCollect}>
@@ -359,10 +713,10 @@ export const Add=()=>{
 
       <h1>Details of The Guest</h1>
       <label htmlFor="guest_name">Name:</label>
-      <input type="text" name="guest_name" placeholder="Name of the Guest" value={seminar.guest_name} required onChange={infoCollect} /><br />
+      <input type="text" name="guest_name" placeholder="Name of the Guest" value={seminar.guest_name} required onChange={infoCollect}  /><br />
 
       <label htmlFor="guest_designation">Designation:</label>
-      <input type="text" name="guest_designation" placeholder="Designation of the Guest" value={seminar.guest_designation} required onChange={infoCollect} /><br />
+      <input type="text" name="guest_designation" placeholder="Designation of the Guest" value={seminar.guest_designation} required onChange={infoCollect}   /><br />
 
       <label htmlFor="guest_address">Address:</label>
       <input type="text" name="guest_address" placeholder="Address of the Guest" value={seminar.guest_address} required onChange={infoCollect} /><br />
@@ -441,10 +795,16 @@ export const Add=()=>{
         <option value="0">Odd Sem</option>
         <option value="1">Even Sem</option>
       </select><br />
-      
-   
-     
+      <input type='button' style={{color:'white',backgroundColor:'#1d4d0b',marginLeft:'36%'}} onClick={preview} value="Preview Proposal" className='col-3 btn btn-primary' />
+      <br></br>
+      <div style={{display:'flex'}}>
+       
+      <input type="checkbox" checked={isChecked} onChange={()=>setIsChecked(!isChecked)}/><h6 style={{marginTop:'6px'}}><span>&nbsp;&nbsp;</span>I confirm that the details I filled out are accurate</h6>
 
+      </div>
+  
+     <br></br>
+      
       
     </div>
     
@@ -452,7 +812,7 @@ export const Add=()=>{
     <h1 style={{color:'red'}}>{information}</h1>
          
     <div className='row mt-5 justify-content-around'>
-        <input type='button' onClick={callPropose} value="Send Proposal" className='col-3 btn btn-primary' />
+        <input type='button' onClick={callPropose} value="Send Proposal" className='col-3 btn btn-primary' disabled={!isChecked} />
                         <input type='button' onClick={()=>{
                                     window.location.assign("/add")
 

@@ -13,9 +13,6 @@ const Ivadd=()=>{
   const [option, setOptions] = useState([]);
 
   useEffect(()=>{
-    const logged=JSON.parse(sessionStorage.getItem("person"))
-    Acad()
-
     axios.get('http://localhost:1234/seminar/find')
         .then((response) => {
         // console.log(response);

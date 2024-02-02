@@ -1,4 +1,6 @@
-import {Major, SubReport, Table,onTable} from './connect';
+
+import { onTable,approveLevel1, approveLevel2, approveLevel3, approveLevel4, approveLevel5,loadComForLevel2,loadComForLevel3,loadComForLevel4,loadComForLevel5, loadForLevel1, loadForLevel2, loadForLevel3, loadForLevel4, loadForLevel5, loadComForLevel1, approveComLevel1, approveComLevel2, approveComLevel3, approveComLevel4, approveComLevel5, Table, Major, SubReport } from "./connect"
+
 import React, { useState, useEffect} from 'react';
 import "./sty.css"
 import axios from 'axios';
@@ -36,6 +38,11 @@ const useStyles = makeStyles((theme) => ({
 
 // localhost
 export const HodECRPage=()=>{
+
+//////////////////////////////////////
+
+  const [ecr, setEcr] = useState([]);
+    const [ecr1, setEcr1] = useState([]);
   
 // --------------------------------------------------
   useEffect(()=>{
@@ -46,6 +53,7 @@ export const HodECRPage=()=>{
     GetCurrAcd()
     // Dept()
     // alert(JSON.stringify(currAcd.acd_yr_id))
+    fetchData(currentPage);
 },[])
 
 const logged=sessionStorage.getItem("person")
@@ -83,21 +91,50 @@ const[selectedMajor,setSelectedMajor]=useState([])
 const[selectedSub,setSelectedSub]=useState([])
 
 const [currentPage, setCurrentPage] = useState(1);
+const [currentRecords, setCurrentRecords] = useState([]);
+const [totalPages, setTotalPages] = useState(1);
       const recordsPerPage = 15;
     
       // Calculate the index of the first and last records to display on the current page
-      const indexOfLastRecord = currentPage * recordsPerPage;
-      const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-      const currentRecords = allvalues.slice(indexOfFirstRecord, indexOfLastRecord);
-    
-      const totalPages = Math.ceil(allvalues.length / recordsPerPage);
+
+      const [loading, setLoading] = useState(false);
+      const fetchData = async (page) => {
+        try {
+          const logged = JSON.parse(sessionStorage.getItem("person"));
+          const empId = logged.faculty_id;
+          
+          // Fetch data from backend API
+          const response = await axios.get(`http://localhost:1234/seminar/hodecr/${empId}?page=${page}`);
+      
+         
+          if (response.status === 200) {
+          
+            setCurrentRecords(response.data.recordsArr);
+            
+            setTotalPages(response.data.totalPages);
+            setLoading(false);
+          } else {
+            console.log('Failed to fetch data');
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
     
       const handleNextPage = () => {
-        setCurrentPage((prevPage) => prevPage + 1);
+        if (currentPage < totalPages) {
+          setLoading(true);
+          setCurrentPage(currentPage + 1);
+          fetchData(currentPage); // Increment currentPage by 1
+        }
       };
     
       const handlePrevPage = () => {
-        setCurrentPage((prevPage) => prevPage - 1);
+        if (currentPage > 1) {
+          setLoading(true);
+          setCurrentPage(currentPage - 1);
+          fetchData(currentPage); // Decrement currentPage by 1
+        }
       };
 
 const[filter,setFilter]=useState({
@@ -353,7 +390,7 @@ const viewPdf1=async(report_id)=>{
    
 
   const handleDownload = async (table) => {
-    try {
+  try {
       const res = await axios.get(`http://localhost:1234/seminar/data/${id}/${table}`);
       // console.log("hai");
       const data = res.data;
@@ -610,7 +647,7 @@ newPdf.text('Principal', 155, 290);
         //     sessionStorage.setItem("report_id",JSON.stringify(temp))
         //     // window.location.assign("/ecr")
         // }
-        const accept=async(report_id,table)=>{
+        const accept1=async(report_id,table)=>{
             const temp=await onTable(report_id,table)
 
         if(temp.report_id){
@@ -629,7 +666,7 @@ newPdf.text('Principal', 155, 290);
         viewPdf(temp.report_id);
 
         }   
-        const ecr=async(report_id,table)=>{
+        const ecrf=async(report_id,table)=>{
           const temp=await onTable(report_id,table)
       if(temp.report_id){
           sessionStorage.setItem("report_id",JSON.stringify(temp))
@@ -1617,6 +1654,166 @@ newPdf.text('Principal', 167, 234);
         }
       }
       const classes = useStyles();
+
+      const [info, setInfo] = useState("")
+
+
+      const accept = async (name, dept_id, report_id, com, report_proposal_status, report_completion_status) => {
+          if (com === 1) {
+  
+              const log = JSON.parse(sessionStorage.getItem("person"))
+              let data;
+              if (report_completion_status === 0) {
+                  data = await approveComLevel1(name, dept_id, log.faculty_id, report_id)
+              }
+              else if (report_completion_status === 1) {
+                  data = await approveComLevel2(name, dept_id, log.faculty_id, report_id)
+              }
+              else if (report_completion_status === 2) {
+                  data = await approveComLevel3(name, dept_id, log.faculty_id, report_id)
+              }
+              else if (report_completion_status === 3) {
+                  data = await approveComLevel4(name, dept_id, log.faculty_id, report_id)
+              }
+              else if (report_completion_status === 4) {
+                  data = await approveComLevel5(name, dept_id, log.faculty_id, report_id)
+              }
+              setInfo(data)
+              window.location.assign("/")
+          }
+          else {
+              const log = JSON.parse(sessionStorage.getItem("person"))
+              let data;
+              // alert(report_proposal_status);
+              if (report_proposal_status === 0) {
+  
+  
+                  data = await approveLevel1(name, dept_id, log.faculty_id, report_id)
+              }
+              else if (report_proposal_status === 1) {
+                  data = await approveLevel2(name, dept_id, log.faculty_id, report_id)
+              }
+              else if (report_proposal_status === 2) {
+                  data = await approveLevel3(name, dept_id, log.faculty_id, report_id)
+              }
+              else if (report_proposal_status === 3) {
+                  data = await approveLevel4(name, dept_id, log.faculty_id, report_id)
+              }
+              else if (report_proposal_status === 4) {
+                  data = await approveLevel5(name, dept_id, log.faculty_id, report_id)
+              }
+              setInfo(data)
+              window.location.assign("/")
+          }
+      }
+  
+      const load = async () => {
+          const logged = JSON.parse(sessionStorage.getItem("person"))
+          let temp;
+          try {
+             
+           temp = await loadComForLevel1(logged.dept_id, logged.faculty_id)
+           
+         
+              setEcr1(temp)
+          }
+          catch (e) {
+              console.log("Error in load For Level 1")
+          }
+          try {
+             
+              temp = await loadComForLevel2(logged.dept_id, logged.faculty_id)
+                 setEcr1(temp)
+             }
+             catch (e) {
+                 console.log("Error in load For Level 2")
+             }
+             try {
+             
+              temp = await loadComForLevel3(logged.dept_id, logged.faculty_id)
+                 setEcr1(temp)
+             }
+             catch (e) {
+                 console.log("Error in load For Level 3")
+             }
+             try {
+             
+              temp = await loadComForLevel4(logged.dept_id, logged.faculty_id)
+                 setEcr1(temp)
+             }
+             catch (e) {
+                 console.log("Error in load For Level 4")
+             }
+             try {
+             
+              temp = await loadComForLevel5(logged.dept_id, logged.faculty_id)
+                 setEcr1(temp)
+             }
+             catch (e) {
+                 console.log("Error in load For Level 5")
+             }
+      }
+      const loadSeminars = async () => {
+          const logged = JSON.parse(sessionStorage.getItem("person"))
+          let temp;
+          try {
+              temp = await loadForLevel1(logged.dept_id, logged.faculty_id)
+  
+              setEcr(temp)
+          }
+          catch (e) {
+              console.log("Error in loadforLevel1");
+          } try {
+              temp = await loadForLevel2(logged.dept_id, logged.faculty_id)
+  
+              setEcr(temp)
+          }
+          catch (e) {
+              console.log("Error in loadforLevel2");
+          }
+          try {
+              temp = await loadForLevel3(logged.dept_id, logged.faculty_id)
+  
+              setEcr(temp)
+          } catch (e) {
+              console.log("Error in loadforLevel3");
+          }
+          try {
+              temp = await loadForLevel4(logged.dept_id, logged.faculty_id)
+  
+              setEcr(temp)
+          }
+          catch (e) {
+              console.log("Error in loadforLevel4");
+          }
+          try {
+              temp = await loadForLevel5(logged.dept_id, logged.faculty_id)
+  
+              setEcr(temp)
+  
+          }
+          catch (e) {
+              console.log("Error in loadforLevel5");
+          }
+      }
+  
+  
+      useEffect(() => {
+          loadSeminars()
+          load()
+      }, [])
+  
+      
+     
+      const ecrs= async (report_id,table) => {
+          const temp = await onTable(report_id,table)
+          if (temp.report_id) {
+              sessionStorage.setItem("report_id", JSON.stringify(temp))
+  
+          }
+          viewPdf1(temp.report_id);
+  
+      }
 // console.log(allvalues)
     return(
         <>
@@ -1640,6 +1837,10 @@ newPdf.text('Principal', 167, 234);
   <div>
 
   </div>
+
+  
+            
+
    
 
             <div class="report-container1">
@@ -1661,28 +1862,28 @@ newPdf.text('Principal', 167, 234);
                             <th>Proposal</th>
                             
 
-                            <th>Completion</th><th>Status</th><th></th><th>Details</th>
+                            <th>Completion</th><th>Status</th><th>Details</th>
                             </tr>
                             {/* <tr><th></th><th></th><th></th> <th></th><th></th><th>Submitted on</th><th>Hod</th><th>Principal</th><th>Submitted on</th><th>Hod</th><th>Principal</th><th></th>
                         </tr> */}
                     </thead>
                     <tbody>
-                 
-                        {
-                            currentRecords.map((data)=>
-                            (
-                          
-                                <tr>
+
+
+                    {
+                            ecr?.length ||0 > 0 ? (
+
+                                ecr.map((data, key) => (
+                                  <tr>
                                     
                                     <td><br></br>{data.report_id}</td>
                                     <td><br></br>{data.event_title}</td>
                                     <td><br></br>{data.event_date.split('-').reverse().join('-')}</td>
                                     <td><br></br>{data.major_report}</td>
                                     
-                                    <td style={{justifyContent:'center',justifyItems:'center'}}><br></br>{(data.sub_report)}</td>
-                                    {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
+                                    <td style={{justifyContent:'center',justifyItems:'center'}}><br></br>{(data.sub_report)}</td>                                    {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
                                     
-                                   
+                                
                                   
                                     {
                                 (data.report_proposal_status===0) ?
@@ -1691,29 +1892,34 @@ newPdf.text('Principal', 167, 234);
                                 <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
                                 Submitted On : {data.proposal_date}
                                 </tr>
-                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
-                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',}}> HOD : 🕒Pending</h6> 
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
                                         {/* <td></td> */}
                                         </td>
                                         <td>    
                                         <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
                                 Submitted On : {data.proposal_date}
                                 </tr>
-                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
-                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</h6> 
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
                                 </td>
                                 <td >
-                                <button type="button" style={{width:'80px'}} onClick={async () => {
+                                <button type="button"style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
 
-}} className="btn btn-success col-4">Accept</button></td>
-<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
+}} className="btn btn-success col-4"  >Accept</button>
+<button type="button" style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
 
                                     <td><button
   style={{
     backgroundColor: '#0000ff', // Background color
     color: 'white', // Text color
     width: '90%', // Button width
-    
+    justifyContent:'center',
+    justifyItems:'center',
+    marginTop:'8px',
     padding: '10px', // Padding
     borderRadius: '5px', // Border radius
     cursor: 'pointer', // Cursor style
@@ -1732,29 +1938,31 @@ newPdf.text('Principal', 167, 234);
                                 <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
                                 Submitted On : {data.proposal_date}
                                 </tr>
-                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
-                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
                                         {/* <td></td> */}
                                         </td>
                                         <td>    
                                         <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
                                 Submitted On : {data.proposal_date}
                                 </tr>
-                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
-                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</h6> 
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
                                 </td>
                                 <td >
-                                <button type="button" style={{width:'80px'}} onClick={async () => {
+                                <button type="button" style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'130px'}} onClick={async () => {
 
-}} className="btn btn-success col-4">Accept</button></td>
-<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+}} className="btn btn-success col-4">Accepted</button></td>
 
                                     <td><button
   style={{
     backgroundColor: '#0000ff', // Background color
     color: 'white', // Text color
     width: '90%', // Button width
-    
+    justifyContent:'center',
+    justifyItems:'center',
+    marginTop:'8px',
     padding: '10px', // Padding
     borderRadius: '5px', // Border radius
     cursor: 'pointer', // Cursor style
@@ -1772,8 +1980,8 @@ newPdf.text('Principal', 167, 234);
                                 <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
                                 Submitted On : {data.proposal_date}
                                 </tr>
-                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
-                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
                                         {/* <td></td> */}
                                         </td>
                                         <td>    
@@ -1784,27 +1992,29 @@ newPdf.text('Principal', 167, 234);
                                 <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
                                 </td>
                                 <td >
-                                <button type="button" style={{width:'80px'}} onClick={async () => {
+                                <button type="button" style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'150px'}} onClick={async () => {
 
-}} className="btn btn-success col-4">Accept</button></td>
-<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+}} className="btn btn-success col-4">Accepted</button></td>
 
                                  
-                                        <td><a className="topic-heading" href="/ecrInput"><button
-  style={{
-    backgroundColor: ' #00997a', // Background color
+<td><button
+   style={{
+    backgroundColor: '#0000ff', // Background color
     color: 'white', // Text color
     width: '90%', // Button width
-    
+    justifyContent:'center',
+    justifyItems:'center',
+    marginTop:'8px',
     padding: '10px', // Padding
     borderRadius: '5px', // Border radius
     cursor: 'pointer', // Cursor style
     border: 'none', // Remove the border
-  }}
-  type="button" onClick={async()=>{
+  }} type="button" onClick={async()=>{
                                                         // alert(val.workshop_id+" "+val.dept_id)
-                                                        accept(data.report_id,data.event_name);
-                                                    }} >Create ECR</button></a></td>
+                                                        pdfAccept(data.report_id,data.event_name);
+                                                       
+                                                    }} >View Proposal</button></td>
                                         </>
                                         :
                                         (data.report_proposal_status===-1) ?
@@ -1817,6 +2027,54 @@ newPdf.text('Principal', 167, 234);
 
                                         </>
                                         :
+                                        (data.report_completion_status===0 && data.lvl_1_completion_sign==null)?
+
+                                        <>
+                                       <td>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
+                                        {/* <td></td> */}
+                                        </td>
+                                        <td>    
+                                        <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                Submitted On : {data.proposal_date}
+                                </tr>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                                </td>
+                                <td >
+                                <button type="button"style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
+
+accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
+}} className="btn btn-success col-4"  >Accept</button>
+<button type="button" style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
+
+     
+                                        <td><button
+   style={{
+    backgroundColor: '#f29b44', // Background color
+    color: 'white', // Text color
+    width: '90%', // Button width
+    justifyContent:'center',
+    justifyItems:'center',
+    marginTop:'8px',
+    padding: '10px', // Padding
+    borderRadius: '5px', // Border radius
+    cursor: 'pointer', // Cursor style
+    border: 'none', // Remove the border
+  }}
+  type="button" onClick={async()=>{
+                                                        // alert(val.workshop_id+" "+val.dept_id)
+                                                       ecrf(data.report_id,data.event_name);
+                                                    }} >View ECR</button></td>
+                                        </>
+                                       
+                                        :
                                         (data.report_completion_status===1)?
 
                                         <>
@@ -1825,29 +2083,31 @@ newPdf.text('Principal', 167, 234);
                                 Submitted On : {data.proposal_date}
                                 </tr>
                                 <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
-                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
                                         {/* <td></td> */}
                                         </td>
                                         <td>    
                                         <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
                                 Submitted On : {data.proposal_date}
                                 </tr>
-                                <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                                <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
                                 <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
                                 </td>
                                 <td >
-                                <button type="button" style={{width:'80px'}} onClick={async () => {
+                                <button type="button" style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'150px'}} onClick={async () => {
 
-}} className="btn btn-success col-4">Accept</button></td>
-<td><button type="button" style={{width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+}} className="btn btn-success col-4">Accepted</button></td>
 
      
                                         <td><button
-  style={{
-    backgroundColor: ' #f29b44', // Background color
+   style={{
+    backgroundColor: '#f29b44', // Background color
     color: 'white', // Text color
     width: '90%', // Button width
-   
+    justifyContent:'center',
+    justifyItems:'center',
+    marginTop:'8px',
     padding: '10px', // Padding
     borderRadius: '5px', // Border radius
     cursor: 'pointer', // Cursor style
@@ -1855,10 +2115,9 @@ newPdf.text('Principal', 167, 234);
   }}
   type="button" onClick={async()=>{
                                                         // alert(val.workshop_id+" "+val.dept_id)
-                                                       ecr(data.report_id,data.event_name);
+                                                       ecrf(data.report_id,data.event_name);
                                                     }} >View ECR</button></td>
-                                        </>
-                                       
+                                                    </>
                                         :
                                         (data.report_completion_status===2)?
 
@@ -1880,15 +2139,13 @@ newPdf.text('Principal', 167, 234);
                                 </td>
                                 <td >
                                 <button type="button" style={{justifyContent:'center',
-    justifyItems:'center',marginTop:'10px',width:'80px'}} onClick={async () => {
+    justifyItems:'center',marginTop:'10px', width:'150px'}} onClick={async () => {
 
-}} className="btn btn-success col-4">Accept</button></td>
-<td><button type="button" style={{justifyContent:'center',
-    justifyItems:'center',marginTop:'10px', width:'80px'}} className="btn btn-dark col-4">Reject</button></td>
+}} className="btn btn-success col-4">Accepted</button></td>
 
                     
                                         <td><button
-  style={{
+   style={{
     backgroundColor: '#f29b44', // Background color
     color: 'white', // Text color
     width: '90%', // Button width
@@ -1902,7 +2159,7 @@ newPdf.text('Principal', 167, 234);
   }}
   type="button" onClick={async()=>{
                                                         // alert(val.workshop_id+" "+val.dept_id)
-                                                       ecr(data.report_id,data.event_name);
+                                                       ecrf(data.report_id,data.event_name);
                                                     }} >View ECR</button></td>
                                         </>
                                         :
@@ -1911,7 +2168,623 @@ newPdf.text('Principal', 167, 234);
                                     
                                 </tr>
                             ))
-                        }
+                        ):( <tr>
+                                    <td colSpan="7" style={{ textAlign: 'center' }}>
+                         No Proposal requests Found
+                         </td>
+                                </tr>)
+                                        }
+
+{
+                            ecr1?.length ||0 > 0 ? (
+
+                                ecr1.map((data, key) => (
+                                  <tr>
+                                    
+                                  <td><br></br>{data.report_id}</td>
+                                  <td><br></br>{data.event_title}</td>
+                                  <td><br></br>{data.event_date.split('-').reverse().join('-')}</td>
+                                  <td><br></br>{data.major_report}</td>
+                                  
+                                  <td style={{justifyContent:'center',justifyItems:'center'}}><br></br>{(data.sub_report)}</td>                                    {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
+                                  
+                              
+                                
+                                  {
+                              (data.report_proposal_status===0) ?
+                              <>
+                              <td>
+                              <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                              Submitted On : {data.proposal_date}
+                              </tr>
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',}}> HOD : 🕒Pending</h6> 
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
+                                      {/* <td></td> */}
+                                      </td>
+                                      <td>    
+                                      <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                              Submitted On : {data.proposal_date}
+                              </tr>
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</h6> 
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
+                              </td>
+                              <td >
+                              <button type="button"style={{justifyContent:'center',
+  justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
+
+accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
+}} className="btn btn-success col-4"  >Accept</button>
+<button type="button" style={{justifyContent:'center',
+  justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
+
+                                  <td><button
+style={{
+  backgroundColor: '#0000ff', // Background color
+  color: 'white', // Text color
+  width: '90%', // Button width
+  justifyContent:'center',
+  justifyItems:'center',
+  marginTop:'8px',
+  padding: '10px', // Padding
+  borderRadius: '5px', // Border radius
+  cursor: 'pointer', // Cursor style
+  border: 'none', // Remove the border
+}} type="button" onClick={async()=>{
+                                                      // alert(val.workshop_id+" "+val.dept_id)
+                                                      pdfAccept(data.report_id,data.event_name);
+                                                     
+                                                  }} >View Proposal</button></td>
+                                      </>
+                                      :
+                                      (data.report_proposal_status===1 && data.report_completion_status===0 ) ? 
+                                      <>
+                                      
+                                      <td>
+                              <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                              Submitted On : {data.proposal_date}
+                              </tr>
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
+                                      {/* <td></td> */}
+                                      </td>
+                                      <td>    
+                                      <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                              Submitted On : {data.proposal_date}
+                              </tr>
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</h6> 
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
+                              </td>
+                              <td >
+                              <button type="button" style={{justifyContent:'center',
+  justifyItems:'center',marginTop:'10px', width:'130px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accepted</button></td>
+
+                                  <td><button
+style={{
+  backgroundColor: '#0000ff', // Background color
+  color: 'white', // Text color
+  width: '90%', // Button width
+  justifyContent:'center',
+  justifyItems:'center',
+  marginTop:'8px',
+  padding: '10px', // Padding
+  borderRadius: '5px', // Border radius
+  cursor: 'pointer', // Cursor style
+  border: 'none', // Remove the border
+}} type="button" onClick={async()=>{
+                                                      // alert(val.workshop_id+" "+val.dept_id)
+                                                      pdfAccept(data.report_id,data.event_name);
+                                                     
+                                                  }} >View Proposal</button></td>
+                                      </>
+                                      :
+                                      (data.report_proposal_status===2 && data.report_completion_status==0 &&data.event_organizer==null ) ?
+                                      <>
+                                      <td>
+                              <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                              Submitted On : {data.proposal_date}
+                              </tr>
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
+                                      {/* <td></td> */}
+                                      </td>
+                                      <td>    
+                                      <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                              Submitted On : {data.proposal_date}
+                              </tr>
+                              <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
+                              <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                              </td>
+                              <td >
+                              <button type="button" style={{justifyContent:'center',
+  justifyItems:'center',marginTop:'10px', width:'150px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accepted</button></td>
+
+                               
+<td><button
+ style={{
+  backgroundColor: '#0000ff', // Background color
+  color: 'white', // Text color
+  width: '90%', // Button width
+  justifyContent:'center',
+  justifyItems:'center',
+  marginTop:'8px',
+  padding: '10px', // Padding
+  borderRadius: '5px', // Border radius
+  cursor: 'pointer', // Cursor style
+  border: 'none', // Remove the border
+}} type="button" onClick={async()=>{
+                                                      // alert(val.workshop_id+" "+val.dept_id)
+                                                      pdfAccept(data.report_id,data.event_name);
+                                                     
+                                                  }} >View Proposal</button></td>
+                                      </>
+                                      :
+                                      (data.report_proposal_status===-1) ?
+                                      <>
+                                         <td><h3 style={{color:'red'}}>Rejected</h3></td>
+                                      <td>-</td>
+                                      <td>-</td>
+                                      <td>-</td>
+                                      <td>-</td>
+
+                                      </>
+                                      :
+                                      (data.report_completion_status==0 || data.lvl_2_completion_sign!=null)?
+
+                                      <>
+                                     <td>
+                              <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                              Submitted On : {data.proposal_date}
+                              </tr>
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
+                                      {/* <td></td> */}
+                                      </td>
+                                      <td>    
+                                      <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                              Submitted On : {data.proposal_date}
+                              </tr>
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</h6> 
+                              <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                              </td>
+                              <td >
+                              <button type="button"style={{justifyContent:'center',
+  justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
+
+accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
+}} className="btn btn-success col-4"  >Accept</button>
+<button type="button" style={{justifyContent:'center',
+  justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
+
+   
+                                      <td><button
+ style={{
+  backgroundColor: '#f29b44', // Background color
+  color: 'white', // Text color
+  width: '90%', // Button width
+  justifyContent:'center',
+  justifyItems:'center',
+  marginTop:'8px',
+  padding: '10px', // Padding
+  borderRadius: '5px', // Border radius
+  cursor: 'pointer', // Cursor style
+  border: 'none', // Remove the border
+}}
+type="button" onClick={async()=>{
+                                                      // alert(val.workshop_id+" "+val.dept_id)
+                                                     ecrf(data.report_id,data.event_name);
+                                                  }} >View ECR</button></td>
+                                      </>
+                                     
+                                      :
+                                      (data.report_completion_status===1)?
+
+                                      <>
+                                     <td>
+                              <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                              Submitted On : {data.proposal_date}
+                              </tr>
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
+                                      {/* <td></td> */}
+                                      </td>
+                                      <td>    
+                                      <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                              Submitted On : {data.proposal_date}
+                              </tr>
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
+                              </td>
+                              <td >
+                              <button type="button" style={{justifyContent:'center',
+  justifyItems:'center',marginTop:'10px', width:'150px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accepted</button></td>
+
+   
+                                      <td><button
+ style={{
+  backgroundColor: '#f29b44', // Background color
+  color: 'white', // Text color
+  width: '90%', // Button width
+  justifyContent:'center',
+  justifyItems:'center',
+  marginTop:'8px',
+  padding: '10px', // Padding
+  borderRadius: '5px', // Border radius
+  cursor: 'pointer', // Cursor style
+  border: 'none', // Remove the border
+}}
+type="button" onClick={async()=>{
+                                                      // alert(val.workshop_id+" "+val.dept_id)
+                                                     ecrf(data.report_id,data.event_name);
+                                                  }} >View ECR</button></td>
+                                                  </>
+                                      :
+                                      (data.report_completion_status===2)?
+
+                                      <>
+                                   <td>
+                              <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                              Submitted On : {data.proposal_date}
+                              </tr>
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
+                                      {/* <td></td> */}
+                                      </td>
+                                      <td>    
+                                      <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                              Submitted On : {data.proposal_date}
+                              </tr>
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                              <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
+                              </td>
+                              <td >
+                              <button type="button" style={{justifyContent:'center',
+  justifyItems:'center',marginTop:'10px', width:'150px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accepted</button></td>
+
+                  
+                                      <td><button
+ style={{
+  backgroundColor: '#f29b44', // Background color
+  color: 'white', // Text color
+  width: '90%', // Button width
+  justifyContent:'center',
+  justifyItems:'center',
+  marginTop:'8px',
+  padding: '10px', // Padding
+  borderRadius: '5px', // Border radius
+  cursor: 'pointer', // Cursor style
+  border: 'none', // Remove the border
+}}
+type="button" onClick={async()=>{
+                                                      // alert(val.workshop_id+" "+val.dept_id)
+                                                     ecrf(data.report_id,data.event_name);
+                                                  }} >View ECR</button></td>
+                                      </>
+                                      :
+                                      <></>
+}
+                                  
+                              </tr>
+                          ))
+                      ):( <tr>
+                                  <td colSpan="7" style={{ textAlign: 'center' }}>
+                       No Completion requests Found
+                       </td>
+                              </tr>)
+                                      }
+                 
+                        {
+                          currentRecords?.length||0>0?(
+                            currentRecords.map((data)=>
+                            (
+                          
+                              <tr>
+                                    
+                              <td><br></br>{data.report_id}</td>
+                              <td><br></br>{data.event_title}</td>
+                              <td><br></br>{data.event_date.split('-').reverse().join('-')}</td>
+                              <td><br></br>{data.major_report}</td>
+                              
+                              <td style={{justifyContent:'center',justifyItems:'center'}}><br></br>{(data.sub_report)}</td>                                    {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
+                              
+                          
+                            
+                              {
+                          (data.report_proposal_status===0) ?
+                          <>
+                          <td>
+                          <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                          Submitted On : {data.proposal_date}
+                          </tr>
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small',}}> HOD : 🕒Pending</h6> 
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
+                                  {/* <td></td> */}
+                                  </td>
+                                  <td>    
+                                  <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                          Submitted On : {data.proposal_date}
+                          </tr>
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</h6> 
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
+                          </td>
+                          <td >
+                          <button type="button"style={{justifyContent:'center',
+justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
+
+accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
+}} className="btn btn-success col-4"  >Accept</button>
+<button type="button" style={{justifyContent:'center',
+justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
+
+                              <td><button
+style={{
+backgroundColor: '#0000ff', // Background color
+color: 'white', // Text color
+width: '90%', // Button width
+justifyContent:'center',
+justifyItems:'center',
+marginTop:'8px',
+padding: '10px', // Padding
+borderRadius: '5px', // Border radius
+cursor: 'pointer', // Cursor style
+border: 'none', // Remove the border
+}} type="button" onClick={async()=>{
+                                                  // alert(val.workshop_id+" "+val.dept_id)
+                                                  pdfAccept(data.report_id,data.event_name);
+                                                 
+                                              }} >View Proposal</button></td>
+                                  </>
+                                  :
+                                  (data.report_proposal_status===1 && data.report_completion_status===0 ) ? 
+                                  <>
+                                  
+                                  <td>
+                          <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                          Submitted On : {data.proposal_date}
+                          </tr>
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
+                                  {/* <td></td> */}
+                                  </td>
+                                  <td>    
+                                  <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                          Submitted On : {data.proposal_date}
+                          </tr>
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</h6> 
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
+                          </td>
+                          <td >
+                          <button type="button" style={{justifyContent:'center',
+justifyItems:'center',marginTop:'10px', width:'130px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accepted</button></td>
+
+                              <td><button
+style={{
+backgroundColor: '#0000ff', // Background color
+color: 'white', // Text color
+width: '90%', // Button width
+justifyContent:'center',
+justifyItems:'center',
+marginTop:'8px',
+padding: '10px', // Padding
+borderRadius: '5px', // Border radius
+cursor: 'pointer', // Cursor style
+border: 'none', // Remove the border
+}} type="button" onClick={async()=>{
+                                                  // alert(val.workshop_id+" "+val.dept_id)
+                                                  pdfAccept(data.report_id,data.event_name);
+                                                 
+                                              }} >View Proposal</button></td>
+                                  </>
+                                  :
+                                  (data.report_proposal_status===2 && data.report_completion_status===0 ) ?
+                                  <>
+                                  <td>
+                          <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                          Submitted On : {data.proposal_date}
+                          </tr>
+                          <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                          <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                  {/* <td></td> */}
+                                  </td>
+                                  <td>    
+                                  <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                          Submitted On : {data.proposal_date}
+                          </tr>
+                          <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
+                          <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                          </td>
+                          <td >
+                          <button type="button" style={{justifyContent:'center',
+justifyItems:'center',marginTop:'10px', width:'150px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accepted</button></td>
+
+                           
+<td><button
+style={{
+backgroundColor: '#0000ff', // Background color
+color: 'white', // Text color
+width: '90%', // Button width
+justifyContent:'center',
+justifyItems:'center',
+marginTop:'8px',
+padding: '10px', // Padding
+borderRadius: '5px', // Border radius
+cursor: 'pointer', // Cursor style
+border: 'none', // Remove the border
+}} type="button" onClick={async()=>{
+                                                  // alert(val.workshop_id+" "+val.dept_id)
+                                                  pdfAccept(data.report_id,data.event_name);
+                                                 
+                                              }} >View Proposal</button></td>
+                                  </>
+                                  :
+                                  (data.report_proposal_status===-1) ?
+                                  <>
+                                     <td><h3 style={{color:'red'}}>Rejected</h3></td>
+                                  <td>-</td>
+                                  <td>-</td>
+                                  <td>-</td>
+                                  <td>-</td>
+
+                                  </>
+                                  :
+                                  (data.report_completion_status===0 && data.lvl_1_completion_sign==null)?
+
+                                  <>
+                                 <td>
+                          <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                          Submitted On : {data.proposal_date}
+                          </tr>
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                          <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                  {/* <td></td> */}
+                                  </td>
+                                  <td>    
+                                  <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                          Submitted On : {data.proposal_date}
+                          </tr>
+                          <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
+                          <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                          </td>
+                          <td >
+                          <button type="button"style={{justifyContent:'center',
+justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
+
+accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
+}} className="btn btn-success col-4"  >Accept</button>
+<button type="button" style={{justifyContent:'center',
+justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
+
+
+                                  <td><button
+style={{
+backgroundColor: '#f29b44', // Background color
+color: 'white', // Text color
+width: '90%', // Button width
+justifyContent:'center',
+justifyItems:'center',
+marginTop:'8px',
+padding: '10px', // Padding
+borderRadius: '5px', // Border radius
+cursor: 'pointer', // Cursor style
+border: 'none', // Remove the border
+}}
+type="button" onClick={async()=>{
+                                                  // alert(val.workshop_id+" "+val.dept_id)
+                                                 ecrf(data.report_id,data.event_name);
+                                              }} >View ECR</button></td>
+                                  </>
+                                 
+                                  :
+                                  (data.report_completion_status===1)?
+
+                                  <>
+                                 <td>
+                          <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                          Submitted On : {data.proposal_date}
+                          </tr>
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                          <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</tr>
+                                  {/* <td></td> */}
+                                  </td>
+                                  <td>    
+                                  <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                          Submitted On : {data.proposal_date}
+                          </tr>
+                          <tr className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</tr> 
+                          <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
+                          </td>
+                          <td >
+                          <button type="button" style={{justifyContent:'center',
+justifyItems:'center',marginTop:'10px', width:'150px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accepted</button></td>
+
+
+                                  <td><button
+style={{
+backgroundColor: '#f29b44', // Background color
+color: 'white', // Text color
+width: '90%', // Button width
+justifyContent:'center',
+justifyItems:'center',
+marginTop:'8px',
+padding: '10px', // Padding
+borderRadius: '5px', // Border radius
+cursor: 'pointer', // Cursor style
+border: 'none', // Remove the border
+}}
+type="button" onClick={async()=>{
+                                                  // alert(val.workshop_id+" "+val.dept_id)
+                                                 ecrf(data.report_id,data.event_name);
+                                              }} >View ECR</button></td>
+                                              </>
+                                  :
+                                  (data.report_completion_status===2)?
+
+                                  <>
+                               <td>
+                          <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                          Submitted On : {data.proposal_date}
+                          </tr>
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
+                                  {/* <td></td> */}
+                                  </td>
+                                  <td>    
+                                  <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                          Submitted On : {data.proposal_date}
+                          </tr>
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}> HOD : Accepted</h6> 
+                          <h6 className='hodECR' style={{border:'none',fontSize:'small',color:'green'}}>Principal : Accepted</h6>
+                          </td>
+                          <td >
+                          <button type="button" style={{justifyContent:'center',
+justifyItems:'center',marginTop:'10px', width:'150px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Accepted</button></td>
+
+              
+                                  <td><button
+style={{
+backgroundColor: '#f29b44', // Background color
+color: 'white', // Text color
+width: '90%', // Button width
+justifyContent:'center',
+justifyItems:'center',
+marginTop:'8px',
+padding: '10px', // Padding
+borderRadius: '5px', // Border radius
+cursor: 'pointer', // Cursor style
+border: 'none', // Remove the border
+}}
+type="button" onClick={async()=>{
+                                                  // alert(val.workshop_id+" "+val.dept_id)
+                                                 ecrf(data.report_id,data.event_name);
+                                              }} >View ECR</button></td>
+                                  </>
+                                  :
+                                  <></>
+}
+                              
+                          </tr>
+                      ))
+                  ):( <tr>
+                              <td colSpan="7" style={{ textAlign: 'center' }}>
+                   No  Reports Found
+                   </td>
+                          </tr>)
+                                  }
                     </tbody>
                 </table>
                 <div className="pagination" style={{gap:"50px", alignItems:"center", marginLeft:'35%'}}>
@@ -1924,6 +2797,13 @@ newPdf.text('Principal', 167, 234);
           Next
         </button>
       </div>
+
+      {loading && (
+  <div className="loading-overlay">
+    <div className="loading-spinner"></div>
+    <div className="loading-text">Loading...</div>
+  </div>
+)}
                 </div>
                 </div>
                    </div>

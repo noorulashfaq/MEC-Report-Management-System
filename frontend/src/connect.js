@@ -71,7 +71,8 @@ export const loadForLevel1=async(dept,emp)=>{
     try{
     const receive = await axios.get(`${url}/seminar/loadForLevel1/${dept}/${emp}`)
     console.log(receive.data)
-    return receive.data.resultArr[0].resultRows
+    // alert(JSON.stringify(receive.data.resultArr[0]))
+    return receive.data.resultArr[0]
     }
     catch(e){
         console.log("No request on level 1");
@@ -82,6 +83,7 @@ export const loadForLevel2=async(dept,emp)=>{
     try{
     // alert(dept)
     const receive = await axios.get(`${url}/seminar/loadForLevel2/${dept}/${emp}`)
+    
     return receive.data.resultArr[0].resultRows
     }
     catch(err){
