@@ -15,6 +15,7 @@ import Image4 from './logo4.jpg';
 export const Add=()=>{
     const[isChecked,setIsChecked]=useState(false);
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const [selected, setSelected] = useState();
     const [option, setOptions] = useState([]);
     // console.log(option)
   
@@ -24,7 +25,7 @@ export const Add=()=>{
         fillPorposals()
        
      
-      axios.get('http://10.167.1.2:1234/seminar/find')
+      axios.get('http://localhost:1234/seminar/find')
         .then((response) => {
         //   console.log(response);
           setOptions(response.data.rows);
@@ -36,7 +37,7 @@ export const Add=()=>{
     
     }, []);
   
-  
+ 
 
     const options = option.map((val, key) => ({
         value: val.faculty_id+'-'+val.faculty_name,
@@ -135,8 +136,36 @@ export const Add=()=>{
             // alert(t)
         }
        
-
+        const major_ = major.map((val, key) => ({
+            value: val.major_report_id,
+            label: val.major_report,
+          }));
     const[facid,setFacid]=useState([])
+    const handle = (eve) => {
+        
+        
+       
+            try{
+               
+                setSelected(eve.value)
+                Sub(eve.value)
+
+        }
+        catch(e){
+          
+            console.log(e)
+        }
+            
+        
+    
+        setSeminar((old) => {
+            return {
+              ...old,
+              major_id:selected
+            }
+          })
+    }
+
 
     const handleChange = (eve) => {
         let updatedFacidString = facid;
@@ -196,9 +225,28 @@ function toCamelCaseWithSpaces(str) {
     });
   }
  
+// alert(op)
+const [showInput, setShowInput] = useState(false);
 
     const infoCollect=(eve)=>{
+        // const { value } = eve.target;
+        
+
+        setSeminar((old)=>{
+           
+            return {
+                ...old,
+                // eve[0].target.major_id:eve[0].target.value
+            }
+        })
         const{name,value}=eve.target
+        if (value === 'Others') {
+           
+            
+            setShowInput(true);
+            return
+
+          } 
         setSeminar((old)=>{
             if(name==="event_name"||name==="event_venue"||name==="event_sponsor"||name==="guest_name"||name==="guest_designation"||name==="guest_address"||name==="proposal_date"||name==="acdyr_id"){
                 
@@ -406,7 +454,7 @@ function toCamelCaseWithSpaces(str) {
     newPdf.text('Nature of the Event:\nConference/Technical Symposium/Workshop/\nSeminar/Guest/Lecture/FDP/Any other',22, 61);
     newPdf.rect(110, 55, 90, 20).stroke();
 try{
-    const found=await axios.get(`http://10.167.1.2:1234/seminar/proposalSub/${data.event_name}`)
+    const found=await axios.get(`http://localhost:1234/seminar/proposalSub/${data.event_name}`)
    
     newPdf.text(`${found.data.rows[0].sub_report}`, 113, 65);//Nature of the Event
 
@@ -627,6 +675,12 @@ catch(e){
         handleDownload();
     }
 
+   
+    // (document).ready(function=>(){
+    //     ('#event_name').select2();
+    // });
+
+
     return(
         <>
          <body>
@@ -651,9 +705,33 @@ catch(e){
 
 
 
-    
+ <label for="major_id">Major Type : </label>
+ {/* <Select
+ className="form-group"
+        isMulti
+        id="event_coordinator"
+        name="event_coordinator"
+        options={options}
+        value={selectedOptions}
+        onChange={handleChange}
+        isSearchable
+        placeholder="Select options..."
+        closeMenuOnSelect={false}
+      /> */}
+ <Select
+ className="form-group"
+
+        id="major_id"
+        name="major_id"
+        options={major_}
+        value={selected}
+          onChange={handle}
+        isSearchable
+        placeholder="Select option..."
+        closeMenuOnSelect={true}
+      />
     <label for="major_id">Major Type :</label>
-    <select name="major_id" value={seminar.major_id} onChange={infoCollect}>
+    <select  name="major_id" value={seminar.major_id} onChange={infoCollect} >
     <option value="">Select Major Type .......</option>
     {
     // let t=0;
@@ -662,6 +740,7 @@ catch(e){
                                 })
                             }
 </select>
+
 <label for="event_name">Nature of The Event :</label>
 <select name="event_name" value={seminar.event_name} onChange={infoCollect}>
     <option value="">Select Event Nature .......</option>
@@ -701,7 +780,7 @@ catch(e){
       <input type="date" name="event_date" value={seminar.event_date} required onChange={infoCollect}  /><br />
 
       <label htmlFor="event_venue">Venue:</label>
-      <select name="event_venue" value={seminar.event_venue} onChange={infoCollect}>
+      <select name="event_venue" value={seminar.event_venue} onChange={infoCollect} hidden={showInput}>
         
       <option value="">Select Venue ......</option>
       {
@@ -709,7 +788,19 @@ catch(e){
                                     return (<option value={val.venue_name}>{val.venue_name}</option>)
                                 })
                             }
-      </select><br />
+        <option value="Others">Others</option>
+       
+      </select>
+      {showInput && (
+        <input
+          type="text"
+          name="event_venue"
+          value={seminar.event_venue}
+          onChange={infoCollect}
+          placeholder="Enter other venue"
+        />
+      )}
+      <br />
 
       <h1>Details of The Guest</h1>
       <label htmlFor="guest_name">Name:</label>
@@ -765,7 +856,7 @@ catch(e){
         </select> */}
 
 <label for="event_coordinator">Event Co-ordinator : </label>
- <Select
+<Select
  className="form-group"
         isMulti
         id="event_coordinator"

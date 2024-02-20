@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 //import Img6001 from'./6001.jpeg';
 
-// 10.167.1.2
+// localhost
 export const HodECRPage=()=>{
 
 //////////////////////////////////////
@@ -68,7 +68,7 @@ const[allvalues,setAllvalues]=useState([]);
         // console.log(allvalues)
 
 const GetCurrAcd=async()=>{
-    const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+    const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
     // alert(JSON.stringify(t.data.result))
     const temp=t.data.result
     let valueYr=0
@@ -104,7 +104,7 @@ const [totalPages, setTotalPages] = useState(1);
           const empId = logged.faculty_id;
           
           // Fetch data from backend API
-          const response = await axios.get(`http://10.167.1.2:1234/seminar/hodecr/${empId}?page=${page}`);
+          const response = await axios.get(`http://localhost:1234/seminar/hodecr/${empId}?page=${page}`);
       
          
           if (response.status === 200) {
@@ -153,7 +153,7 @@ const onClickFilter=async()=>{
     // alert(JSON.stringify(filter))
     try{
         // alert("hi")
-        const filteredRecords=await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001",filter)
+        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
         // alert(filteredRecords.data)
         setAllvalues(filteredRecords.data)
     }
@@ -234,7 +234,7 @@ let [subs,setSubs]=useState([])
 
     const[year,setYear]=useState([])
     const Acad=async()=>{
-        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -391,7 +391,7 @@ const viewPdf1=async(report_id)=>{
 
   const handleDownload = async (table) => {
   try {
-      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
+      const res = await axios.get(`http://localhost:1234/seminar/data/${id}/${table}`);
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
@@ -685,7 +685,7 @@ newPdf.text('Principal', 155, 290);
         try {
           
           
-          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
+          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
         //   var atten = `/Project_images/attendence.jpg`;
@@ -1855,8 +1855,8 @@ newPdf.text('Principal', 167, 234);
                             <th>ID</th>
                             <th>Event Title</th>
                             <th>Date</th>
-                            <th>Major Type</th>
-                            <th>Sub Type</th>
+                            <th>Major Type <br></br>Sub Type</th>
+                            <th>Event Coordinator</th>
                             {/* <th></th> */}
                             
                             <th>Proposal</th>
@@ -1879,9 +1879,12 @@ newPdf.text('Principal', 167, 234);
                                     <td><br></br>{data.report_id}</td>
                                     <td><br></br>{data.event_title}</td>
                                     <td><br></br>{data.event_date.split('-').reverse().join('-')}</td>
+                                    <tr>
                                     <td><br></br>{data.major_report}</td>
                                     
-                                    <td style={{justifyContent:'center',justifyItems:'center'}}><br></br>{(data.sub_report)}</td>                                    {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
+                                    <td style={{justifyContent:'center',justifyItems:'center'}}><br></br>{(data.sub_report)}</td>
+                                    </tr>
+                                                                       {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
                                     
                                 
                                   
@@ -2488,11 +2491,27 @@ type="button" onClick={async()=>{
                               <tr>
                                     
                               <td><br></br>{data.report_id}</td>
-                              <td><br></br>{data.event_title}</td>
-                              <td><br></br>{data.event_date.split('-').reverse().join('-')}</td>
-                              <td><br></br>{data.major_report}</td>
                               
-                              <td style={{justifyContent:'center',justifyItems:'center'}}><br></br>{(data.sub_report)}</td>                                    {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
+                              <td style={{ whiteSpace: 'pre-wrap' }}>
+  <br></br>
+  {data.event_title}
+</td>
+
+                              <td><br></br>{data.event_date.split('-').reverse().join('-')}</td>
+                              <td>
+                                    <h6 style={{border:'none',fontSize:'small',}}>{data.major_report}</h6>
+                                    
+                                    <h6 style={{justifyContent:'center',justifyItems:'center',border:'none',fontSize:'small'}}><br></br>{(data.sub_report)}</h6>
+                                    </td>  
+                                    <td>
+  <br></br>
+  {data.event_coordinator.split(',').map(entry => {
+    const [code, name] = entry.split('-');
+    return <div>{name}</div>;
+  })}
+</td>
+{/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
+                              {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
                               
                           
                             
