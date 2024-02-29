@@ -424,6 +424,25 @@ function queryAsync(sql, params = []) {
     });
 }
 
+route.get('/findFacWithDept/:deptId',async(req,res)=>{
+    // const dId=req.params.deptId
+    const sql=`select * from data_faculties inner join data_dept on data_faculties.dept_id = data_dept.dept_id where not faculty_desig in(401,402,403) and data_dept.dept_id=${req.params.deptId};`
+//     INNER JOIN data_dept d ON f.dept_id = d.dept_id
+// WHERE f.faculty_desig NOT IN (403, 404);
+    base.query(sql,[],(err,rows)=>{
+        if(err){
+            console.log(err)
+            res.status(500).json({error:err.message})
+            return
+        }
+        if(rows.length==0){
+            res.status(404).json({error:"No faculties"})
+            return
+        }
+        res.status(200).json({rows})
+    })
+})
+
 route.get('/find',async(req,res)=>{
     // const dId=req.params.deptId
     const sql=`select * from data_faculties inner join data_dept on data_faculties.dept_id = data_dept.dept_id where not faculty_desig in(401,402)`

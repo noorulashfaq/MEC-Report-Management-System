@@ -10,11 +10,37 @@ import Image from './logo.png';
 import Image2 from './logo2.png';
 import Image3 from './logo3.jpg';
 import Image4 from './logo4.jpg';
-import './facultyEcrFilter.css';
+// import './facultyEcrFilter.css';
 // import Select from 'react-select';
 import { makeStyles } from '@material-ui/core/styles';
+import Select from 'react-select';
+import { FormControl, InputLabel, MenuItem, Button } from '@mui/material';
 
-import { FormControl, InputLabel, MenuItem, Select, Button } from '@mui/material';
+
+const CustomClearText = () => <>X</>;
+
+const ClearIndicator = (props) => {
+  const {
+    children = <CustomClearText />,
+    getStyles,
+    innerProps: { ref, ...restInnerProps },
+  } = props;
+  return (
+    <div
+      {...restInnerProps}
+      ref={ref}
+      style={getStyles('clearIndicator', props)}
+    >
+      <div style={{ padding: '0px 5px' }}>{children}</div>
+    </div>
+  );
+};
+
+const ClearIndicatorStyles = (base, state) => ({
+  ...base,
+  cursor: 'pointer',
+  color: state.isFocused ? 'blue' : 'black',
+});
 
 const useStyles = makeStyles((theme) => ({
   filterDropdowns: {
@@ -43,7 +69,8 @@ export const HodECRPage=()=>{
 
   const [ecr, setEcr] = useState([]);
     const [ecr1, setEcr1] = useState([]);
-  
+    const [emp,setEmp]=useState([])
+
 // --------------------------------------------------
   useEffect(()=>{
     doSomething();
@@ -51,10 +78,25 @@ export const HodECRPage=()=>{
     Maj()
     Acad()
     GetCurrAcd()
+    fetchFac()
     // Dept()
     // alert(JSON.stringify(currAcd.acd_yr_id))
     fetchData(currentPage);
 },[])
+
+const fetchFac=async()=>{
+  await axios.get(`http://localhost:1234/seminar/findFacWithDept/${loggedUser.dept_id}`)
+        .then((response) => {
+          console.log(response);
+          setEmp(response.data.rows);
+        })
+}
+
+const facs=emp.map((val)=>({
+  value: val.faculty_id,
+  label: val.faculty_name,
+  extraInfo: "emp_id"
+}))
 
 const logged=sessionStorage.getItem("person")
 const loggedUser = JSON.parse(logged)
@@ -89,6 +131,562 @@ const[selectedAcd,setSelectedAcd]=useState([])
 const[selectedSem,setSelectedSem]=useState([])
 const[selectedMajor,setSelectedMajor]=useState([])
 const[selectedSub,setSelectedSub]=useState([])
+
+
+const acdInfoCollect=(eve)=>{
+  if(eve.length==0){
+    setFilter((old)=>({
+      ...old,
+      acdyr_id:""
+  }))
+  }else{
+
+    const label = eve.label
+    const value = eve.value
+    const extraInfo = eve.extraInfo
+
+    let isArray = Array.isArray(eve);
+    // alert(JSON.stringify(eve))
+    if(eve.length==1){
+        if(eve[0].extraInfo=="major_id"){
+            // alert(eve[0].value)
+            Sub(eve[0].value)
+        }
+        if(typeof eve[0].value === 'string'){
+            setFilter((old)=>({
+                ...old,
+                [eve[0].extraInfo]:eve[0].value
+            }))
+        }else{
+        setFilter((old)=>({
+            ...old,
+            [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+        }))}
+    }
+    if(isArray){
+        // if(eve.length==1){
+        //     if(eve[0].extraInfo=="major_id"){
+        //         Sub(eve[0].value)
+        //     }
+        //     setFilter((old)=>({
+        //         ...old,
+        //         [eve[0].extraInfo]:eve[0].value
+        //     }))
+        // }
+        if(eve.length!=1){
+        if(eve[0].extraInfo=="major_id"){
+            Sub(0)
+            for(let i=0;i<eve.length;i++){
+                majorVals+=eve[i].value
+                if(i!=eve.length-1){
+                    majorVals+=","
+                }
+                setFilter((old)=>({
+                    ...old,
+                    [eve[i].extraInfo]:majorVals,
+                    sub_id:""
+                }))
+            }
+            // alert(majorVals)
+        
+    }
+    if(eve[0].extraInfo=="acdyr_id"){
+        
+            // alert(JSON.stringify(eve))
+            for(let i=0;i<eve.length;i++){
+                // alert(JSON.stringify(eve[i].value))
+                AcdVals+=eve[i].value
+                if(i!=eve.length-1){
+                    AcdVals+=","
+                }
+                setFilter((old)=>({
+                    ...old,
+                    [eve[i].extraInfo]:AcdVals
+                }))
+            }
+            // alert(majorVals)
+        
+    }
+    if(eve[0].extraInfo=="sub_id"){
+        
+        // alert(JSON.stringify(eve))
+        for(let i=0;i<eve.length;i++){
+            // alert(JSON.stringify(eve[i].value))
+            subVals+=eve[i].value
+            if(i!=eve.length-1){
+                subVals+=","
+            }
+            setFilter((old)=>({
+                ...old,
+                [eve[i].extraInfo]:subVals
+            }))
+        }
+        // alert(majorVals)
+    
+}
+    }
+    }
+    else if(extraInfo=="sem_id"){
+        setSelectedSem(value)
+        // handleChange(value)
+        setFilter((old)=>({
+            ...old,
+            [extraInfo]:JSON.stringify(value)
+        }))
+    }
+    else if(extraInfo=="sub_id"){
+        setSelectedSub(value)
+        // handleChange(value)
+        setFilter((old)=>({
+            ...old,
+            [extraInfo]:value
+        }))
+    }
+}
+}
+const semInfoCollect=(eve)=>{
+  if(eve.length==0){
+    setFilter((old)=>({
+      ...old,
+      sem_id:""
+  }))
+  }else{
+
+  const label = eve.label
+  const value = eve.value
+  const extraInfo = eve.extraInfo
+
+  let isArray = Array.isArray(eve);
+  // alert(JSON.stringify(eve))
+  if(eve.length==1){
+      if(eve[0].extraInfo=="major_id"){
+          // alert(eve[0].value)
+          Sub(eve[0].value)
+      }
+      if(typeof eve[0].value === 'string'){
+          setFilter((old)=>({
+              ...old,
+              [eve[0].extraInfo]:eve[0].value
+          }))
+      }else{
+      setFilter((old)=>({
+          ...old,
+          [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+      }))}
+  }
+  if(isArray){
+      // if(eve.length==1){
+      //     if(eve[0].extraInfo=="major_id"){
+      //         Sub(eve[0].value)
+      //     }
+      //     setFilter((old)=>({
+      //         ...old,
+      //         [eve[0].extraInfo]:eve[0].value
+      //     }))
+      // }
+      if(eve.length!=1){
+      if(eve[0].extraInfo=="major_id"){
+          Sub(0)
+          for(let i=0;i<eve.length;i++){
+              majorVals+=eve[i].value
+              if(i!=eve.length-1){
+                  majorVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:majorVals,
+                  sub_id:""
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="acdyr_id"){
+      
+          // alert(JSON.stringify(eve))
+          for(let i=0;i<eve.length;i++){
+              // alert(JSON.stringify(eve[i].value))
+              AcdVals+=eve[i].value
+              if(i!=eve.length-1){
+                  AcdVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:AcdVals
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="sub_id"){
+      
+      // alert(JSON.stringify(eve))
+      for(let i=0;i<eve.length;i++){
+          // alert(JSON.stringify(eve[i].value))
+          subVals+=eve[i].value
+          if(i!=eve.length-1){
+              subVals+=","
+          }
+          setFilter((old)=>({
+              ...old,
+              [eve[i].extraInfo]:subVals
+          }))
+      }
+      // alert(majorVals)
+  
+}
+  }
+  }
+  else if(extraInfo=="sem_id"){
+      setSelectedSem(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:JSON.stringify(value)
+      }))
+  }
+  else if(extraInfo=="sub_id"){
+      setSelectedSub(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:value
+      }))
+  }
+}}
+
+const majorInfoCollect=(eve)=>{
+  if(eve.length==0){
+    setFilter((old)=>({
+      ...old,
+      major_id:""
+  }))
+  }else{
+
+  const label = eve.label
+  const value = eve.value
+  const extraInfo = eve.extraInfo
+
+  let isArray = Array.isArray(eve);
+  // alert(JSON.stringify(eve))
+  if(eve.length==1){
+      if(eve[0].extraInfo=="major_id"){
+          // alert(eve[0].value)
+          Sub(eve[0].value)
+      }
+      if(typeof eve[0].value === 'string'){
+          setFilter((old)=>({
+              ...old,
+              [eve[0].extraInfo]:eve[0].value
+          }))
+      }else{
+      setFilter((old)=>({
+          ...old,
+          [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+      }))}
+  }
+  if(isArray){
+      // if(eve.length==1){
+      //     if(eve[0].extraInfo=="major_id"){
+      //         Sub(eve[0].value)
+      //     }
+      //     setFilter((old)=>({
+      //         ...old,
+      //         [eve[0].extraInfo]:eve[0].value
+      //     }))
+      // }
+      if(eve.length!=1){
+      if(eve[0].extraInfo=="major_id"){
+          Sub(0)
+          for(let i=0;i<eve.length;i++){
+              majorVals+=eve[i].value
+              if(i!=eve.length-1){
+                  majorVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:majorVals,
+                  sub_id:""
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="acdyr_id"){
+      
+          // alert(JSON.stringify(eve))
+          for(let i=0;i<eve.length;i++){
+              // alert(JSON.stringify(eve[i].value))
+              AcdVals+=eve[i].value
+              if(i!=eve.length-1){
+                  AcdVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:AcdVals
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="sub_id"){
+      
+      // alert(JSON.stringify(eve))
+      for(let i=0;i<eve.length;i++){
+          // alert(JSON.stringify(eve[i].value))
+          subVals+=eve[i].value
+          if(i!=eve.length-1){
+              subVals+=","
+          }
+          setFilter((old)=>({
+              ...old,
+              [eve[i].extraInfo]:subVals
+          }))
+      }
+      // alert(majorVals)
+  
+}
+  }
+  }
+  else if(extraInfo=="sem_id"){
+      setSelectedSem(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:JSON.stringify(value)
+      }))
+  }
+  else if(extraInfo=="sub_id"){
+      setSelectedSub(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:value
+      }))
+  }
+}}
+
+const subInfoCollect=(eve)=>{
+  if(eve.length==0){
+    setFilter((old)=>({
+      ...old,
+      sub_id:""
+  }))
+  }else{
+
+  const label = eve.label
+  const value = eve.value
+  const extraInfo = eve.extraInfo
+
+  let isArray = Array.isArray(eve);
+  // alert(JSON.stringify(eve))
+  if(eve.length==1){
+      if(eve[0].extraInfo=="major_id"){
+          // alert(eve[0].value)
+          Sub(eve[0].value)
+      }
+      if(typeof eve[0].value === 'string'){
+          setFilter((old)=>({
+              ...old,
+              [eve[0].extraInfo]:eve[0].value
+          }))
+      }else{
+      setFilter((old)=>({
+          ...old,
+          [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+      }))}
+  }
+  if(isArray){
+      // if(eve.length==1){
+      //     if(eve[0].extraInfo=="major_id"){
+      //         Sub(eve[0].value)
+      //     }
+      //     setFilter((old)=>({
+      //         ...old,
+      //         [eve[0].extraInfo]:eve[0].value
+      //     }))
+      // }
+      if(eve.length!=1){
+      if(eve[0].extraInfo=="major_id"){
+          Sub(0)
+          for(let i=0;i<eve.length;i++){
+              majorVals+=eve[i].value
+              if(i!=eve.length-1){
+                  majorVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:majorVals,
+                  sub_id:""
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="acdyr_id"){
+      
+          // alert(JSON.stringify(eve))
+          for(let i=0;i<eve.length;i++){
+              // alert(JSON.stringify(eve[i].value))
+              AcdVals+=eve[i].value
+              if(i!=eve.length-1){
+                  AcdVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:AcdVals
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="sub_id"){
+      
+      // alert(JSON.stringify(eve))
+      for(let i=0;i<eve.length;i++){
+          // alert(JSON.stringify(eve[i].value))
+          subVals+=eve[i].value
+          if(i!=eve.length-1){
+              subVals+=","
+          }
+          setFilter((old)=>({
+              ...old,
+              [eve[i].extraInfo]:subVals
+          }))
+      }
+      // alert(majorVals)
+  
+}
+  }
+  }
+  else if(extraInfo=="sem_id"){
+      setSelectedSem(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:JSON.stringify(value)
+      }))
+  }
+  else if(extraInfo=="sub_id"){
+      setSelectedSub(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:value
+      }))
+  }
+}}
+const facInfoCollect=(eve)=>{
+    if(eve.length==0){
+      setFilter((old)=>({
+        ...old,
+        emp_id:""
+    }))
+    }else{
+  
+    const label = eve.label
+    const value = eve.value
+    const extraInfo = eve.extraInfo
+  
+    let isArray = Array.isArray(eve);
+    // alert(JSON.stringify(eve))
+    if(eve.length==1){
+        if(eve[0].extraInfo=="major_id"){
+            // alert(eve[0].value)
+            Sub(eve[0].value)
+        }
+        if(typeof eve[0].value === 'string'){
+            setFilter((old)=>({
+                ...old,
+                [eve[0].extraInfo]:eve[0].value
+            }))
+        }else{
+        setFilter((old)=>({
+            ...old,
+            [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+        }))}
+    }
+    if(isArray){
+        // if(eve.length==1){
+        //     if(eve[0].extraInfo=="major_id"){
+        //         Sub(eve[0].value)
+        //     }
+        //     setFilter((old)=>({
+        //         ...old,
+        //         [eve[0].extraInfo]:eve[0].value
+        //     }))
+        // }
+        if(eve.length!=1){
+        if(eve[0].extraInfo=="emp_id"){
+            // Sub(0)
+            for(let i=0;i<eve.length;i++){
+                empVals+=eve[i].value
+                if(i!=eve.length-1){
+                    empVals+=","
+                }
+                setFilter((old)=>({
+                    ...old,
+                    [eve[i].extraInfo]:empVals,
+                    // sub_id:""
+                }))
+            }
+            // alert(majorVals)
+        
+    }
+    if(eve[0].extraInfo=="acdyr_id"){
+        
+            // alert(JSON.stringify(eve))
+            for(let i=0;i<eve.length;i++){
+                // alert(JSON.stringify(eve[i].value))
+                AcdVals+=eve[i].value
+                if(i!=eve.length-1){
+                    AcdVals+=","
+                }
+                setFilter((old)=>({
+                    ...old,
+                    [eve[i].extraInfo]:AcdVals
+                }))
+            }
+            // alert(majorVals)
+        
+    }
+    if(eve[0].extraInfo=="sub_id"){
+        
+        // alert(JSON.stringify(eve))
+        for(let i=0;i<eve.length;i++){
+            // alert(JSON.stringify(eve[i].value))
+            subVals+=eve[i].value
+            if(i!=eve.length-1){
+                subVals+=","
+            }
+            setFilter((old)=>({
+                ...old,
+                [eve[i].extraInfo]:subVals
+            }))
+        }
+        // alert(majorVals)
+    
+  }
+    }
+    }
+    else if(extraInfo=="sem_id"){
+        setSelectedSem(value)
+        // handleChange(value)
+        setFilter((old)=>({
+            ...old,
+            [extraInfo]:JSON.stringify(value)
+        }))
+    }
+    else if(extraInfo=="sub_id"){
+        setSelectedSub(value)
+        // handleChange(value)
+        setFilter((old)=>({
+            ...old,
+            [extraInfo]:value
+        }))
+    }
+  }}
+  
 
 const [currentPage, setCurrentPage] = useState(1);
 const [currentRecords, setCurrentRecords] = useState([]);
@@ -143,7 +741,7 @@ const[filter,setFilter]=useState({
     "major_id":"",
     "sub_id":"",
     "dept_id":`${loggedUser.dept_id}`,
-    "emp_id":`${loggedUser.faculty_id}`
+    "emp_id":""
     // "dept_id":null,
     // "emp_id":null
 })
@@ -153,9 +751,9 @@ const onClickFilter=async()=>{
     // alert(JSON.stringify(filter))
     try{
         // alert("hi")
-        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
-        // alert(filteredRecords.data)
-        setAllvalues(filteredRecords.data)
+        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticular/1001",filter)
+        console.log(filteredRecords.data)
+        setCurrentRecords(filteredRecords.data.resultArray)
     }
     catch(err){
         alert("No Reports in the selected filter")
@@ -259,6 +857,8 @@ let [subs,setSubs]=useState([])
 let [majorVals,setMajorVals]=useState("")
 let [AcdVals,setAcdVals]=useState("")
 let [subVals,setSubVals]=useState("")
+let [empVals,setEmpVals]=useState("")
+
 
 const infoCollect=(eve)=>{
 
@@ -1837,6 +2437,112 @@ newPdf.text('Principal', 167, 234);
   <div>
 
   </div>
+  <>
+        <div className="filter-dropdowns" style={{width:'100%',display:'flex',alignItems:'center',marginLeft:'-5%',justifyContent:'center'}}>
+       
+{/* Filter of Academic year--------------------------------------------------- */}
+
+        <label for="acdyr_id">Academic Year : </label>
+<Select
+      closeMenuOnSelect={false}
+      components={{ ClearIndicator }}
+      styles={{ clearIndicator: ClearIndicatorStyles }}
+      defaultValue={[]}
+      name="acdyr_id"
+      onChange={acdInfoCollect}
+      isSearchable
+      isMulti
+      options={years}
+    />
+       
+    
+
+{/* Filter of Sem--------------------------------------------------------- */}
+<label for="sem_id">Semester : </label>
+    <Select
+      closeMenuOnSelect={false}
+      components={{ ClearIndicator }}
+      styles={{ clearIndicator: ClearIndicatorStyles }}
+      defaultValue={[]}
+      name="sem_id"
+      onChange={semInfoCollect}
+      isSearchable
+      // isMulti
+      options={sems}
+    />
+
+    
+
+    {/* Filter of Major Id-------------------------------------------------- */}
+    <label for="major_id">Major Type : </label>
+<Select
+      closeMenuOnSelect={false}
+      components={{ ClearIndicator }}
+      styles={{ clearIndicator: ClearIndicatorStyles }}
+      defaultValue={[]}
+      name="major_id"
+      onChange={majorInfoCollect}
+      isSearchable
+      isMulti
+      options={majors}
+    />
+    
+    {/* Filter of Sub ID---------------------------------------------------- */}
+    
+
+    <label for="sub_id">Sub Type : </label>
+    <Select
+      closeMenuOnSelect={false}
+      components={{ ClearIndicator }}
+      styles={{ clearIndicator: ClearIndicatorStyles }}
+      defaultValue={[]}
+      name="sub_id"
+      onChange={subInfoCollect}
+      isSearchable
+      isMulti
+      options={subs}
+    />
+
+        {/* Filter of Faculty ID-------------------------------------------- */}
+        <label for="emp_id">Faculty : </label>
+<Select
+      closeMenuOnSelect={false}
+      components={{ ClearIndicator }}
+      styles={{ clearIndicator: ClearIndicatorStyles }}
+      defaultValue={[]}
+      name="emp_id"
+      onChange={facInfoCollect}
+      isSearchable
+      isMulti
+      options={facs}
+    />
+
+    
+           <input
+  className='filter-button'
+  type='button'
+  value="Filter"
+  onClick={onClickFilter}
+  style={{
+  
+    backgroundColor: '#4CAF50',
+    border: 'none',
+    color: 'white',
+    padding: '10px 15px',
+    textAlign: 'center',
+    textDecoration: 'none',
+    display: 'inline-block',
+    fontSize: '16px',
+    margin: '4px 2px',
+    cursor: 'pointer',
+    borderRadius: '12px'
+  }}
+/>
+
+
+
+            </div>
+    </>
 
   
             
@@ -1879,11 +2585,18 @@ newPdf.text('Principal', 167, 234);
                                     <td><br></br>{data.report_id}</td>
                                     <td><br></br>{data.event_title}</td>
                                     <td><br></br>{data.event_date.split('-').reverse().join('-')}</td>
-                                    <tr>
-                                    <td><br></br>{data.major_report}</td>
+                                    <td>
+                                    <h6 style={{border:'none',fontSize:'small',}}>{data.major_report}</h6>
                                     
-                                    <td style={{justifyContent:'center',justifyItems:'center'}}><br></br>{(data.sub_report)}</td>
-                                    </tr>
+                                    <h6 style={{justifyContent:'center',justifyItems:'center',border:'none',fontSize:'small'}}><br></br>{(data.sub_report)}</h6>
+                                    </td>  
+                                      <td>
+  <br></br>
+  {data.event_coordinator.split(',').map(entry => {
+    const [code, name] = entry.split('-');
+    return <div>{name}</div>;
+  })}
+</td>
                                                                        {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
                                     
                                 
@@ -2187,17 +2900,25 @@ accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status
                                   <td><br></br>{data.report_id}</td>
                                   <td><br></br>{data.event_title}</td>
                                   <td><br></br>{data.event_date.split('-').reverse().join('-')}</td>
-                                  <td><br></br>{data.major_report}</td>
-                                  
-                                  <td style={{justifyContent:'center',justifyItems:'center'}}><br></br>{(data.sub_report)}</td>                                    {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
-                                  
-                              
-                                
-                                  {
-                              (data.report_proposal_status===0) ?
-                              <>
-                              <td>
-                              <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
+                                  <td>
+                                    <h6 style={{border:'none',fontSize:'small',}}>{data.major_report}</h6>
+                                    
+                                    <h6 style={{justifyContent:'center',justifyItems:'center',border:'none',fontSize:'small'}}><br></br>{(data.sub_report)}</h6>
+                                    </td>
+                                    <td>
+    <br></br>
+    {data.event_coordinator.split(',').map(entry => {
+    const [code, name] = entry.split('-');
+    return <div>{name}</div>;
+    })}
+</td>
+         {/* <td><a className="topic-heading" href="/ecrInput"><button type="button" className="btn btn-outline-info col-3" onClick={onClicked(data.report_id)}>{data.report_id}</button></a></td> */}
+
+        {
+                                (data.report_proposal_status===0) ?
+                                <>
+                                <td>
+                                <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
                               Submitted On : {data.proposal_date}
                               </tr>
                               <h6 className='hodECR' style={{border:'none',fontSize:'small',}}> HOD : 🕒Pending</h6> 

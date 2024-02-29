@@ -16,8 +16,8 @@ export const HodDashboard=()=>{
                   
 
                 <Route path="" element={<ViewSeminar/>} />
-                <Route path="viewPdf" element={<PDFGenerator/>} />
-                <Route path="hodecr" element={<HodECRPage/>} />
+                <Route path="/viewPdf" element={<PDFGenerator/>} />
+                <Route path="/hodecr" element={<HodECRPage/>} />
                 </Routes>
             </BrowserRouter>
         </>

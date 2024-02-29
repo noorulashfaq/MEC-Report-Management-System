@@ -12,6 +12,7 @@ import Image4 from './logo4.jpg';
 import './facultyEcrFilter.css';
 import Select from 'react-select';
 import { CSSObject } from '@emotion/serialize';
+import FacultyEcrFilter from './FacultyEcrFilter';
 // import { colourOptions } from '../data';
 // import { ColourOption, colourOptions } from './data';
 
@@ -167,10 +168,9 @@ const onClickFilter=async()=>{
     // alert("clicked")
     // alert(JSON.stringify(filter))
     try{
-        // alert("hi")
-        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
-        // alert(filteredRecords.data)
-        setAllvalues(filteredRecords.data)
+        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticular/1001",filter)
+        setCurrentRecords(filteredRecords.data.resultArray)
+
     }
     catch(err){
         alert("No Reports in the selected filter")
@@ -275,7 +275,13 @@ let [majorVals,setMajorVals]=useState("")
 let [AcdVals,setAcdVals]=useState("")
 let [subVals,setSubVals]=useState("")
 
-const infoCollect=(eve)=>{
+const acdInfoCollect=(eve)=>{
+  if(eve.length==0){
+    setFilter((old)=>({
+      ...old,
+      acdyr_id:""
+  }))
+  }else{
 
     const label = eve.label
     const value = eve.value
@@ -379,6 +385,339 @@ const infoCollect=(eve)=>{
         }))
     }
 }
+}
+const semInfoCollect=(eve)=>{
+  if(eve.length==0){
+    setFilter((old)=>({
+      ...old,
+      sem_id:""
+  }))
+  }else{
+
+  const label = eve.label
+  const value = eve.value
+  const extraInfo = eve.extraInfo
+
+  let isArray = Array.isArray(eve);
+  // alert(JSON.stringify(eve))
+  if(eve.length==1){
+      if(eve[0].extraInfo=="major_id"){
+          // alert(eve[0].value)
+          Sub(eve[0].value)
+      }
+      if(typeof eve[0].value === 'string'){
+          setFilter((old)=>({
+              ...old,
+              [eve[0].extraInfo]:eve[0].value
+          }))
+      }else{
+      setFilter((old)=>({
+          ...old,
+          [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+      }))}
+  }
+  if(isArray){
+      // if(eve.length==1){
+      //     if(eve[0].extraInfo=="major_id"){
+      //         Sub(eve[0].value)
+      //     }
+      //     setFilter((old)=>({
+      //         ...old,
+      //         [eve[0].extraInfo]:eve[0].value
+      //     }))
+      // }
+      if(eve.length!=1){
+      if(eve[0].extraInfo=="major_id"){
+          Sub(0)
+          for(let i=0;i<eve.length;i++){
+              majorVals+=eve[i].value
+              if(i!=eve.length-1){
+                  majorVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:majorVals,
+                  sub_id:""
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="acdyr_id"){
+      
+          // alert(JSON.stringify(eve))
+          for(let i=0;i<eve.length;i++){
+              // alert(JSON.stringify(eve[i].value))
+              AcdVals+=eve[i].value
+              if(i!=eve.length-1){
+                  AcdVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:AcdVals
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="sub_id"){
+      
+      // alert(JSON.stringify(eve))
+      for(let i=0;i<eve.length;i++){
+          // alert(JSON.stringify(eve[i].value))
+          subVals+=eve[i].value
+          if(i!=eve.length-1){
+              subVals+=","
+          }
+          setFilter((old)=>({
+              ...old,
+              [eve[i].extraInfo]:subVals
+          }))
+      }
+      // alert(majorVals)
+  
+}
+  }
+  }
+  else if(extraInfo=="sem_id"){
+      setSelectedSem(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:JSON.stringify(value)
+      }))
+  }
+  else if(extraInfo=="sub_id"){
+      setSelectedSub(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:value
+      }))
+  }
+}}
+
+const majorInfoCollect=(eve)=>{
+  if(eve.length==0){
+    setFilter((old)=>({
+      ...old,
+      major_id:""
+  }))
+  }else{
+
+  const label = eve.label
+  const value = eve.value
+  const extraInfo = eve.extraInfo
+
+  let isArray = Array.isArray(eve);
+  // alert(JSON.stringify(eve))
+  if(eve.length==1){
+      if(eve[0].extraInfo=="major_id"){
+          // alert(eve[0].value)
+          Sub(eve[0].value)
+      }
+      if(typeof eve[0].value === 'string'){
+          setFilter((old)=>({
+              ...old,
+              [eve[0].extraInfo]:eve[0].value
+          }))
+      }else{
+      setFilter((old)=>({
+          ...old,
+          [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+      }))}
+  }
+  if(isArray){
+      // if(eve.length==1){
+      //     if(eve[0].extraInfo=="major_id"){
+      //         Sub(eve[0].value)
+      //     }
+      //     setFilter((old)=>({
+      //         ...old,
+      //         [eve[0].extraInfo]:eve[0].value
+      //     }))
+      // }
+      if(eve.length!=1){
+      if(eve[0].extraInfo=="major_id"){
+          Sub(0)
+          for(let i=0;i<eve.length;i++){
+              majorVals+=eve[i].value
+              if(i!=eve.length-1){
+                  majorVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:majorVals,
+                  sub_id:""
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="acdyr_id"){
+      
+          // alert(JSON.stringify(eve))
+          for(let i=0;i<eve.length;i++){
+              // alert(JSON.stringify(eve[i].value))
+              AcdVals+=eve[i].value
+              if(i!=eve.length-1){
+                  AcdVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:AcdVals
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="sub_id"){
+      
+      // alert(JSON.stringify(eve))
+      for(let i=0;i<eve.length;i++){
+          // alert(JSON.stringify(eve[i].value))
+          subVals+=eve[i].value
+          if(i!=eve.length-1){
+              subVals+=","
+          }
+          setFilter((old)=>({
+              ...old,
+              [eve[i].extraInfo]:subVals
+          }))
+      }
+      // alert(majorVals)
+  
+}
+  }
+  }
+  else if(extraInfo=="sem_id"){
+      setSelectedSem(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:JSON.stringify(value)
+      }))
+  }
+  else if(extraInfo=="sub_id"){
+      setSelectedSub(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:value
+      }))
+  }
+}}
+
+const subInfoCollect=(eve)=>{
+  if(eve.length==0){
+    setFilter((old)=>({
+      ...old,
+      sub_id:""
+  }))
+  }else{
+
+  const label = eve.label
+  const value = eve.value
+  const extraInfo = eve.extraInfo
+
+  let isArray = Array.isArray(eve);
+  // alert(JSON.stringify(eve))
+  if(eve.length==1){
+      if(eve[0].extraInfo=="major_id"){
+          // alert(eve[0].value)
+          Sub(eve[0].value)
+      }
+      if(typeof eve[0].value === 'string'){
+          setFilter((old)=>({
+              ...old,
+              [eve[0].extraInfo]:eve[0].value
+          }))
+      }else{
+      setFilter((old)=>({
+          ...old,
+          [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+      }))}
+  }
+  if(isArray){
+      // if(eve.length==1){
+      //     if(eve[0].extraInfo=="major_id"){
+      //         Sub(eve[0].value)
+      //     }
+      //     setFilter((old)=>({
+      //         ...old,
+      //         [eve[0].extraInfo]:eve[0].value
+      //     }))
+      // }
+      if(eve.length!=1){
+      if(eve[0].extraInfo=="major_id"){
+          Sub(0)
+          for(let i=0;i<eve.length;i++){
+              majorVals+=eve[i].value
+              if(i!=eve.length-1){
+                  majorVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:majorVals,
+                  sub_id:""
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="acdyr_id"){
+      
+          // alert(JSON.stringify(eve))
+          for(let i=0;i<eve.length;i++){
+              // alert(JSON.stringify(eve[i].value))
+              AcdVals+=eve[i].value
+              if(i!=eve.length-1){
+                  AcdVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:AcdVals
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="sub_id"){
+      
+      // alert(JSON.stringify(eve))
+      for(let i=0;i<eve.length;i++){
+          // alert(JSON.stringify(eve[i].value))
+          subVals+=eve[i].value
+          if(i!=eve.length-1){
+              subVals+=","
+          }
+          setFilter((old)=>({
+              ...old,
+              [eve[i].extraInfo]:subVals
+          }))
+      }
+      // alert(majorVals)
+  
+}
+  }
+  }
+  else if(extraInfo=="sem_id"){
+      setSelectedSem(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:JSON.stringify(value)
+      }))
+  }
+  else if(extraInfo=="sub_id"){
+      setSelectedSub(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:value
+      }))
+  }
+}}
 
 console.log(filter)
 // ---------------------------------------------------
@@ -1702,45 +2041,72 @@ newPdf.text('Principal', 167, 234);
     </style>
         <div class="button-container">
           {/* <FacultyEcrFilter/> */}
-        <>
+          <>
         <div className="filter-dropdowns" style={{width:'100%',display:'flex',alignItems:'center',marginLeft:'-5%',justifyContent:'center'}}>
        
+{/* Filter of Academic year--------------------------------------------------- */}
 
-        <Select
+        <label for="acdyr_id">Academic Year : </label>
+<Select
       closeMenuOnSelect={false}
       components={{ ClearIndicator }}
       styles={{ clearIndicator: ClearIndicatorStyles }}
-      defaultValue={[options[0], options[1]]}
+      defaultValue={[]}
+      name="acdyr_id"
+      onChange={acdInfoCollect}
+      isSearchable
       isMulti
-      options={options}
+      options={years}
     />
+       
     
+
+{/* Filter of Sem--------------------------------------------------------- */}
+<label for="sem_id">Semester : </label>
     <Select
       closeMenuOnSelect={false}
       components={{ ClearIndicator }}
       styles={{ clearIndicator: ClearIndicatorStyles }}
-      defaultValue={[options[0], options[1]]}
+      defaultValue={[]}
+      name="sem_id"
+      onChange={semInfoCollect}
+      isSearchable
+      // isMulti
+      options={sems}
+    />
+
+    
+
+    {/* Filter of Major Id-------------------------------------------------- */}
+    <label for="major_id">Major Type : </label>
+<Select
+      closeMenuOnSelect={false}
+      components={{ ClearIndicator }}
+      styles={{ clearIndicator: ClearIndicatorStyles }}
+      defaultValue={[]}
+      name="major_id"
+      onChange={majorInfoCollect}
+      isSearchable
       isMulti
-      options={options}
+      options={majors}
     />
     
+    {/* Filter of Sub ID---------------------------------------------------- */}
+    
+
+    <label for="sub_id">Sub Type : </label>
     <Select
       closeMenuOnSelect={false}
       components={{ ClearIndicator }}
       styles={{ clearIndicator: ClearIndicatorStyles }}
-      defaultValue={[options[0], options[1]]}
+      defaultValue={[]}
+      name="sub_id"
+      onChange={subInfoCollect}
+      isSearchable
       isMulti
-      options={options}
+      options={subs}
     />
     
-    <Select
-      closeMenuOnSelect={false}
-      components={{ ClearIndicator }}
-      styles={{ clearIndicator: ClearIndicatorStyles }}
-      defaultValue={[options[0], options[1]]}
-      isMulti
-      options={options}
-    />
            <input
   className='filter-button'
   type='button'
@@ -1748,7 +2114,7 @@ newPdf.text('Principal', 167, 234);
   onClick={onClickFilter}
   style={{
   
-    backgroundColor: '#4CAF50', /* Green */
+    backgroundColor: '#4CAF50',
     border: 'none',
     color: 'white',
     padding: '10px 15px',
@@ -1764,73 +2130,9 @@ newPdf.text('Principal', 167, 234);
 
 
 
-
-{/* <label for="acdyr_id">Academic Year : </label>
-
-
-    <Select
-        className="form1group"
-        id="acdyr_id"
-
-        isMulti
-        name="acdyr_id"
-        options={years}
-        value={selectedAcd}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
-    />
-    <input type="" name="acdyr_id" onChange={handleChange} value={selectedAcd} />
-
-
-<label for="sem_id">Semester : </label>
-<Select
-        className="form1group"
-        isMulti
-        name="sem_id"
-        options={sems}
-        value={selectedSem}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
-        />
-            <input type="" name="sem_id" onChange={handleChange} value={selectedSem} />
-
-
-<label for="major_id">Major Type : </label>
-<Select
-        className="form1group"
-        isMulti
-        name="major_id"
-        options={majors}
-        value={selectedMajor}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={false}
-/>
-<input type="" name="major_id" onChange={handleChange} value={selectedMajor} />
-
-<label for="sub_id">Sub Type : </label>
-<Select
-className="form1group"
-        isMulti
-        name="sub_id"
-        options={subs}
-        value={selectedSub}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
-        />
-                    <input type="" name="sub_id" onChange={handleChange} value={selectedSub} /> */}
-      
-        
-
             </div>
     </>
+
         </div>
 </div>
             <div class="report-container1">

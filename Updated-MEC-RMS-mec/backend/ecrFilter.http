@@ -42,16 +42,17 @@ GET http://localhost:1234/ecrFilter/getSubList/2001
 
 ###
 
-POST http://localhost:1234/cfilter/filterReportsWithParticulars/1001
+POST http://localhost:1234/cfilter/filterReportsWithParticular/1001
 Content-Type: application/json
 
 {
-    "acdyr_id":"3",
-    "dept_id":"1",
-    "emp_id":"60CS04,60CS02",
-    "major_id":null,
-    "sem_id":"1",
-    "sub_id":null
+    
+"acdyr_id": "3",
+"dept_id": "1",
+"emp_id": "",
+"major_id": "2001",
+"sem_id": "",
+"sub_id": "data_management_workshop"
 }
 
 ###
