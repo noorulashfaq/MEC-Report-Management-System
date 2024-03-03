@@ -45,6 +45,16 @@ const Validate=()=>{
 }
 console.log(finalArr)
 
+
+const [loading, setLoading] = useState(false);
+const [file, setFile] = useState(true);
+const [selectedFilePdf, setSelectedFilePdf] = useState(null);
+const [requestMail,setRequestMail]=useState(null);
+const [acceptMail,setAcceptMail]=useState(null);
+const [resPerson,setResPerson]=useState(null);
+const [partiFeedback,setPartiFeedback]=useState(null);
+const [resProfile,setResProfile]=useState(null);
+
 const CheckRollWithDb=async(roll)=>{
 try{
  const temp=await axios.get(`http://localhost:1234/seminar/compare/${roll}`)
@@ -103,7 +113,12 @@ try{
  "event_time":"",
  "event_description":"",
  "event_budget_utilized":"",
- "pdf":""
+ "pdf":"",
+ "reqMail":"",
+ "accMail":"",
+ "resPerson":"",
+ "particiFeedback":"",
+ "resProfile":""
  });
 
  const[facid,setFacid]=useState([])
@@ -256,7 +271,12 @@ try{
  const name4=newFileName+'4_'+dateTimeString+'_'+random;
  const name5=newFileName+'5_'+dateTimeString+'_'+random;
  const name6 = newFileName + '_Pdf_' + dateTimeString + '_' + random+'.pdf';
- 
+ const name7 = newFileName + '_reqMail_' + dateTimeString + '_' + random+'.pdf';
+ const name8 = newFileName + '_accMail_' + dateTimeString + '_' + random+'.pdf';
+ const name9 = newFileName + '_resPerson_' + dateTimeString + '_' + random+'.pdf';
+ const name10 = newFileName + '_particiFeedback_' + dateTimeString + '_' + random+'.pdf';
+ const name11 = newFileName + '_resProfile_' + dateTimeString + '_' + random+'.pdf';
+
  setFormData((old)=>{
  return{
  ...old,
@@ -265,7 +285,12 @@ try{
  event_photo_3: name3,
  event_photo_4: name4,
  event_photo_5: name5,
- pdf: name6
+ pdf: name6,
+ reqMail:name7,
+ accMail:name8,
+ resPerson:name9,
+ particiFeedback:name10,
+ resProfile:name11
  }
  });
  
@@ -469,6 +494,199 @@ try{
       alert('Error uploading the PDF: ' + error.message);
     });
 }
+if (requestMail) {
+  const formData6 = new FormData();
+
+
+  formData6.append('file', requestMail, formData.pdf);
+
+ 
+
+
+  fetch('http://localhost:1234/ecr/uploadPdf', {
+    method: 'POST',
+    body: formData6,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        // Check if the response status is 400
+        if (response.status === 400) {
+          // You can parse the response JSON to get more details about the error
+          return response.json().then((errorData) => {
+            throw new Error(`Bad Request: ${JSON.stringify(errorData)}`);
+          });
+        } else {
+          // For other errors, throw a general error
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      }
+      return response.text();
+    })
+    .then((data) => {
+      // alert(formData.pdf)
+      alert(data);
+    })
+    .catch((error) => {
+      console.error('Error uploading the reqMail:', error);
+      alert('Error uploading the reqMail: ' + error.message);
+    });
+}
+
+if (acceptMail) {
+  const formData6 = new FormData();
+
+
+  formData6.append('file', acceptMail, formData.pdf);
+
+ 
+
+
+  fetch('http://localhost:1234/ecr/uploadPdf', {
+    method: 'POST',
+    body: formData6,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        // Check if the response status is 400
+        if (response.status === 400) {
+          // You can parse the response JSON to get more details about the error
+          return response.json().then((errorData) => {
+            throw new Error(`Bad Request: ${JSON.stringify(errorData)}`);
+          });
+        } else {
+          // For other errors, throw a general error
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      }
+      return response.text();
+    })
+    .then((data) => {
+      // alert(formData.pdf)
+      alert(data);
+    })
+    .catch((error) => {
+      console.error('Error uploading the acceptMail:', error);
+      alert('Error uploading the acceptMail: ' + error.message);
+    });
+}
+
+
+if (resPerson) {
+  const formData6 = new FormData();
+
+
+  formData6.append('file', resPerson, formData.pdf);
+
+ 
+
+
+  fetch('http://localhost:1234/ecr/uploadPdf', {
+    method: 'POST',
+    body: formData6,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        // Check if the response status is 400
+        if (response.status === 400) {
+          // You can parse the response JSON to get more details about the error
+          return response.json().then((errorData) => {
+            throw new Error(`Bad Request: ${JSON.stringify(errorData)}`);
+          });
+        } else {
+          // For other errors, throw a general error
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      }
+      return response.text();
+    })
+    .then((data) => {
+      // alert(formData.pdf)
+      alert(data);
+    })
+    .catch((error) => {
+      console.error('Error uploading the resPerson:', error);
+      alert('Error uploading the resPerson: ' + error.message);
+    });
+}
+
+if (partiFeedback) {
+  const formData6 = new FormData();
+
+
+  formData6.append('file', partiFeedback, formData.pdf);
+
+ 
+
+
+  fetch('http://localhost:1234/ecr/uploadPdf', {
+    method: 'POST',
+    body: formData6,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        // Check if the response status is 400
+        if (response.status === 400) {
+          // You can parse the response JSON to get more details about the error
+          return response.json().then((errorData) => {
+            throw new Error(`Bad Request: ${JSON.stringify(errorData)}`);
+          });
+        } else {
+          // For other errors, throw a general error
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      }
+      return response.text();
+    })
+    .then((data) => {
+      // alert(formData.pdf)
+      alert(data);
+    })
+    .catch((error) => {
+      console.error('Error uploading the partiFeedback:', error);
+      alert('Error uploading the partiFeedback: ' + error.message);
+    });
+}
+
+if (resProfile) {
+  const formData6 = new FormData();
+
+
+  formData6.append('file', resProfile, formData.pdf);
+
+ 
+
+
+  fetch('http://localhost:1234/ecr/uploadPdf', {
+    method: 'POST',
+    body: formData6,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        // Check if the response status is 400
+        if (response.status === 400) {
+          // You can parse the response JSON to get more details about the error
+          return response.json().then((errorData) => {
+            throw new Error(`Bad Request: ${JSON.stringify(errorData)}`);
+          });
+        } else {
+          // For other errors, throw a general error
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      }
+      return response.text();
+    })
+    .then((data) => {
+      // alert(formData.pdf)
+      alert(data);
+    })
+    .catch((error) => {
+      console.error('Error uploading the resProfile:', error);
+      alert('Error uploading the resProfile: ' + error.message);
+    });
+}
+
+
+/////////Naming/////////////
 try{
   // alert(Data.event_name)
   if(formData.event_photo_1.length<=1){
@@ -660,13 +878,26 @@ try{
 
  
 
- const [loading, setLoading] = useState(false);
- const [file, setFile] = useState(true);
- const [selectedFilePdf, setSelectedFilePdf] = useState(null);
+
 
  const handleFilePdf = (e) => {
    setSelectedFilePdf(e.target.files[0]);
  };
+ const reqMail=(e)=>{
+  setRequestMail(e.target.files[0])
+ }
+ const accMail=(e)=>{
+  setAcceptMail(e.target.files[0])
+ }
+ const resPer=(e)=>{
+  setResPerson(e.target.files[0])
+ }
+ const partFeed=(e)=>{
+  setPartiFeedback(e.target.files[0])
+ }
+ const resPro=(e)=>{
+  setResProfile(e.target.files[0])
+ }
 
  const pdfUpload = async () => {
    try {
@@ -774,6 +1005,16 @@ console.log(formData);
 /><br />
 <label htmlFor="event">PDF: (Attendence)</label>
  <input type="file" onChange={handleFilePdf} id="event" name="pdf" accept = "application/pdf"/><br />
+ <label htmlFor="event">PDF: (Resource Person Profile)</label>
+ <input type="file" onChange={resPro} id="event" name="pdf" accept = "application/pdf"/><br/>
+ <label htmlFor="event">PDF: (Resource Person Feedback)</label>
+ <input type="file" onChange={resPer} id="event" name="pdf" accept = "application/pdf"/><br />
+ <label htmlFor="event">PDF: (Participant Feedback)</label>
+ <input type="file" onChange={partFeed} id="event" name="pdf" accept = "application/pdf"/><br />
+ <label htmlFor="event">PDF: (Request Mail )</label>
+ <input type="file" onChange={reqMail} id="event" name="pdf" accept = "application/pdf"/><br />
+ <label htmlFor="event">PDF: (Acceptance Mail)</label>
+ <input type="file" onChange={accMail} id="event" name="pdf" accept = "application/pdf"/><br />
  <br></br>
  
  {loading && (

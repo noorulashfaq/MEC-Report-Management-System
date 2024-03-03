@@ -104,7 +104,7 @@ const [totalPages, setTotalPages] = useState(1);
           const empId = logged.faculty_id;
           
           // Fetch data from backend API
-          const response = await axios.get(`http://localhost:1234/seminar/hodecr/${empId}?page=${page}`);
+          const response = await axios.get(`http://localhost:1234/seminar/principalecr/${empId}?page=${page}`);
       
          
           if (response.status === 200) {

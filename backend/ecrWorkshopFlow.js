@@ -53,11 +53,105 @@ router.post('/uploadPdf', upload1.any(), (req, res) => {
     }
     res.send('PDF uploaded and saved on the server.');
 });
+/////////////////////////
+const storage2 = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'D:/React/Muthayammal/Updated-MEC-RMS/frontend/public/requestMail');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    },
+});
+
+const upload2 = multer({ storage: storage2 });
+
+router.post('/uploadrequestMail', upload2.any(), (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).send('No file uploaded.');
+    }
+    res.send('requestMail uploaded and saved on the server.');
+});
+
+/////
+const storage3 = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'D:/React/Muthayammal/Updated-MEC-RMS/frontend/public/acceptMail');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    },
+});
+
+const upload3 = multer({ storage: storage3 });
+
+router.post('/uploadacceptMail', upload3.any(), (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).send('No file uploaded.');
+    }
+    res.send('acceptMail uploaded and saved on the server.');
+});
+////
+const storage4 = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'D:/React/Muthayammal/Updated-MEC-RMS/frontend/public/resPerson');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    },
+});
+
+const upload4 = multer({ storage: storage4 });
+
+router.post('/uploadresPerson', upload4.any(), (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).send('No file uploaded.');
+    }
+    res.send('resPerson uploaded and saved on the server.');
+});
+
+////
+const storage5 = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'D:/React/Muthayammal/Updated-MEC-RMS/frontend/public/partiFeedback');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    },
+});
+
+const upload5 = multer({ storage: storage5 });
+
+router.post('/uploadpartiFeedback', upload5.any(), (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).send('No file uploaded.');
+    }
+    res.send('partiFeedback uploaded and saved on the server.');
+});
+////
+const storage6 = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'D:/React/Muthayammal/Updated-MEC-RMS/frontend/public/resProfile');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    },
+});
+
+const upload6 = multer({ storage: storage6 });
+
+router.post('/uploadresProfile', upload6.any(), (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).send('No file uploaded.');
+    }
+    res.send('resProfile uploaded and saved on the server.');
+});
 
 
 
 
 
+
+//////////////////////////
 
 router.get('/dept/:obj',async(req,res)=>{
     // console.log(req.params.obj)

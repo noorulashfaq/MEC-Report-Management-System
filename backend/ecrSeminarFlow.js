@@ -411,6 +411,62 @@ route.get('/hodecr/:empId', async (req, res) => {
 
 ///////////////////////////////
 
+
+route.get('/principalecr/:empId', async (req, res) => {
+    
+    const eId = req.params.empId;
+    const page = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
+    const limit = 3; // Number of records per page
+    const offset = (page - 1) * limit; // Calculate offset based on current page
+
+    try {
+        let recordsArr = [];
+        let totalRecords = 0; // Total number of records
+        let totalPages = 0; // Total number of pages
+
+        const tableNamesQuery = 'SELECT table_name FROM data_sub_report_type WHERE head_report_id = 1001';
+        const tableNamesResult = await queryAsync(tableNamesQuery);
+
+        for (const table of tableNamesResult) {
+            const tableName = table.table_name;
+
+            const countQuery = `SELECT COUNT(*) AS totalRecords FROM ${tableName} AS seminar
+                                INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
+                                INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
+                                WHERE lvl_2_proposal_sign LIKE ?`;
+            
+            // Execute count query for each table
+            const countResult = await queryAsync(countQuery, [`%${eId}%`]);
+            totalRecords += countResult[0].totalRecords;
+
+            const sql = `
+                SELECT * FROM ${tableName} AS seminar
+                INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
+                INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
+                WHERE lvl_1_proposal_sign LIKE ?
+                ORDER BY report_id DESC
+                LIMIT ? OFFSET ?`;
+
+            const rows = await queryAsync(sql, [`%${eId}%`, limit, offset]);
+
+            if (rows.length > 0) {
+                recordsArr.push(...rows);
+            }
+        }
+
+        // Calculate total number of pages
+        totalPages = Math.ceil(totalRecords / limit)-1;
+
+        res.status(200).json({ recordsArr, totalPages }); // Send records array and total pages
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+
+
+
 // Assuming you have a function to perform asynchronous database queries (e.g., using mysql2 or a similar library)
 function queryAsync(sql, params = []) {
     return new Promise((resolve, reject) => {
