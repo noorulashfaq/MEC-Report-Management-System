@@ -1742,7 +1742,7 @@ newPdf.text('Principal', 167, 234);
                 </>
               <>
               <div className="boxContainer1" >
-              <a href="/hodecr">
+              <a href="/principalecr">
           <div className="boxx1" style={{ display: 'flex', width: '230px', justifyContent: 'space-around', cursor: 'pointer', padding: '50px', position: 'relative' }}>
         <div className="card-body">
           <div className="row">

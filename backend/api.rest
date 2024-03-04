@@ -122,7 +122,7 @@ GET http://localhost:1234/ecrWorkshop/loadforCompletion/1
 ###
 
 ### Faculty is updating the completion report
-PUT http://localhost:1234/ecrWorkshop/ecrCompletion/0000001
+PUT http://localhost:1234/seminar/ecrCompletion/data_management_seminar/RPT5004
 Content-Type: application/json
 
 {
@@ -137,7 +137,8 @@ Content-Type: application/json
     "event_os":"Dr. G. Kavitha",
     "event_time":"10 am",
     "event_description":"The event was about how to develop a webpage using React JS",
-    "event_budget_utilized":50000
+    "event_budget_utilized":50000,
+    "reqMail":"snjnjzx"
 }
 
 ###

@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 //import Img6001 from'./6001.jpeg';
 
 // localhost
-export const HodECRPage=()=>{
+export const PrincipalECRPage=()=>{
 
 //////////////////////////////////////
 
@@ -1710,16 +1710,7 @@ newPdf.text('Principal', 167, 234);
       const load = async () => {
           const logged = JSON.parse(sessionStorage.getItem("person"))
           let temp;
-          try {
-             
-           temp = await loadComForLevel1(logged.dept_id, logged.faculty_id)
-           
          
-              setEcr1(temp)
-          }
-          catch (e) {
-              console.log("Error in load For Level 1")
-          }
           try {
              
               temp = await loadComForLevel2(logged.dept_id, logged.faculty_id)
@@ -1757,13 +1748,6 @@ newPdf.text('Principal', 167, 234);
           const logged = JSON.parse(sessionStorage.getItem("person"))
           let temp;
           try {
-              temp = await loadForLevel1(logged.dept_id, logged.faculty_id)
-  
-              setEcr(temp)
-          }
-          catch (e) {
-              console.log("Error in loadforLevel1");
-          } try {
               temp = await loadForLevel2(logged.dept_id, logged.faculty_id)
   
               setEcr(temp)
@@ -1921,13 +1905,10 @@ newPdf.text('Principal', 167, 234);
                                 <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
                                 </td>
                                 <td >
-                                <button type="button"style={{justifyContent:'center',
-    justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
+                                <button type="button" style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'130px'}} onClick={async () => {
 
-accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
-}} className="btn btn-success col-4"  >Accept</button>
-<button type="button" style={{justifyContent:'center',
-    justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
+}} className="btn btn-success col-4">Accepted</button></td>
 
                                     <td><button
   style={{
@@ -1967,10 +1948,14 @@ accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status
                                 <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
                                 </td>
                                 <td >
-                                <button type="button" style={{justifyContent:'center',
-    justifyItems:'center',marginTop:'10px', width:'130px'}} onClick={async () => {
+                                <button type="button"style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
 
-}} className="btn btn-success col-4">Accepted</button></td>
+accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
+}} className="btn btn-success col-4"  >Accept</button>
+<button type="button" style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
+                               
 
                                     <td><button
   style={{
@@ -2384,13 +2369,10 @@ style={{
                               <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
                               </td>
                               <td >
-                              <button type="button"style={{justifyContent:'center',
-  justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
+                                <button type="button" style={{justifyContent:'center',
+    justifyItems:'center',marginTop:'10px', width:'130px'}} onClick={async () => {
 
-accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
-}} className="btn btn-success col-4"  >Accept</button>
-<button type="button" style={{justifyContent:'center',
-  justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
+}} className="btn btn-success col-4">Accepted</button></td>
 
    
                                       <td><button
@@ -2432,10 +2414,13 @@ type="button" onClick={async()=>{
                               <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
                               </td>
                               <td >
-                              <button type="button" style={{justifyContent:'center',
-  justifyItems:'center',marginTop:'10px', width:'150px'}} onClick={async () => {
+                              <button type="button"style={{justifyContent:'center',
+  justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
 
-}} className="btn btn-success col-4">Accepted</button></td>
+accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
+}} className="btn btn-success col-4"  >Accept</button>
+<button type="button" style={{justifyContent:'center',
+  justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
 
    
                                       <td><button

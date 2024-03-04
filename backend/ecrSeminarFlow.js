@@ -443,7 +443,7 @@ route.get('/principalecr/:empId', async (req, res) => {
                 SELECT * FROM ${tableName} AS seminar
                 INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
                 INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id
-                WHERE lvl_1_proposal_sign LIKE ?
+                WHERE lvl_2_proposal_sign LIKE ?
                 ORDER BY report_id DESC
                 LIMIT ? OFFSET ?`;
 
@@ -2345,9 +2345,9 @@ route.get('/loadecrCompletion/:deptId/:tableName',async(req,res)=>{
 
 route.put('/ecrCompletion/:tableName/:report_id',async(req,res)=>{
     // receive the request from client
-    const{event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date}=req.body
-    sql=`update ${req.params.tableName} set event_photo_1=?, event_photo_2=?, event_po=?, pdf=?, event_date_from=?, event_date_to=?, event_organizing_secretary=?, event_time=?, event_description=?, event_budget_utilized=? , completion_date=? where report_id=? and final_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0`
-        base.query(sql,[event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date,req.params.report_id],(err,ack)=>{
+    const{event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date,reqMail,accMail,resPerson,particiFeedback,resProfile}=req.body
+    sql=`update ${req.params.tableName} set event_photo_1=?, event_photo_2=?, event_po=?, pdf=?, event_date_from=?, event_date_to=?, event_organizing_secretary=?, event_time=?, event_description=?, event_budget_utilized=? , completion_date=?,reqMail=?,accMail=?,resPerson=?,particiFeedback=?,resProfile=? where report_id=? and final_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0`
+        base.query(sql,[event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date,reqMail,accMail,resPerson,particiFeedback,resProfile,req.params.report_id],(err,ack)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
