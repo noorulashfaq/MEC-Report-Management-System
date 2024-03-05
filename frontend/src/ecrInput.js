@@ -51,6 +51,7 @@ const [file, setFile] = useState(true);
 const [selectedFilePdf, setSelectedFilePdf] = useState(null);
 const [requestMail,setRequestMail]=useState(null);
 const [acceptMail,setAcceptMail]=useState(null);
+const [ppt,setPpt]=useState(null);
 const [resPerson,setResPerson]=useState(null);
 const [partiFeedback,setPartiFeedback]=useState(null);
 const [resProfile,setResProfile]=useState(null);
@@ -118,7 +119,8 @@ try{
  "accMail":"",
  "resPerson":"",
  "particiFeedback":"",
- "resProfile":""
+ "resProfile":"",
+ "ppt":""
  });
 
  const[facid,setFacid]=useState([])
@@ -276,6 +278,7 @@ try{
  const name9 = newFileName + '_resPerson_' + dateTimeString + '_' + random+'.pdf';
  const name10 = newFileName + '_particiFeedback_' + dateTimeString + '_' + random+'.pdf';
  const name11 = newFileName + '_resProfile_' + dateTimeString + '_' + random+'.pdf';
+ const name12 = newFileName + '_ppt_' + dateTimeString + '_' + random+'.pdf';
 
  setFormData((old)=>{
  return{
@@ -290,7 +293,8 @@ try{
  accMail:name8,
  resPerson:name9,
  particiFeedback:name10,
- resProfile:name11
+ resProfile:name11,
+ ppt:name12
  }
  });
  
@@ -498,12 +502,12 @@ if (requestMail) {
   const formData6 = new FormData();
 
 
-  formData6.append('file', requestMail, formData.pdf);
+  formData6.append('file', requestMail, formData.reqMail);
 
  
 
 
-  fetch('http://localhost:1234/ecr/uploadPdf', {
+  fetch('http://localhost:1234/ecr/uploadrequestMail', {
     method: 'POST',
     body: formData6,
   })
@@ -536,12 +540,12 @@ if (acceptMail) {
   const formData6 = new FormData();
 
 
-  formData6.append('file', acceptMail, formData.pdf);
+  formData6.append('file', acceptMail, formData.accMail);
 
  
 
 
-  fetch('http://localhost:1234/ecr/uploadPdf', {
+  fetch('http://localhost:1234/ecr/uploadacceptMail', {
     method: 'POST',
     body: formData6,
   })
@@ -575,12 +579,12 @@ if (resPerson) {
   const formData6 = new FormData();
 
 
-  formData6.append('file', resPerson, formData.pdf);
+  formData6.append('file', resPerson, formData.resPerson);
 
  
 
 
-  fetch('http://localhost:1234/ecr/uploadPdf', {
+  fetch('http://localhost:1234/ecr/uploadresPerson', {
     method: 'POST',
     body: formData6,
   })
@@ -613,12 +617,12 @@ if (partiFeedback) {
   const formData6 = new FormData();
 
 
-  formData6.append('file', partiFeedback, formData.pdf);
+  formData6.append('file', partiFeedback, formData.particiFeedback);
 
  
 
 
-  fetch('http://localhost:1234/ecr/uploadPdf', {
+  fetch('http://localhost:1234/ecr/uploadpartiFeedback', {
     method: 'POST',
     body: formData6,
   })
@@ -651,12 +655,12 @@ if (resProfile) {
   const formData6 = new FormData();
 
 
-  formData6.append('file', resProfile, formData.pdf);
+  formData6.append('file', resProfile, formData.resProfile);
 
  
 
 
-  fetch('http://localhost:1234/ecr/uploadPdf', {
+  fetch('http://localhost:1234/ecr/uploadresProfile', {
     method: 'POST',
     body: formData6,
   })
@@ -686,6 +690,46 @@ if (resProfile) {
 }
 
 
+if (ppt) {
+  const formData6 = new FormData();
+
+
+  formData6.append('file',ppt, formData.ppt);
+
+ 
+
+
+  fetch('http://localhost:1234/ecr/uploadppt', {
+    method: 'POST',
+    body: formData6,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        // Check if the response status is 400
+        if (response.status === 400) {
+          // You can parse the response JSON to get more details about the error
+          return response.json().then((errorData) => {
+            throw new Error(`Bad Request: ${JSON.stringify(errorData)}`);
+          });
+        } else {
+          // For other errors, throw a general error
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      }
+      return response.text();
+    })
+    .then((data) => {
+      // alert(formData.pdf)
+      alert(data);
+    })
+    .catch((error) => {
+      console.error('Error uploading the partiFeedback:', error);
+      alert('Error uploading the partiFeedback: ' + error.message);
+    });
+}
+
+
+
 /////////Naming/////////////
 try{
   // alert(Data.event_name)
@@ -695,7 +739,7 @@ try{
   else{
     try{
   const temp = await onComplete(formData,Data.report_id,Data.event_name)
-  window. location. reload(false); 
+  window.location.reload(false); 
     }
     catch(e){
       alert(e)
@@ -889,6 +933,9 @@ try{
  const accMail=(e)=>{
   setAcceptMail(e.target.files[0])
  }
+ const hand=(e)=>{
+  setPpt(e.target.files[0])
+ }
  const resPer=(e)=>{
   setResPerson(e.target.files[0])
  }
@@ -1015,6 +1062,8 @@ console.log(formData);
  <input type="file" onChange={reqMail} id="event" name="pdf" accept = "application/pdf"/><br />
  <label htmlFor="event">PDF: (Acceptance Mail)</label>
  <input type="file" onChange={accMail} id="event" name="pdf" accept = "application/pdf"/><br />
+ <label htmlFor="event">PDF: (PPT)</label>
+ <input type="file" onChange={hand} id="event" name="pdf" accept = "application/pdf"/><br />
  <br></br>
  
  {loading && (

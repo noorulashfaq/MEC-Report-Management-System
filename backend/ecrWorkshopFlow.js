@@ -145,7 +145,25 @@ router.post('/uploadresProfile', upload6.any(), (req, res) => {
     }
     res.send('resProfile uploaded and saved on the server.');
 });
+/////
 
+const storage7 = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'D:/React/Muthayammal/Updated-MEC-RMS/frontend/public/ppt');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    },
+});
+
+const upload7 = multer({ storage: storage7 });
+
+router.post('/uploadppt', upload7.any(), (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).send('No file uploaded.');
+    }
+    res.send('ppt uploaded and saved on the server.');
+});
 
 
 

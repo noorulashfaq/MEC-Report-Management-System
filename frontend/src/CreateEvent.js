@@ -156,7 +156,7 @@ const handleNextPage = () => {
     }
   };
 
-const[filter,setFilter]=useState({
+  const[filter,setFilter]=useState({
     "acdyr_id":"",
     "sem_id":"",
     "major_id":"",
@@ -171,10 +171,9 @@ const onClickFilter=async()=>{
     // alert("clicked")
     // alert(JSON.stringify(filter))
     try{
-        // alert("hi")
-        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001",filter)
-        // alert(filteredRecords.data)
-        setAllvalues(filteredRecords.data)
+        const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticular/1001",filter)
+        setCurrentRecords(filteredRecords.data.resultArray)
+
     }
     catch(err){
         alert("No Reports in the selected filter")
@@ -279,7 +278,13 @@ let [majorVals,setMajorVals]=useState("")
 let [AcdVals,setAcdVals]=useState("")
 let [subVals,setSubVals]=useState("")
 
-const infoCollect=(eve)=>{
+const acdInfoCollect=(eve)=>{
+  if(eve.length==0){
+    setFilter((old)=>({
+      ...old,
+      acdyr_id:""
+  }))
+  }else{
 
     const label = eve.label
     const value = eve.value
@@ -383,8 +388,342 @@ const infoCollect=(eve)=>{
         }))
     }
 }
+}
+const semInfoCollect=(eve)=>{
+  if(eve.length==0){
+    setFilter((old)=>({
+      ...old,
+      sem_id:""
+  }))
+  }else{
+
+  const label = eve.label
+  const value = eve.value
+  const extraInfo = eve.extraInfo
+
+  let isArray = Array.isArray(eve);
+  // alert(JSON.stringify(eve))
+  if(eve.length==1){
+      if(eve[0].extraInfo=="major_id"){
+          // alert(eve[0].value)
+          Sub(eve[0].value)
+      }
+      if(typeof eve[0].value === 'string'){
+          setFilter((old)=>({
+              ...old,
+              [eve[0].extraInfo]:eve[0].value
+          }))
+      }else{
+      setFilter((old)=>({
+          ...old,
+          [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+      }))}
+  }
+  if(isArray){
+      // if(eve.length==1){
+      //     if(eve[0].extraInfo=="major_id"){
+      //         Sub(eve[0].value)
+      //     }
+      //     setFilter((old)=>({
+      //         ...old,
+      //         [eve[0].extraInfo]:eve[0].value
+      //     }))
+      // }
+      if(eve.length!=1){
+      if(eve[0].extraInfo=="major_id"){
+          Sub(0)
+          for(let i=0;i<eve.length;i++){
+              majorVals+=eve[i].value
+              if(i!=eve.length-1){
+                  majorVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:majorVals,
+                  sub_id:""
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="acdyr_id"){
+      
+          // alert(JSON.stringify(eve))
+          for(let i=0;i<eve.length;i++){
+              // alert(JSON.stringify(eve[i].value))
+              AcdVals+=eve[i].value
+              if(i!=eve.length-1){
+                  AcdVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:AcdVals
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="sub_id"){
+      
+      // alert(JSON.stringify(eve))
+      for(let i=0;i<eve.length;i++){
+          // alert(JSON.stringify(eve[i].value))
+          subVals+=eve[i].value
+          if(i!=eve.length-1){
+              subVals+=","
+          }
+          setFilter((old)=>({
+              ...old,
+              [eve[i].extraInfo]:subVals
+          }))
+      }
+      // alert(majorVals)
+  
+}
+  }
+  }
+  else if(extraInfo=="sem_id"){
+      setSelectedSem(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:JSON.stringify(value)
+      }))
+  }
+  else if(extraInfo=="sub_id"){
+      setSelectedSub(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:value
+      }))
+  }
+}}
+
+const majorInfoCollect=(eve)=>{
+  if(eve.length==0){
+    setFilter((old)=>({
+      ...old,
+      major_id:""
+  }))
+  }else{
+
+  const label = eve.label
+  const value = eve.value
+  const extraInfo = eve.extraInfo
+
+  let isArray = Array.isArray(eve);
+  // alert(JSON.stringify(eve))
+  if(eve.length==1){
+      if(eve[0].extraInfo=="major_id"){
+          // alert(eve[0].value)
+          Sub(eve[0].value)
+      }
+      if(typeof eve[0].value === 'string'){
+          setFilter((old)=>({
+              ...old,
+              [eve[0].extraInfo]:eve[0].value
+          }))
+      }else{
+      setFilter((old)=>({
+          ...old,
+          [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+      }))}
+  }
+  if(isArray){
+      // if(eve.length==1){
+      //     if(eve[0].extraInfo=="major_id"){
+      //         Sub(eve[0].value)
+      //     }
+      //     setFilter((old)=>({
+      //         ...old,
+      //         [eve[0].extraInfo]:eve[0].value
+      //     }))
+      // }
+      if(eve.length!=1){
+      if(eve[0].extraInfo=="major_id"){
+          Sub(0)
+          for(let i=0;i<eve.length;i++){
+              majorVals+=eve[i].value
+              if(i!=eve.length-1){
+                  majorVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:majorVals,
+                  sub_id:""
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="acdyr_id"){
+      
+          // alert(JSON.stringify(eve))
+          for(let i=0;i<eve.length;i++){
+              // alert(JSON.stringify(eve[i].value))
+              AcdVals+=eve[i].value
+              if(i!=eve.length-1){
+                  AcdVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:AcdVals
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="sub_id"){
+      
+      // alert(JSON.stringify(eve))
+      for(let i=0;i<eve.length;i++){
+          // alert(JSON.stringify(eve[i].value))
+          subVals+=eve[i].value
+          if(i!=eve.length-1){
+              subVals+=","
+          }
+          setFilter((old)=>({
+              ...old,
+              [eve[i].extraInfo]:subVals
+          }))
+      }
+      // alert(majorVals)
+  
+}
+  }
+  }
+  else if(extraInfo=="sem_id"){
+      setSelectedSem(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:JSON.stringify(value)
+      }))
+  }
+  else if(extraInfo=="sub_id"){
+      setSelectedSub(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:value
+      }))
+  }
+}}
+
+const subInfoCollect=(eve)=>{
+  if(eve.length==0){
+    setFilter((old)=>({
+      ...old,
+      sub_id:""
+  }))
+  }else{
+
+  const label = eve.label
+  const value = eve.value
+  const extraInfo = eve.extraInfo
+
+  let isArray = Array.isArray(eve);
+  // alert(JSON.stringify(eve))
+  if(eve.length==1){
+      if(eve[0].extraInfo=="major_id"){
+          // alert(eve[0].value)
+          Sub(eve[0].value)
+      }
+      if(typeof eve[0].value === 'string'){
+          setFilter((old)=>({
+              ...old,
+              [eve[0].extraInfo]:eve[0].value
+          }))
+      }else{
+      setFilter((old)=>({
+          ...old,
+          [eve[0].extraInfo]:JSON.stringify(eve[0].value)
+      }))}
+  }
+  if(isArray){
+      // if(eve.length==1){
+      //     if(eve[0].extraInfo=="major_id"){
+      //         Sub(eve[0].value)
+      //     }
+      //     setFilter((old)=>({
+      //         ...old,
+      //         [eve[0].extraInfo]:eve[0].value
+      //     }))
+      // }
+      if(eve.length!=1){
+      if(eve[0].extraInfo=="major_id"){
+          Sub(0)
+          for(let i=0;i<eve.length;i++){
+              majorVals+=eve[i].value
+              if(i!=eve.length-1){
+                  majorVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:majorVals,
+                  sub_id:""
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="acdyr_id"){
+      
+          // alert(JSON.stringify(eve))
+          for(let i=0;i<eve.length;i++){
+              // alert(JSON.stringify(eve[i].value))
+              AcdVals+=eve[i].value
+              if(i!=eve.length-1){
+                  AcdVals+=","
+              }
+              setFilter((old)=>({
+                  ...old,
+                  [eve[i].extraInfo]:AcdVals
+              }))
+          }
+          // alert(majorVals)
+      
+  }
+  if(eve[0].extraInfo=="sub_id"){
+      
+      // alert(JSON.stringify(eve))
+      for(let i=0;i<eve.length;i++){
+          // alert(JSON.stringify(eve[i].value))
+          subVals+=eve[i].value
+          if(i!=eve.length-1){
+              subVals+=","
+          }
+          setFilter((old)=>({
+              ...old,
+              [eve[i].extraInfo]:subVals
+          }))
+      }
+      // alert(majorVals)
+  
+}
+  }
+  }
+  else if(extraInfo=="sem_id"){
+      setSelectedSem(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:JSON.stringify(value)
+      }))
+  }
+  else if(extraInfo=="sub_id"){
+      setSelectedSub(value)
+      // handleChange(value)
+      setFilter((old)=>({
+          ...old,
+          [extraInfo]:value
+      }))
+  }
+}}
 
 console.log(filter)
+
 // ---------------------------------------------------
 
 
@@ -806,7 +1145,7 @@ const viewPdf1=async(report_id)=>{
            let pdfDocument1;
            
            try{
-            const pdfUrl = `/Pdf/${data.pdf1}`;
+            const pdfUrl = `/requestMail/${data.reqMail}`;
             const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
             const pdfData = pdfResponse.data;
     
@@ -818,7 +1157,7 @@ const viewPdf1=async(report_id)=>{
            let pdfDocument2;
            
            try{
-            const pdfUrl = `/Pdf/${data.pdf2}`;
+            const pdfUrl = `/acceptMail/${data.accMail}`;
             const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
             const pdfData = pdfResponse.data;
     
@@ -830,7 +1169,7 @@ const viewPdf1=async(report_id)=>{
            let pdfDocument3;
            
            try{
-            const pdfUrl = `/Pdf/${data.pdf3}`;
+            const pdfUrl = `/resPerson/${data.resPerson}`;
             const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
             const pdfData = pdfResponse.data;
     
@@ -842,7 +1181,7 @@ const viewPdf1=async(report_id)=>{
            let pdfDocument4;
            
            try{
-            const pdfUrl = `/Pdf/${data.pdf4}`;
+            const pdfUrl = `/partiFeedback/${data.particiFeedback}`;
             const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
             const pdfData = pdfResponse.data;
     
@@ -854,11 +1193,23 @@ const viewPdf1=async(report_id)=>{
            let pdfDocument5;
            
            try{
-            const pdfUrl = `/Pdf/${data.pdf5}`;
+            const pdfUrl = `/resProfile/${data.resProfile}`;
             const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
             const pdfData = pdfResponse.data;
     
          pdfDocument5 = await getDocument({ data: pdfData }).promise;
+           }catch(e){
+            console.log(e)
+           }
+
+           let pdfDocument6;
+           
+           try{
+            const pdfUrl = `/ppt/${data.ppt}`;
+            const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
+            const pdfData = pdfResponse.data;
+    
+         pdfDocument6 = await getDocument({ data: pdfData }).promise;
            }catch(e){
             console.log(e)
            }
@@ -1579,31 +1930,87 @@ newPdf.text('HoD', 15, 290);
 
 newPdf.text('Principal', 155, 290);
 
-     try{ 
-      // Add pages from the original PDF
-      for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber++) {
-        const page = await pdfDocument.getPage(pageNumber);
-        const pdfWidth = page.view[2];
-        const pdfHeight = page.view[3];
+///////////////////////////////////reqmail////////////////////////////////////////////
+try{ 
+  // Add pages from the original PDF
 
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = pdfWidth;
-        canvas.height = pdfHeight;
+  for (let pageNumber = 1; pageNumber <= pdfDocument1.numPages; pageNumber++) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const pdfWidth = page.view[2];
+    const pdfHeight = page.view[3];
 
-        await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = pdfWidth;
+    canvas.height = pdfHeight;
 
-        const imageDataUrl = canvas.toDataURL('image/jpeg');
-        try{newPdf.addPage();
-        newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
-        }catch(error){
-          console.error(error);
-        }
-      }
+    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    try{newPdf.addPage();
+    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+    }catch(error){
+      console.error(error);
     }
-    catch(e){
-      console.log(e);
+  }
+}
+catch(e){
+  console.log(e);
+}
+
+///////////////////////////////////////accMail//////////////////////////////////////
+try{ 
+  // Add pages from the original PDF
+  for (let pageNumber = 1; pageNumber <= pdfDocument2.numPages; pageNumber++) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const pdfWidth = page.view[2];
+    const pdfHeight = page.view[3];
+
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = pdfWidth;
+    canvas.height = pdfHeight;
+
+    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    try{newPdf.addPage();
+    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+    }catch(error){
+      console.error(error);
     }
+  }
+}
+catch(e){
+  console.log(e);
+}
+/////////////////////////////////////resProfile////////////////////////// /////////////
+try{ 
+  // Add pages from the original PDF
+  for (let pageNumber = 1; pageNumber <= pdfDocument5.numPages; pageNumber++) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const pdfWidth = page.view[2];
+    const pdfHeight = page.view[3];
+
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = pdfWidth;
+    canvas.height = pdfHeight;
+
+    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    try{newPdf.addPage();
+    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+    }catch(error){
+      console.error(error);
+    }
+  }
+}
+catch(e){
+  console.log(e);
+}
+    
       // newPdf.addPage();
       /////////////////////////////////////////////// BUDGET PROPOSAL //////////////////////////
       newPdf.addPage();
@@ -1861,6 +2268,86 @@ newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);
     newPdf.text('',15,250);
     newPdf.text('Co-Ordinator',15,255);
 
+///////////////////////////////////////////////////////////////////////////////
+    try{ 
+      // Add pages from the original PDF
+      for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber++) {
+        const page = await pdfDocument.getPage(pageNumber);
+        const pdfWidth = page.view[2];
+        const pdfHeight = page.view[3];
+
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = pdfWidth;
+        canvas.height = pdfHeight;
+
+        await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+
+        const imageDataUrl = canvas.toDataURL('image/jpeg');
+        try{newPdf.addPage();
+        newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+        }catch(error){
+          console.error(error);
+        }
+      }
+    }
+    catch(e){
+      console.log(e);
+    }
+/////////////////////////////////////Participant feedback///////////////////////////////
+
+try{ 
+  // Add pages from the original PDF
+  for (let pageNumber = 1; pageNumber <= pdfDocument4.numPages; pageNumber++) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const pdfWidth = page.view[2];
+    const pdfHeight = page.view[3];
+
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = pdfWidth;
+    canvas.height = pdfHeight;
+
+    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    try{newPdf.addPage();
+    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+    }catch(error){
+      console.error(error);
+    }
+  }
+}
+catch(e){
+  console.log(e);
+}
+
+/////////////////////////////////////////Resource Person Feedback///////////////////////
+try{ 
+  // Add pages from the original PDF
+  for (let pageNumber = 1; pageNumber <= pdfDocument3.numPages; pageNumber++) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const pdfWidth = page.view[2];
+    const pdfHeight = page.view[3];
+
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = pdfWidth;
+    canvas.height = pdfHeight;
+
+    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    try{newPdf.addPage();
+    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+    }catch(error){
+      console.error(error);
+    }
+  }
+}
+catch(e){
+  console.log(e);
+}
 ////////////////////////////////////////Event photos///////////////////////////////////
 newPdf.setTextColor(0,0,0);
 newPdf.addPage();
@@ -1972,9 +2459,34 @@ newPdf.text('Event Coordinator(s)', 15, 234);
 newPdf.text('HoD', 100, 234);
 newPdf.text('Principal', 167, 234);
 
+//////////////////////////////////////////PPT////////////////////////////////////
       
     
-    
+try{ 
+  // Add pages from the original PDF
+  for (let pageNumber = 1; pageNumber <= pdfDocument6.numPages; pageNumber++) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const pdfWidth = page.view[2];
+    const pdfHeight = page.view[3];
+
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = pdfWidth;
+    canvas.height = pdfHeight;
+
+    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    try{newPdf.addPage();
+    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+    }catch(error){
+      console.error(error);
+    }
+  }
+}
+catch(e){
+  console.log(e);
+}
     
    
 
@@ -2037,45 +2549,72 @@ newPdf.text('Principal', 167, 234);
     </style>
         <div class="button-container">
           {/* <FacultyEcrFilter/> */}
-        <>
-        <div className="filter-dropdowns" style={{width:'100%',display:'flex',alignItems:'center',marginLeft:'-5%',justifyContent:'center'}}>
+          <>
+        <div className="filter-dropdowns" style={{width:'100%',display:'flex',marginTop:"120px",alignItems:'center',marginLeft:'-5%',justifyContent:'center'}}>
        
+{/* Filter of Academic year--------------------------------------------------- */}
 
-        <Select
+        <label for="acdyr_id">Academic Year : </label>
+<Select
       closeMenuOnSelect={false}
       components={{ ClearIndicator }}
       styles={{ clearIndicator: ClearIndicatorStyles }}
-      defaultValue={[options[0], options[1]]}
+      defaultValue={[]}
+      name="acdyr_id"
+      onChange={acdInfoCollect}
+      isSearchable
       isMulti
-      options={options}
+      options={years}
     />
+       
     
+
+{/* Filter of Sem--------------------------------------------------------- */}
+<label for="sem_id">Semester : </label>
     <Select
       closeMenuOnSelect={false}
       components={{ ClearIndicator }}
       styles={{ clearIndicator: ClearIndicatorStyles }}
-      defaultValue={[options[0], options[1]]}
+      defaultValue={[]}
+      name="sem_id"
+      onChange={semInfoCollect}
+      isSearchable
+      // isMulti
+      options={sems}
+    />
+
+    
+
+    {/* Filter of Major Id-------------------------------------------------- */}
+    <label for="major_id">Major Type : </label>
+<Select
+      closeMenuOnSelect={false}
+      components={{ ClearIndicator }}
+      styles={{ clearIndicator: ClearIndicatorStyles }}
+      defaultValue={[]}
+      name="major_id"
+      onChange={majorInfoCollect}
+      isSearchable
       isMulti
-      options={options}
+      options={majors}
     />
     
+    {/* Filter of Sub ID---------------------------------------------------- */}
+    
+
+    <label for="sub_id">Sub Type : </label>
     <Select
       closeMenuOnSelect={false}
       components={{ ClearIndicator }}
       styles={{ clearIndicator: ClearIndicatorStyles }}
-      defaultValue={[options[0], options[1]]}
+      defaultValue={[]}
+      name="sub_id"
+      onChange={subInfoCollect}
+      isSearchable
       isMulti
-      options={options}
+      options={subs}
     />
     
-    <Select
-      closeMenuOnSelect={false}
-      components={{ ClearIndicator }}
-      styles={{ clearIndicator: ClearIndicatorStyles }}
-      defaultValue={[options[0], options[1]]}
-      isMulti
-      options={options}
-    />
            <input
   className='filter-button'
   type='button'
@@ -2083,7 +2622,7 @@ newPdf.text('Principal', 167, 234);
   onClick={onClickFilter}
   style={{
   
-    backgroundColor: '#4CAF50', /* Green */
+    backgroundColor: '#4CAF50',
     border: 'none',
     color: 'white',
     padding: '10px 15px',
@@ -2099,73 +2638,9 @@ newPdf.text('Principal', 167, 234);
 
 
 
-
-{/* <label for="acdyr_id">Academic Year : </label>
-
-
-    <Select
-        className="form1group"
-        id="acdyr_id"
-
-        isMulti
-        name="acdyr_id"
-        options={years}
-        value={selectedAcd}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
-    />
-    <input type="" name="acdyr_id" onChange={handleChange} value={selectedAcd} />
-
-
-<label for="sem_id">Semester : </label>
-<Select
-        className="form1group"
-        isMulti
-        name="sem_id"
-        options={sems}
-        value={selectedSem}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
-        />
-            <input type="" name="sem_id" onChange={handleChange} value={selectedSem} />
-
-
-<label for="major_id">Major Type : </label>
-<Select
-        className="form1group"
-        isMulti
-        name="major_id"
-        options={majors}
-        value={selectedMajor}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={false}
-/>
-<input type="" name="major_id" onChange={handleChange} value={selectedMajor} />
-
-<label for="sub_id">Sub Type : </label>
-<Select
-className="form1group"
-        isMulti
-        name="sub_id"
-        options={subs}
-        value={selectedSub}
-        onChange={infoCollect}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={true}
-        />
-                    <input type="" name="sub_id" onChange={handleChange} value={selectedSub} /> */}
-      
-        
-
             </div>
     </>
+
         </div>
 </div>
             <div class="report-container1">
@@ -2896,13 +3371,10 @@ type="button" onClick={async()=>{
                           <h6 className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</h6>
                           </td>
                           <td >
-                          <button type="button"style={{justifyContent:'center',
-justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
+                          <button type="button" style={{justifyContent:'center',backgroundColor:'red',
+justifyItems:'center',marginTop:'10px', width:'130px'}} onClick={async () => {
 
-accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
-}} className="btn btn-success col-4"  >Accept</button>
-<button type="button" style={{justifyContent:'center',
-justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
+}} className="btn btn-success col-4">Pending</button></td>
 
                               <td><button
 style={{

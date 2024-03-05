@@ -3,833 +3,199 @@ const base=require('./db')
 // const bodyParser = require('body-parser')
 const route = express.Router()
 
-// route.post('/filterReportsWithParticulars/:head',async(req,res)=>{
-//     const {acdyr_id,sem_id,major_id,sub_id,dept_id,emp_id} = req.body
-//     let resultArray=[]
-//     if(major_id=="" && sub_id==""){
-//     let sql="SELECT * FROM data_sub_report_type where head_report_id=?"
-//     base.query(sql,[req.params.head],(err,rows)=>{
-//         if(err){
-//             return
-//         }
-//         // res.status(200).json({rows})
-//         for(let i=0;i<rows.length;i++){
-//             // console.log(rows[i].table_name)
-//             if(acdyr_id!="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id=="" && emp_id==""){
-//                 let sql=`SELECT * FROM ${rows[i].table_name} where acdyr_id=? order by report_id desc`
-//                 base.query(sql,[acdyr_id],(err,temp)=>{
-//                     if(err){
-//                         console.log(err)
-//                         return
-//                     }
-//                     else if(temp.length==0){
-//                         console.log("No records")
-//                         return
-//                     }
-//                     for(let i=0;i<temp.length;i++){
-//                         resultArray.push(temp[i])
-//                     }
-//                     res.status(200).json(resultArray)
-//                 })
-//             }
-//             else if(acdyr_id=="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id==""){
-//                 let sql=`SELECT * FROM ${rows[i].table_name} where dept_id=? order by report_id desc`
-//                 base.query(sql,[dept_id],(err,temp)=>{
-//                     if(err){
-//                         console.log(err)
-//                         return
-//                     }
-//                     else if(temp.length==0){
-//                         console.log("No records")
-//                         return
-//                     }
-//                     for(let i=0;i<temp.length;i++){
-//                         resultArray.push(temp[i])
-//                     }
-//                     res.status(200).json(resultArray)
-//                 })
-//             }
-//             else if(acdyr_id!="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id==""){
-//                 let sql=`SELECT * FROM ${rows[i].table_name} where acdyr_id=? and dept_id=? order by report_id desc`
-//                 base.query(sql,[acdyr_id,dept_id],(err,temp)=>{
-//                     if(err){
-//                         console.log(err)
-//                         return
-//                     }
-//                     else if(temp.length==0){
-//                         console.log("No records")
-//                         return
-//                     }
-//                     for(let i=0;i<temp.length;i++){
-//                         resultArray.push(temp[i])
-//                     }
-//                     res.status(200).json(resultArray)
-//                 })
-//             }
-//             else if(acdyr_id!="" && sem_id!="" && major_id=="" && sub_id=="" && dept_id=="" && emp_id==""){
-//                 let sql=`SELECT * FROM ${rows[i].table_name} where acdyr_id=? and sem_id=? order by report_id desc`
-//                 base.query(sql,[acdyr_id,sem_id],(err,temp)=>{
-//                     if(err){
-//                         console.log(err)
-//                         return
-//                     }
-//                     else if(temp.length==0){
-//                         console.log("No records")
-//                         return
-//                     }
-//                     for(let i=0;i<temp.length;i++){
-//                         resultArray.push(temp[i])
-//                     }
-//                     res.status(200).json(resultArray)
-//                 })
-//             }
-//             else if(acdyr_id=="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id!=""){
-//                 let sql=`SELECT * FROM ${rows[i].table_name} where dept_id=? and event_coordinator like ? order by report_id desc`
-//                 base.query(sql,[dept_id,`%${emp_id}%`],(err,temp)=>{
-//                     if(err){
-//                         console.log(err)
-//                         return
-//                     }
-//                     else if(temp.length==0){
-//                         console.log("No records")
-//                         return
-//                     }
-//                     for(let i=0;i<temp.length;i++){
-//                         resultArray.push(temp[i])
-//                     }
-//                     res.status(200).json(resultArray)
-//                 })
-//             }
-//             else if(acdyr_id!="" && sem_id!="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id==""){
-//                 let sql=`SELECT * FROM ${rows[i].table_name} where acdyr_id=? and sem_id=? and dept_id=? order by report_id desc`
-//                 base.query(sql,[acdyr_id,sem_id,dept_id],(err,temp)=>{
-//                     if(err){
-//                         console.log(err)
-//                         return
-//                     }
-//                     else if(temp.length==0){
-//                         console.log("No records")
-//                         return
-//                     }
-//                     for(let i=0;i<temp.length;i++){
-//                         resultArray.push(temp[i])
-//                     }
-//                     res.status(200).json(resultArray)
-//                 })
-//             }
-//             else if(acdyr_id!="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id!=""){
-//                 let sql=`SELECT * FROM ${rows[i].table_name} where acdyr_id=? and dept_id=? and event_coordinator like ? order by report_id desc`
-//                 base.query(sql,[acdyr_id,dept_id,`%${emp_id}%`],(err,temp)=>{
-//                     if(err){
-//                         console.log(err)
-//                         return
-//                     }
-//                     else if(temp.length==0){
-//                         console.log("No records")
-//                         return
-//                     }
-//                     for(let i=0;i<temp.length;i++){
-//                         resultArray.push(temp[i])
-//                     }
-//                     res.status(200).json(resultArray)
-//                 })
-//             }
-//             else if(acdyr_id!="" && sem_id!="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id!=""){
-//                 let sql=`SELECT * FROM ${rows[i].table_name} where acdyr_id=? and sem_id=? and dept_id=? and event_coordinator like ? order by report_id desc`
-//                 base.query(sql,[acdyr_id,sem_id,dept_id,`%${emp_id}%`],(err,temp)=>{
-//                     if(err){
-//                         console.log(err)
-//                         return
-//                     }
-//                     else if(temp.length==0){
-//                         console.log("No records")
-//                         return
-//                     }
-//                     for(let i=0;i<temp.length;i++){
-//                         resultArray.push(temp[i])
-//                     }
-//                     res.status(200).json(resultArray)
-//                 })
-//             }
-//         }
-//             // res.status(200).json({resultArray})
-//     })
-//     }
-//     if(major_id!="" && sub_id==""){
-//         let sql="SELECT * FROM data_sub_report_type where major_report_id=?"
-//         base.query(sql,[major_id],(err,temp)=>{
-//             if(err){
-//                 return
-//             }
-//             for(let i=0;i<temp.length;i++){
-//                 // console.log(temp[i].table_name)
-//                 if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id=="" && dept_id=="" && emp_id==""){
-//                     let sql=`SELECT * FROM ${temp[i].table_name} where major_report_id=?`
-//                     base.query(sql,[major_id],(err,rows)=>{
-//                         if(err){
-//                             console.log(err)
-//                             return
-//                         }
-//                         else if(rows.length==0){
-//                             console.log("No records")
-//                             return
-//                         }
-//                         for(let i=0;i<temp.length;i++){
-//                             resultArray.push(temp[i])
-//                         }
-//                         res.status(200).json(resultArray)
-//                     })
-//                 }
-//                 else if(acdyr_id!="" && sem_id=="" && major_id!="" && sub_id=="" && dept_id=="" && emp_id==""){
-//                     let sql=`SELECT * FROM ${temp[i].table_name} where acdyr_id=? and major_report_id=? order by report_id desc`
-//                     base.query(sql,[acdyr_id,major_id],(err,rows)=>{
-//                         if(err){
-//                             console.log(err)
-//                             return
-//                         }
-//                         else if(rows.length==0){
-//                             console.log("No records")
-//                             return
-//                         }
-//                         for(let i=0;i<temp.length;i++){
-//                             resultArray.push(temp[i])
-//                         }
-//                         res.status(200).json(resultArray)
-//                     })
-//                 }
-//                 else if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id=="" && dept_id!="" && emp_id==""){
-//                     let sql=`SELECT * FROM ${temp[i].table_name} where major_report_id=? and dept_id=? order by report_id desc`
-//                     base.query(sql,[major_id,dept_id],(err,rows)=>{
-//                         if(err){
-//                             console.log(err)
-//                             return
-//                         }
-//                         else if(rows.length==0){
-//                             console.log("No records")
-//                             return
-//                         }
-//                         for(let i=0;i<temp.length;i++){
-//                             resultArray.push(temp[i])
-//                         }
-//                         res.status(200).json(resultArray)
-//                     })
-//                 }
-//                 else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id=="" && dept_id=="" && emp_id==""){
-//                     let sql=`SELECT * FROM ${temp[i].table_name} where acdyr_id=? and sem_id=? and major_report_id=? order by report_id desc`
-//                     base.query(sql,[acdyr_id,sem_id,major_id],(err,rows)=>{
-//                         if(err){
-//                             console.log(err)
-//                             return
-//                         }
-//                         else if(rows.length==0){
-//                             console.log("No records")
-//                             return
-//                         }
-//                         for(let i=0;i<temp.length;i++){
-//                             resultArray.push(temp[i])
-//                         }
-//                         res.status(200).json(resultArray)
-//                     })
-//                 }
-//                 else if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id=="" && dept_id!="" && emp_id!=""){
-//                     let sql=`SELECT * FROM ${temp[i].table_name} where major_report_id=? and dept_id=? and event_coordinator like ? order by report_id desc`
-//                     base.query(sql,[major_id,dept_id,`%${emp_id}%`],(err,rows)=>{
-//                         if(err){
-//                             console.log(err)
-//                             return
-//                         }
-//                         else if(rows.length==0){
-//                             console.log("No records")
-//                             return
-//                         }
-//                         for(let i=0;i<temp.length;i++){
-//                             resultArray.push(temp[i])
-//                         }
-//                         res.status(200).json(resultArray)
-//                     })
-//                 }
-//                 else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id=="" && dept_id!="" && emp_id!=""){
-//                     let sql=`SELECT * FROM ${temp[i].table_name} where acdyr_id=? and sem_id=? and major_report_id=? and dept_id=? and event_coordinator like ? order by report_id desc`
-//                     base.query(sql,[acdyr_id,sem_id,major_id,dept_id,`%${emp_id}%`],(err,rows)=>{
-//                         if(err){
-//                             console.log(err)
-//                             return
-//                         }
-//                         else if(rows.length==0){
-//                             console.log("No records")
-//                             return
-//                         }
-//                         for(let i=0;i<temp.length;i++){
-//                             resultArray.push(temp[i])
-//                         }
-//                         res.status(200).json(resultArray)
-//                     })
-//                 }
-//             }
-//         })
-//     }
-//     if(sub_id!=""){
-//         if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id=="" && emp_id==""){
-//             let sql=`select * from ${sub_id} order by report_id desc`
-//             base.query(sql,(err,temp)=>{
-//                 if(err){
-//                     console.log(err)
-//                     return
-//                 }
-//                 else if(temp.length==0){
-//                     console.log("No records")
-//                     return
-//                 }
-//                 for(let i=0;i<temp.length;i++){
-//                     resultArray.push(temp[i])
-//                 }
-//                 res.status(200).json(resultArray)
-//             })
-//         }
-//         else if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id==""){
-//             let sql=`select * from ${sub_id} where dept_id=? order by report_id desc`
-//             base.query(sql,[dept_id],(err,temp)=>{
-//                 if(err){
-//                     console.log(err)
-//                     return
-//                 }
-//                 else if(temp.length==0){
-//                     console.log("No records")
-//                     return
-//                 }
-//                 for(let i=0;i<temp.length;i++){
-//                     resultArray.push(temp[i])
-//                 }
-//                 res.status(200).json(resultArray)
-//             })
-//         }
-//         else if(acdyr_id!="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id=="" && emp_id==""){
-//             let sql=`select * from ${sub_id} where acdyr_id=? order by report_id desc`
-//             base.query(sql,[acdyr_id],(err,temp)=>{
-//                 if(err){
-//                     console.log(err)
-//                     return
-//                 }
-//                 else if(temp.length==0){
-//                     console.log("No records")
-//                     return
-//                 }
-//                 for(let i=0;i<temp.length;i++){
-//                     resultArray.push(temp[i])
-//                 }
-//                 res.status(200).json(resultArray)
-//             })
-//         }
-//         else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id!="" && dept_id=="" && emp_id==""){
-//             let sql=`select * from ${sub_id} where acdyr_id=? and sem_id=? order by report_id desc`
-//             base.query(sql,[acdyr_id,sem_id],(err,temp)=>{
-//                 if(err){
-//                     console.log(err)
-//                     return
-//                 }
-//                 else if(temp.length==0){
-//                     console.log("No records")
-//                     return
-//                 }
-//                 for(let i=0;i<temp.length;i++){
-//                     resultArray.push(temp[i])
-//                 }
-//                 res.status(200).json(resultArray)
-//             })
-//         }
-//         else if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id!=""){
-//             let sql=`select * from ${sub_id} where dept_id=? and event_coordinator like ? order by report_id desc`
-//             base.query(sql,[dept_id,`%${emp_id}%`],(err,temp)=>{
-//                 if(err){
-//                     console.log(err)
-//                     return
-//                 }
-//                 else if(temp.length==0){
-//                     console.log("No records")
-//                     return
-//                 }
-//                 for(let i=0;i<temp.length;i++){
-//                     resultArray.push(temp[i])
-//                 }
-//                 res.status(200).json(resultArray)
-//             })
-//         }
-//         else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id==""){
-//             let sql=`select * from ${sub_id} where acdyr_id=? and sem_id=? and dept_id=? order by report_id desc`
-//             base.query(sql,[acdyr_id,sem_id,dept_id],(err,temp)=>{
-//                 if(err){
-//                     console.log(err)
-//                     return
-//                 }
-//                 else if(temp.length==0){
-//                     console.log("No records")
-//                     return
-//                 }
-//                 for(let i=0;i<temp.length;i++){
-//                     resultArray.push(temp[i])
-//                 }
-//                 res.status(200).json(resultArray)
-//             })
-//         }
-//         else if(acdyr_id!="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id!=""){
-//             let sql=`select * from ${sub_id} where acdyr_id=? and dept_id=? and event_coordinator like ? order by report_id desc`
-//             base.query(sql,[acdyr_id,dept_id,`%${emp_id}%`],(err,temp)=>{
-//                 if(err){
-//                     console.log(err)
-//                     return
-//                 }
-//                 else if(temp.length==0){
-//                     console.log("No records")
-//                     return
-//                 }
-//                 for(let i=0;i<temp.length;i++){
-//                     resultArray.push(temp[i])
-//                 }
-//                 res.status(200).json(resultArray)
-//             })
-//         }
-//         else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id!=""){
-//             let sql=`select * from ${sub_id} where acdyr_id=? and sem_id=? and dept_id=? and event_coordinator like ? order by report_id desc`
-//             base.query(sql,[acdyr_id,sem_id,dept_id,`%${emp_id}%`],(err,temp)=>{
-//                 if(err){
-//                     console.log(err)
-//                     return
-//                 }
-//                 else if(temp.length==0){
-//                     console.log("No records")
-//                     return
-//                 }
-//                 for(let i=0;i<temp.length;i++){
-//                     resultArray.push(temp[i])
-//                 }
-//                 res.status(200).json(resultArray)
-//             })
-//         }
-//     }
-// })
 
-route.post('/filterReportsWithParticulars/:head',async(req,res)=>{
-    const {acdyr_id,sem_id,major_id,sub_id,dept_id,emp_id} = req.body
-    const faculty_id = emp_id.split(",")
-    let resultRecord=[]
-    let resultArray=[]
-    if(major_id=="" && sub_id==""){
-    let sql="SELECT * FROM data_sub_report_type where head_report_id=?"
-    base.query(sql,[req.params.head],(err,rows)=>{
-        if(err){
-            return
-        }
-        // res.status(200).json({rows})
-        for(let i=0;i<rows.length;i++){
-            // console.log(rows[i].table_name)
-            if(acdyr_id!="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id=="" && emp_id==""){
-                let sql=`SELECT * FROM ${rows[i].table_name} where acdyr_id in (${acdyr_id}) order by report_id desc`
-                base.query(sql,(err,temp)=>{
-                    if(err){
-                        console.log(err)
-                        return
+
+route.post('/filterReportsWithParticular/:head', async (req, res) => {
+    try {
+        const { acdyr_id, sem_id, major_id, sub_id, dept_id, emp_id } = req.body;
+        const faculty_id = emp_id.split(",");
+        const tables_name = sub_id.split(",");
+        const resultArray = [];
+        console.log("Hey")
+
+        const processQuery = async (sql, params) => {
+            return new Promise((resolve, reject) => {
+                base.query(sql, params, (err, result) => {
+                    if (err) {
+                        console.error(err);
+                        reject(err);
+                    } else {
+                        resolve(result);
                     }
-                    else if(temp.length==0){
-                        console.log("No records")
-                        return
-                    }
-                    for(let i=0;i<temp.length;i++){
-                        resultArray.push(temp[i])
-                    }
-                    res.status(200).json(resultArray)
-                })
+                });
+            });
+        };
+
+        const pushToResultArray = async (sql, params) => {
+            console.log(sql)
+            const temp = await processQuery(sql, params);
+            if (temp.length > 0) {
+                resultArray.push(...temp);
+                // console.log("Resultarray"+resultArray)
+            } else {
+                console.log("No records");
             }
-            else if(acdyr_id=="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id==""){
-                let sql=`SELECT * FROM ${rows[i].table_name} where dept_id in (${dept_id}) order by report_id desc`
-                base.query(sql,(err,temp)=>{
-                    if(err){
-                        console.log(err)
-                        return
-                    }
-                    else if(temp.length==0){
-                        console.log("No records")
-                        return
-                    }
-                    for(let i=0;i<temp.length;i++){
-                        resultArray.push(temp[i])
-                    }
-                    res.status(200).json(resultArray)
-                })
-            }
-            else if(acdyr_id!="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id==""){
-                let sql=`SELECT * FROM ${rows[i].table_name} where acdyr_id in (${acdyr_id}) and dept_id in (${dept_id}) order by report_id desc`
-                base.query(sql,(err,temp)=>{
-                    if(err){
-                        console.log(err)
-                        return
-                    }
-                    else if(temp.length==0){
-                        console.log("No records")
-                        return
-                    }
-                    for(let i=0;i<temp.length;i++){
-                        resultArray.push(temp[i])
-                    }
-                    res.status(200).json(resultArray)
-                })
-            }
-            else if(acdyr_id!="" && sem_id!="" && major_id=="" && sub_id=="" && dept_id=="" && emp_id==""){
-                let sql=`SELECT * FROM ${rows[i].table_name} where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) order by report_id desc`
-                base.query(sql,(err,temp)=>{
-                    if(err){
-                        console.log(err)
-                        return
-                    }
-                    else if(temp.length==0){
-                        console.log("No records")
-                        return
-                    }
-                    for(let i=0;i<temp.length;i++){
-                        resultArray.push(temp[i])
-                    }
-                    res.status(200).json(resultArray)
-                })
-            }
-            else if(acdyr_id=="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id!=""){
-                for(let i=0;i<faculty_id.length;i++){
-                    let sql=`SELECT * FROM ${rows[i].table_name} where dept_id in (${dept_id}) and event_coordinator like ? order by report_id desc`
-                base.query(sql,[`%${faculty_id[i]}%`],(err,temp)=>{
-                    if(err){
-                        console.log(err)
-                        return
-                    }
-                    else if(temp.length==0){
-                        console.log("No records")
-                        return
-                    }
-                    for(let i=0;i<temp.length;i++){
-                        resultArray.push(temp[i])
-                    }
-                })
+        };
+
+        if (major_id == "" && sub_id == "") {
+            const rows = await processQuery(`SELECT * FROM data_sub_report_type WHERE head_report_id=${req.params.head}`)
+            for (let i = 0; i < rows.length; i++) {
+                // 1
+                if(acdyr_id!="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id=="" && emp_id==""){
+                    await pushToResultArray(`SELECT * FROM ${rows[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) order by report_id desc`)
                 }
-                res.status(200).json(resultArray)
-            }
-            else if(acdyr_id!="" && sem_id!="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id==""){
-                let sql=`SELECT * FROM ${rows[i].table_name} where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) and dept_id in (${dept_id}) order by report_id desc`
-                base.query(sql,(err,temp)=>{
-                    if(err){
-                        console.log(err)
-                        return
-                    }
-                    else if(temp.length==0){
-                        console.log("No records")
-                        return
-                    }
-                    for(let i=0;i<temp.length;i++){
-                        resultArray.push(temp[i])
-                    }
-                    res.status(200).json(resultArray)
-                })
-            }
-            else if(acdyr_id!="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id!=""){
-                for(let i=0;i<faculty_id.length;i++){
-                    let sql=`SELECT * FROM ${rows[i].table_name} where acdyr_id in (${acdyr_id}) and dept_id in (${dept_id}) and event_coordinator like ? order by report_id desc`
-                base.query(sql,[`%${faculty_id[i]}%`],(err,temp)=>{
-                    if(err){
-                        console.log(err)
-                        return
-                    }
-                    else if(temp.length==0){
-                        console.log("No records")
-                        return
-                    }
-                    for(let i=0;i<temp.length;i++){
-                        resultArray.push(temp[i])
-                    }
-                })
+                // 2
+                else if(acdyr_id=="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id==""){
+                    await pushToResultArray(`SELECT * FROM ${rows[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where dept_id in (${dept_id}) order by report_id desc`)
                 }
-                res.status(200).json(resultArray)
-            }
-            else if(acdyr_id!="" && sem_id!="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id!=""){
-                for(let i=0;i<faculty_id.length;i++){
-                let sql=`SELECT * FROM ${rows[i].table_name} where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) and dept_id in (${dept_id}) and event_coordinator like ? order by report_id desc`
-                base.query(sql,[`%${faculty_id[i]}%`],(err,temp)=>{
-                    if(err){
-                        console.log(err)
-                        return
-                    }
-                    else if(temp.length==0){
-                        console.log("No records")
-                        return
-                    }
-                    for(let i=0;i<temp.length;i++){
-                        resultArray.push(temp[i])
-                    }
-                })
+                // 3
+                else if(acdyr_id!="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id==""){
+                    await pushToResultArray(`SELECT * FROM ${rows[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and dept_id in (${dept_id}) order by report_id desc`)
                 }
-                res.status(200).json(resultArray)
+                // 4
+                else if(acdyr_id!="" && sem_id!="" && major_id=="" && sub_id=="" && dept_id=="" && emp_id==""){
+                    await pushToResultArray(`SELECT * FROM ${rows[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) order by report_id desc`)
+                }
+                // 5
+                else if(acdyr_id=="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id!=""){
+                    for(let j=0;j<faculty_id.length;j++){
+                        await pushToResultArray(`SELECT * FROM ${rows[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where dept_id in (${dept_id}) and event_coordinator like "%${faculty_id[j]}%" order by report_id desc`)
+                    }
+                }
+                // 6
+                else if(acdyr_id!="" && sem_id!="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id==""){
+                    await pushToResultArray(`SELECT * FROM ${rows[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) and dept_id in (${dept_id}) order by report_id desc`)
+                }
+                // 7
+                else if(acdyr_id!="" && sem_id=="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id!=""){
+                    for(let j=0;j<faculty_id.length;j++){
+                        await pushToResultArray(`SELECT * FROM ${rows[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and dept_id in (${dept_id}) and event_coordinator like "%${faculty_id[j]}%" order by report_id desc`)
+                    }
+                }
+                // 8
+                else if(acdyr_id!="" && sem_id!="" && major_id=="" && sub_id=="" && dept_id!="" && emp_id!=""){
+                    for(let j=0;j<faculty_id.length;j++){
+                        await pushToResultArray(`SELECT * FROM ${rows[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) and dept_id in (${dept_id}) and event_coordinator like "%${faculty_id[j]}%" order by report_id desc`)
+                    }
+                }
+                
             }
         }
-            // res.status(200).json({resultArray})
-    })
-    }
-    if(major_id!="" && sub_id==""){
-        let sql=`SELECT * FROM data_sub_report_type where major_report_id in (${major_id})`
-        base.query(sql,(err,temp)=>{
-            if(err){
-                return
-            }
-            for(let i=0;i<temp.length;i++){
-                // console.log(temp[i].table_name)
+        else if (major_id !== "" && sub_id == "") {
+            const temp = await processQuery("SELECT * FROM data_sub_report_type WHERE major_report_id IN (?)", [major_id]);
+
+            for (let i = 0; i < temp.length; i++) {
+
+                // 9
                 if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id=="" && dept_id=="" && emp_id==""){
-                    let sql=`SELECT * FROM ${temp[i].table_name} where major_report_id in (${major_id})`
-                    base.query(sql,(err,rows)=>{
-                        if(err){
-                            console.log(err)
-                            return
-                        }
-                        else if(rows.length==0){
-                            console.log("No records")
-                            return
-                        }
-                        for(let i=0;i<temp.length;i++){
-                            resultArray.push(temp[i])
-                        }
-                        res.status(200).json(resultArray)
-                    })
+                    await pushToResultArray(`SELECT * FROM ${temp[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where seminar.major_report_id in (${major_id})`)
                 }
+                // 10
                 else if(acdyr_id!="" && sem_id=="" && major_id!="" && sub_id=="" && dept_id=="" && emp_id==""){
-                    let sql=`SELECT * FROM ${temp[i].table_name} where acdyr_id in (${acdyr_id}) and major_report_id in (${major_id}) order by report_id desc`
-                    base.query(sql,(err,rows)=>{
-                        if(err){
-                            console.log(err)
-                            return
-                        }
-                        else if(rows.length==0){
-                            console.log("No records")
-                            return
-                        }
-                        for(let i=0;i<temp.length;i++){
-                            resultArray.push(temp[i])
-                        }
-                        res.status(200).json(resultArray)
-                    })
+                    await pushToResultArray(`SELECT * FROM ${temp[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and seminar.major_report_id in (${major_id}) order by report_id desc`)
                 }
+                // 11
                 else if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id=="" && dept_id!="" && emp_id==""){
-                    let sql=`SELECT * FROM ${temp[i].table_name} where major_report_id in (${major_id}) and dept_id in (${dept_id}) order by report_id desc`
-                    base.query(sql,(err,rows)=>{
-                        if(err){
-                            console.log(err)
-                            return
-                        }
-                        else if(rows.length==0){
-                            console.log("No records")
-                            return
-                        }
-                        for(let i=0;i<temp.length;i++){
-                            resultArray.push(temp[i])
-                        }
-                        res.status(200).json(resultArray)
-                    })
+                    await pushToResultArray(`SELECT * FROM ${temp[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where seminar.major_report_id in (${major_id}) and dept_id in (${dept_id}) order by report_id desc`)
                 }
+                // 12
                 else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id=="" && dept_id=="" && emp_id==""){
-                    let sql=`SELECT * FROM ${temp[i].table_name} where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) and major_report_id in (${major_id}) order by report_id desc`
-                    base.query(sql,(err,rows)=>{
-                        if(err){
-                            console.log(err)
-                            return
-                        }
-                        else if(rows.length==0){
-                            console.log("No records")
-                            return
-                        }
-                        for(let i=0;i<temp.length;i++){
-                            resultArray.push(temp[i])
-                        }
-                        res.status(200).json(resultArray)
-                    })
+                    await pushToResultArray(`SELECT * FROM ${temp[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) and seminar.major_report_id in (${major_id}) order by report_id desc`)
                 }
+                // 13
                 else if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id=="" && dept_id!="" && emp_id!=""){
-                    for(let i=0;i<faculty_id.length;i++){
-                        let sql=`SELECT * FROM ${temp[i].table_name} where major_report_id in (${major_id}) and dept_id in (${dept_id}) and event_coordinator like ? order by report_id desc`
-                    base.query(sql,[`%${faculty_id[i]}%`],(err,rows)=>{
-                        if(err){
-                            console.log(err)
-                            return
-                        }
-                        else if(rows.length==0){
-                            console.log("No records")
-                            return
-                        }
-                        for(let i=0;i<temp.length;i++){
-                            resultArray.push(temp[i])
-                        }
-                    })
+                    for(let j=0;j<faculty_id.length;j++){
+                        await pushToResultArray(`SELECT * FROM ${temp[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where seminar.major_report_id in (${major_id}) and dept_id in (${dept_id}) and event_coordinator like "%${faculty_id[j]}%" order by report_id desc`)
                     }
-                    res.status(200).json(resultArray)
                 }
+                // 14
                 else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id=="" && dept_id!="" && emp_id!=""){
-                    for(let i=0;i<faculty_id.length;i++){
-                        let sql=`SELECT * FROM ${temp[i].table_name} where acdyr_id in (${acdyr_id}) and sem_id ${sem_id} and major_report_id in (${major_id}) and dept_id in (${dept_id}) and event_coordinator like ? order by report_id desc`
-                    base.query(sql,[`%${faculty_id[i]}%`],(err,rows)=>{
-                        if(err){
-                            console.log(err)
-                            return
-                        }
-                        else if(rows.length==0){
-                            console.log("No records")
-                            return
-                        }
-                        for(let i=0;i<temp.length;i++){
-                            resultArray.push(temp[i])
-                        }
-                    })
+                    for(let j=0;j<faculty_id.length;j++){
+                        await pushToResultArray(`SELECT * FROM ${temp[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and sem_id ${sem_id} and seminar.major_report_id in (${major_id}) and dept_id in (${dept_id}) and event_coordinator like "%${faculty_id[j]}%" order by report_id desc`)
                     }
-                    res.status(200).json(resultArray)
+                }
+                else if(acdyr_id!="" && sem_id=="" && major_id!="" && sub_id=="" && dept_id!="" && emp_id!=""){
+                    for(let j=0;j<faculty_id.length;j++){
+                        await pushToResultArray(`SELECT * FROM ${temp[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and seminar.major_report_id in (${major_id}) and dept_id in (${dept_id}) and event_coordinator like "%${faculty_id[j]}%" order by report_id desc`)
+                    }
+                }
+                else if(acdyr_id!="" && sem_id=="" && major_id!="" && sub_id=="" && dept_id!="" && emp_id==""){
+                    // for(let j=0;j<faculty_id.length;j++){
+                        await pushToResultArray(`SELECT * FROM ${temp[i].table_name} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and seminar.major_report_id in (${major_id}) and dept_id in (${dept_id}) order by report_id desc`)
+                    // }
                 }
             }
-        })
+        }
+        else if (sub_id !== "") {
+            // 15
+            if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id=="" && emp_id==""){
+                for(let m=0;m<tables_name.length;m++){
+                    await pushToResultArray(`select * from ${tables_name[m]} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id order by report_id desc`)
+                }
+            }
+            // 16
+            else if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id==""){
+                for(let m=0;m<tables_name.length;m++){
+                    await pushToResultArray(`select * from ${tables_name[m]} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where dept_id in (${dept_id}) order by report_id desc`)
+                }
+            }
+            // 17
+            else if(acdyr_id!="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id=="" && emp_id==""){
+                for(let m=0;m<tables_name.length;m++){
+                    await pushToResultArray(`select * from ${tables_name[m]} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) order by report_id desc`)
+                }
+            }
+            // 18
+            else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id!="" && dept_id=="" && emp_id==""){
+                for(let m=0;m<tables_name.length;m++){
+                    await pushToResultArray(`select * from ${tables_name[m]} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) order by report_id desc`)
+                }
+            }
+            // 19
+            else if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id!=""){
+                for(let j=0;j<faculty_id.length;j++){
+                    for(let m=0;m<tables_name.length;m++){
+                        await pushToResultArray(`select * from ${tables_name[m]} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where dept_id in (${dept_id}) and event_coordinator like "%${faculty_id[j]}%" order by report_id desc`)
+                    }
+                }
+            }
+            // 20
+            else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id==""){
+                for(let m=0;m<tables_name.length;m++){
+                    await pushToResultArray(`select * from ${tables_name[m]} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) and dept_id in (${dept_id}) order by report_id desc`)
+                }
+            }
+            // 21
+            else if(acdyr_id!="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id!=""){
+                for(let j=0;j<faculty_id.length;j++){
+                    for(let m=0;m<tables_name.length;m++){
+                        await pushToResultArray(`select * from ${tables_name[m]} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and dept_id in (${dept_id}) and event_coordinator like "%${faculty_id[j]}%" order by report_id desc`)
+                    }
+                }
+            }
+            // 22
+            else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id!=""){
+                for(let j=0;j<faculty_id.length;j++){
+                    for(let m=0;m<tables_name.length;m++){
+                        await pushToResultArray(`select * from ${tables_name[m]} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) and dept_id in(${dept_id}) and event_coordinator like "%${faculty_id[j]}%" order by report_id desc`)
+                    }
+                }
+            }
+            else if(acdyr_id!="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id==""){
+                // for(let j=0;j<faculty_id.length;j++){
+                    for(let m=0;m<tables_name.length;m++){
+                        await pushToResultArray(`select * from ${tables_name[m]} as seminar INNER JOIN data_major_report_type AS major_report_type ON seminar.major_report_id = major_report_type.major_report_id inner join data_sub_report_type as sub_report_type on seminar.sub_report_id=sub_report_type.sub_report_id where acdyr_id in (${acdyr_id}) and seminar.major_report_id in (${major_id}) and dept_id in (${dept_id}) order by report_id desc`)
+                    }
+                // }
+            }
+        }
+
+        res.status(200).json({ resultArray });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-    if(sub_id!=""){
-        if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id=="" && emp_id==""){
-            let sql=`select * from ${sub_id} order by report_id desc`
-            base.query(sql,(err,temp)=>{
-                if(err){
-                    console.log(err)
-                    return
-                }
-                else if(temp.length==0){
-                    console.log("No records")
-                    return
-                }
-                for(let i=0;i<temp.length;i++){
-                    resultArray.push(temp[i])
-                }
-                res.status(200).json(resultArray)
-            })
-        }
-        else if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id==""){
-            let sql=`select * from ${sub_id} where dept_id in (${dept_id}) order by report_id desc`
-            base.query(sql,(err,temp)=>{
-                if(err){
-                    console.log(err)
-                    return
-                }
-                else if(temp.length==0){
-                    console.log("No records")
-                    return
-                }
-                for(let i=0;i<temp.length;i++){
-                    resultArray.push(temp[i])
-                }
-                res.status(200).json(resultArray)
-            })
-        }
-        else if(acdyr_id!="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id=="" && emp_id==""){
-            let sql=`select * from ${sub_id} where acdyr_id in (${acdyr_id}) order by report_id desc`
-            base.query(sql,(err,temp)=>{
-                if(err){
-                    console.log(err)
-                    return
-                }
-                else if(temp.length==0){
-                    console.log("No records")
-                    return
-                }
-                for(let i=0;i<temp.length;i++){
-                    resultArray.push(temp[i])
-                }
-                res.status(200).json(resultArray)
-            })
-        }
-        else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id!="" && dept_id=="" && emp_id==""){
-            let sql=`select * from ${sub_id} where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) order by report_id desc`
-            base.query(sql,(err,temp)=>{
-                if(err){
-                    console.log(err)
-                    return
-                }
-                else if(temp.length==0){
-                    console.log("No records")
-                    return
-                }
-                for(let i=0;i<temp.length;i++){
-                    resultArray.push(temp[i])
-                }
-                res.status(200).json(resultArray)
-            })
-        }
-        else if(acdyr_id=="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id!=""){
-            for(let i=0;i<faculty_id.length;i++){
-                let sql=`select * from ${sub_id} where dept_id in (${dept_id}) and event_coordinator like ? order by report_id desc`
-            base.query(sql,[`%${emp_id}%`],(err,temp)=>{
-                if(err){
-                    console.log(err)
-                    return
-                }
-                else if(temp.length==0){
-                    console.log("No records")
-                    return
-                }
-                for(let i=0;i<temp.length;i++){
-                    resultArray.push(temp[i])
-                }
-            })
-            }
-            res.status(200).json(resultArray)
-        }
-        else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id==""){
-            let sql=`select * from ${sub_id} where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) and dept_id in (${dept_id}) order by report_id desc`
-            base.query(sql,(err,temp)=>{
-                if(err){
-                    console.log(err)
-                    return
-                }
-                else if(temp.length==0){
-                    console.log("No records")
-                    return
-                }
-                for(let i=0;i<temp.length;i++){
-                    resultArray.push(temp[i])
-                }
-                res.status(200).json(resultArray)
-            })
-        }
-        else if(acdyr_id!="" && sem_id=="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id!=""){
-            for(let i=0;i<faculty_id.length;i++){
-                let sql=`select * from ${sub_id} where acdyr_id in (${acdyr_id}) and dept_id in (${dept_id}) and event_coordinator like ? order by report_id desc`
-            base.query(sql,[`%${faculty_id[i]}%`],(err,temp)=>{
-                if(err){
-                    console.log(err)
-                    return
-                }
-                else if(temp.length==0){
-                    console.log("No records")
-                    return
-                }
-                for(let i=0;i<temp.length;i++){
-                    resultArray.push(temp[i])
-                }
-            })
-            }
-            res.status(200).json(resultArray)
-        }
-        else if(acdyr_id!="" && sem_id!="" && major_id!="" && sub_id!="" && dept_id!="" && emp_id!=""){
-            for(let i=0;i<faculty_id.length;i++){
-                let sql=`select * from ${sub_id} where acdyr_id in (${acdyr_id}) and sem_id in (${sem_id}) and dept_id in(${dept_id}) and event_coordinator like ? order by report_id desc`
-            base.query(sql,[`%${emp_id}%`],(err,temp)=>{
-                if(err){
-                    console.log(err)
-                    return
-                }
-                else if(temp.length==0){
-                    console.log("No records")
-                    return
-                }
-                for(let i=0;i<temp.length;i++){
-                    resultArray.push(temp[i])
-                }
-            })
-            }
-            res.status(200).json(resultArray)
-        }
-    }
-})
+});
 
 // route.get('/deltables',async(req,res)=>{
 //     let sql=`select table_name from data_sub_report_type`

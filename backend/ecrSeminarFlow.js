@@ -300,6 +300,35 @@ route.post('/report/:report_id/:table',async(req,res)=>{
 /////////////////////
 
 
+route.get('/findFacWithDept/:deptId',async(req,res)=>{
+    if(req.params.deptId!=0){
+        // const dId=req.params.deptId
+    const sql=`select * from data_faculties inner join data_dept on data_faculties.dept_id = data_dept.dept_id where not faculty_desig in(401,402,403) and data_dept.dept_id=${req.params.deptId};`
+    //     INNER JOIN data_dept d ON f.dept_id = d.dept_id
+    // WHERE f.faculty_desig NOT IN (403, 404);
+        base.query(sql,[],(err,rows)=>{
+            if(err){
+                console.log(err)
+                res.status(500).json({error:err.message})
+                return
+            }
+            if(rows.length==0){
+                res.status(404).json({error:"No faculties"})
+                return
+            }
+            res.status(200).json({rows})
+        })
+    }else{
+        console.log("Cannot fetch with multiple major ids")
+    const rows=[{
+        faculty_id:"",
+        faculty_name:"None"
+    }]
+    res.status(200).json({rows})
+    }
+})
+
+
 route.get('/dept/:empId', async (req, res) => {
     
     const eId = req.params.empId;
@@ -2345,9 +2374,9 @@ route.get('/loadecrCompletion/:deptId/:tableName',async(req,res)=>{
 
 route.put('/ecrCompletion/:tableName/:report_id',async(req,res)=>{
     // receive the request from client
-    const{event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date,reqMail,accMail,resPerson,particiFeedback,resProfile}=req.body
-    sql=`update ${req.params.tableName} set event_photo_1=?, event_photo_2=?, event_po=?, pdf=?, event_date_from=?, event_date_to=?, event_organizing_secretary=?, event_time=?, event_description=?, event_budget_utilized=? , completion_date=?,reqMail=?,accMail=?,resPerson=?,particiFeedback=?,resProfile=? where report_id=? and final_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0`
-        base.query(sql,[event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date,reqMail,accMail,resPerson,particiFeedback,resProfile,req.params.report_id],(err,ack)=>{
+    const{event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date,reqMail,accMail,resPerson,particiFeedback,resProfile,ppt}=req.body
+    sql=`update ${req.params.tableName} set event_photo_1=?, event_photo_2=?, event_po=?, pdf=?, event_date_from=?, event_date_to=?, event_organizing_secretary=?, event_time=?, event_description=?, event_budget_utilized=? , completion_date=?,reqMail=?,accMail=?,resPerson=?,particiFeedback=?,resProfile=?,ppt=? where report_id=? and final_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0`
+        base.query(sql,[event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date,reqMail,accMail,resPerson,particiFeedback,resProfile,ppt,req.params.report_id],(err,ack)=>{
             if(err){
                 res.status(500).json({error:err.message})
                 return
