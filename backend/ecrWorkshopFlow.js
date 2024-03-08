@@ -205,6 +205,22 @@ router.get('/find/:deptId',async(req,res)=>{
     })
 })
 
+router.get('/getFacultyParticulars/:name',async(req,res)=>{
+    const sql=`select * from data_faculties AS faculties INNER JOIN predefined_designation AS designation
+    ON faculties.faculty_desig = designation.designation_id where faculty_name like ?`
+    base.query(sql,[req.params.name],(err,rows)=>{
+        if(err){
+            res.status(500).json({error:err.message})
+            return
+        }
+        if(rows.length==0){
+            res.status(404).json({error:"No faculties"})
+            return
+        }
+        res.status(200).json({rows})
+    })
+})
+
 router.post('/propose/:tableName',async(req,res)=>{
     // receive the request from client
 

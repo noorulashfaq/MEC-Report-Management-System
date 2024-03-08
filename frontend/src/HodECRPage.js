@@ -12,6 +12,8 @@ import Image3 from './logo3.jpg';
 import Image4 from './logo4.jpg';
 import './facultyEcrFilter.css';
 import Select from 'react-select';
+import { callAddFont } from "./calibri-regular-normal";
+import { callAddBoldFont } from "./calibri-bold-normal";
 import { makeStyles } from '@material-ui/core/styles';
 
 import { FormControl, InputLabel, MenuItem, Button } from '@mui/material';
@@ -64,7 +66,7 @@ filterButton: {
 //import Img6001 from'./6001.jpeg';
 
 
-// localhost
+// 10.167.1.2
 export const HodECRPage=()=>{
 
 //////////////////////////////////////
@@ -103,7 +105,7 @@ const[allvalues,setAllvalues]=useState([]);
 
 
 const fetchFac=async()=>{
-  await axios.get(`http://localhost:1234/seminar/findFacWithDept/${loggedUser.dept_id}`)
+  await axios.get(`http://10.167.1.2:1234/seminar/findFacWithDept/${loggedUser.dept_id}`)
           .then((response) => {
           console.log(response);
           setEmp(response.data.rows);
@@ -123,7 +125,7 @@ const fetchFac=async()=>{
         // console.log(allvalues)
 
 const GetCurrAcd=async()=>{
-    const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+    const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
     // alert(JSON.stringify(t.data.result))
     const temp=t.data.result
     let valueYr=0
@@ -155,7 +157,7 @@ const [totalPages, setTotalPages] = useState(1);
           const empId = logged.faculty_id;
           
           // Fetch data from backend API
-          const response = await axios.get(`http://localhost:1234/seminar/hodecr/${empId}?page=${page}`);
+          const response = await axios.get(`http://10.167.1.2:1234/seminar/hodecr/${empId}?page=${page}`);
       
          
           if (response.status === 200) {
@@ -203,7 +205,7 @@ const [totalPages, setTotalPages] = useState(1);
         // alert(JSON.stringify(filter))
         try{
             // alert("hi")
-            const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticular/1001",filter)
+            const filteredRecords=await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticular/1001",filter)
             console.log(filteredRecords.data)
             setCurrentRecords(filteredRecords.data.resultArray)
         }
@@ -841,7 +843,7 @@ let [subs,setSubs]=useState([])
 
     const[year,setYear]=useState([])
     const Acad=async()=>{
-        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -995,238 +997,339 @@ const viewPdf1=async(report_id)=>{
    
 
   const handleDownload = async (table) => {
-  try {
-      const res = await axios.get(`http://localhost:1234/seminar/data/${id}/${table}`);
+    try {
+      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
-      var sign = `/Project_images/${data.lvl_1_proposal_sign}.jpeg`;
+   
+
       // alert(sign);
       
       const newPdf = new jsPDF();
        
+      jsPDF.API.events.push(["addFonts", callAddFont]);
+      jsPDF.API.events.push(["addFonts", callAddBoldFont]);
+      const centerTextInsideBox = (newPdf,word,rectxaxis,rectyaxis)=>{
+        const text = word;
+      var textwidth = newPdf.getTextDimensions(text).w;
+      var textheight = newPdf.getTextDimensions(text).h;
+      var rectWidth = textwidth + 5; // Adding some padding for better visibility
+      var rectHeight = textheight + 5;
+      var rectX = rectxaxis;
+      var rectY = rectyaxis;
+      newPdf.rect(rectX, rectY, rectWidth, rectHeight);
+      newPdf.text(word, rectX + rectWidth / 2, rectY + rectHeight / 2, { align: "center", baseline: "middle" });
       
+      }
+      const coordi = `/Project_Images/${data.coordinator_emp_id}.jpg`;
+      const hod = `/Project_Images/${data.lvl_1_proposal_sign}.jpg`;
+      const princi = `/Project_Images/${data.lvl_2_proposal_sign}.jpg`;
    
-    newPdf.addImage(Image, 'PNG', 10, 3, 20, 20);
-newPdf.addImage(Image2, 'PNG', 12,23, 15, 15);
-newPdf.addImage(Image3, 'JPG', 175, 3, 20, 15);
-newPdf.addImage(Image4, 'JPG', 175, 20, 20, 15);
-
-newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
-newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
-newPdf.setFontSize(10);
-newPdf.setFont("times", "");
-newPdf.text('(An Autonomous Institution)', 80, 20);
-newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
-newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
-
-
-newPdf.setFontSize(12);
-newPdf.setFont("times", "bold");
-newPdf.rect(10, 40, 20, 7);
-newPdf.text(`${data.event_organizer}`, 15, 45);///Department
-
-newPdf.rect(80, 40, 50, 7);
-newPdf.text('EVENT PROPOSAL', 85, 45);
-
-newPdf.rect(170, 40, 30, 7);
-newPdf.text(`${data.acd_yr}`, 173, 45);//academic year
-
-newPdf.setFont("times","")
-newPdf.rect(10, 55, 10, 20).stroke();
-newPdf.text('1.', 12, 65);
-newPdf.rect(20, 55, 90, 20).stroke();
-newPdf.text('Nature of the Event:\nConference/Technical Symposium/Workshop/\nSeminar/Guest/Lecture/FDP/Any other',22, 61);
-newPdf.rect(110, 55, 90, 20).stroke();
-newPdf.text(`${data.sub_report}`, 113, 65);//Nature of the Event
-
-
-newPdf.rect(10, 75, 10, 10).stroke();
-newPdf.text('2.', 12, 81);
-newPdf.rect(20, 75, 90, 10).stroke();
-newPdf.text('Title of the event',22, 81);
-newPdf.rect(110, 75, 90, 10).stroke();
-newPdf.text(`${data.event_title}`, 113, 81);//Event Title
-
-
-newPdf.rect(10, 85, 10, 10).stroke();
-newPdf.text('3.', 12, 91);
-newPdf.rect(20, 85, 90, 10).stroke();
-newPdf.text('Organized by',22, 91);
-newPdf.rect(110, 85, 90, 10).stroke();
-newPdf.text(`${data.event_organizer}`, 113, 91);//Event Organizer
-
-
-
-newPdf.rect(10, 95, 10, 10).stroke();
-newPdf.text('4.', 12, 101);
-newPdf.rect(20, 95, 90, 10).stroke();
-newPdf.text('Collaboration/Sponsoring Agency',22, 101);
-newPdf.rect(110, 95, 90, 10).stroke();
-newPdf.text(`${data.event_sponsor}`, 113, 101);//Sponsor Name
-
-
-newPdf.rect(10, 105, 10, 10).stroke();
-newPdf.text('5.', 12, 111);
-newPdf.rect(20, 105, 90, 10).stroke();
-newPdf.text('Date of the Event Planned',22, 111);
-newPdf.rect(110, 105, 90, 10).stroke();
-newPdf.text(`${data.proposal_date}`, 113, 111);//Event Date
-
-newPdf.rect(10, 115, 10, 10).stroke();
-newPdf.text('6.', 12, 121);
-newPdf.rect(20, 115, 90, 10).stroke();
-newPdf.text('Venue',22, 121);
-newPdf.rect(110, 115, 90, 10).stroke();
-newPdf.text(`${data.event_venue}`, 113, 121);
-
-
-newPdf.rect(10, 125, 10, 50).stroke();
-newPdf.text('7.', 12, 141);
-newPdf.rect(20, 125, 90, 50).stroke();
-newPdf.text('Details of the Guest',22, 141);
-
-newPdf.rect(110, 125, 23, 10).stroke();
-newPdf.text('Name', 111, 131);
-newPdf.rect(133, 125,67, 10).stroke();
-newPdf.text(`${data.guest_name}`, 135, 131);///Name of the Guest 
-newPdf.rect(110, 135, 23, 10).stroke();
-newPdf.text('Designation', 111, 141);
-newPdf.rect(133, 135,67, 10).stroke();
-newPdf.text(`${data.guest_designation }`, 135, 141);///Guest Designation
-newPdf.rect(110, 145, 23, 10).stroke();
-newPdf.text('Address', 111, 151);
-const x = 133;
-let y = 145;
-const address = `${data.guest_address}`;
-const contentWidth = newPdf.getStringUnitWidth(address) * 12; // Initial font size: 12
-const contentHeight = newPdf.getTextDimensions(address, { fontSize: 12 }).h;
-
-// Determine font size to fit within specified dimensions
-const maxWidth = 100; // Adjust based on your requirements
-const maxHeight = 100; // Adjust based on your requirements
-const fontSize = Math.min(12, (maxWidth / contentWidth) * 35, (maxHeight / contentHeight) * 35);
- // Adjust the width as needed
-// Set font size and add text to the PDF
-newPdf.setFontSize(fontSize);
-
-console.log(contentHeight);
-
-const textLines = newPdf.splitTextToSize(address, 60);
-newPdf.rect(x , y , maxWidth-33  , maxHeight - 90);
-newPdf.text(x+2, y+5, textLines);
-// newPdf.rect(133, 140,67, 10).stroke();
-// newPdf.text(textLines,135, 145);/////Address
-newPdf.setFontSize(12);
-
-
-newPdf.rect(110, 155, 23, 10).stroke();
-newPdf.text('Contact No', 111, 161);
-newPdf.rect(133, 155,67, 10).stroke();
-newPdf.text(`${data.guest_phone_number}`, 135, 161);//Contact no
-newPdf.rect(110, 165, 23, 10).stroke();
-newPdf.text('Mail-id', 111, 171);
-newPdf.rect(133, 165,67, 10).stroke();
-newPdf.text(`${data.guest_email}`, 135, 171);/////Guest Mail id
-
-newPdf.rect(10, 175, 10, 30).stroke();
-newPdf.text('8.', 12, 190);
-newPdf.rect(20, 175, 90, 30).stroke();
-newPdf.text('Total Participants expected',22, 190);
-
-newPdf.rect(110, 175, 23, 10).stroke();
-newPdf.text('MEC\nStudents', 110.5, 179);
-newPdf.rect(133, 175,67, 10).stroke();
-newPdf.text(`${data.student_count}`, 135, 181);//Count of the Student
-
-newPdf.rect(110, 185, 23, 10).stroke();
-newPdf.text('MEC\nFaculty', 110.5, 189);
-newPdf.rect(133, 185,67, 10).stroke();
-newPdf.text(`${data.faculty_count}`, 135, 191);//COunt of the Faculty
-
-newPdf.rect(110, 195, 23, 10).stroke();
-newPdf.text('Others', 110.5, 201);
-newPdf.rect(133, 195,67, 10).stroke();
-newPdf.text(`${data.others_count}`, 135, 201);//Count of Others
-
-newPdf.rect(10, 205, 10, 10).stroke();
-newPdf.text('9.', 12, 211);
-newPdf.rect(20, 205, 90, 10).stroke();
-newPdf.text('Proposed Budget',22, 211);
-newPdf.rect(110, 205, 90, 10).stroke();
-newPdf.text(`${data.event_budget}`, 113, 211);//Event Budget
-
-
-
-newPdf.rect(10, 215, 10, 10).stroke();
-newPdf.text('10.', 12, 220);
-newPdf.rect(20, 215, 180, 10).stroke();
-newPdf.text('Co-ordinator of the Event',22, 220);
-
-newPdf.rect(10, 225, 70, 5).stroke();
-newPdf.text('Name', 35, 229);
-
-newPdf.rect(80, 225, 60, 5).stroke();
-newPdf.text('Designation', 100, 229);
-
-newPdf.rect(140, 225, 60, 5).stroke();
-newPdf.text('Phone Number', 155, 229);
-
-newPdf.rect(10, 230, 70, 10).stroke();
-newPdf.text(`${data.faculty_name}`, 12, 235);//coordinator Name
-
-newPdf.rect(80, 230, 60, 10).stroke();
-newPdf.text(` ${data.designation}`, 83, 235);//coordinator Desgination
-
-newPdf.rect(140, 230, 60, 10).stroke();
-newPdf.text(``, 142, 235);//coordinator Phone_num
-
-newPdf.rect(10, 240, 70, 10).stroke();
-newPdf.text('', 35, 229);//coordinator Name
-
-newPdf.rect(80, 240, 60, 10).stroke();
-newPdf.text('', 100, 229);//cordinator  Desgination
-
-newPdf.rect(140, 240, 60, 10).stroke();
-newPdf.text('', 155, 229);//coordinator Phone_num
-
-newPdf.rect(10, 250, 70, 10).stroke();
-newPdf.text('', 35, 229);//coordinator Name
-
-newPdf.rect(80, 250, 60, 10).stroke();
-newPdf.text('', 100, 229);//coordinator Desgination
-
-newPdf.rect(140, 250, 60, 10).stroke();
-newPdf.text('', 155, 229);//coordinator 
-
-// newPdf.rect(10, 225, 70, 5).stroke();
-// newPdf.text('Name', 35, 229);
-
-// newPdf.rect(80, 225, 60, 5).stroke();
-// newPdf.text('Designation', 100, 229);
-
-// newPdf.rect(140, 225, 60, 5).stroke();
-// newPdf.text('Phone Number', 155, 229);
-// newPdf.rect(10, 225, 70, 5).stroke();
-// newPdf.text('Name', 35, 229);
-
-// newPdf.rect(80, 225, 60, 5).stroke();
-// newPdf.text('Designation', 100, 229);
-
-// newPdf.rect(140, 225, 60, 5).stroke();
-// newPdf.text('Phone Number', 155, 229);
-
-
-
-
-newPdf.setFont("times","bold");
-
-newPdf.text('HoD', 15, 290);
-
-newPdf.text('Principal', 155, 290);
-
-
+   
+     
+      newPdf.addImage(Image, 'PNG', 10, 3, 20, 20);
+      newPdf.addImage(Image2, 'PNG', 12,25, 17, 10);
+      newPdf.addImage(Image3, 'JPG', 175, 5, 22, 12);
+      newPdf.addImage(Image4, 'JPG', 175, 20, 20, 14);
+  
+      let date;
+      const parts = `${data.event_date}`.split("-");
+      if(parts.length === 3){
+       date = `${parts[2]}-${parts[1]}-${parts[0]}`
+      }
+      console.log(date);
+    
+      newPdf.setFontSize(20);
+      newPdf.setFont("calibri-bold", "normal");
+      newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',45, 15);
+      newPdf.setFontSize(10);
+      newPdf.setFont("calibri-regular", "normal");
+      newPdf.text('(An Autonomous Institution)', 85, 20);
+      newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 43, 25);
+      newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);
+      
+    
+    
+      newPdf.addImage(Image, 'PNG', 10, 3, 20, 20);
+      newPdf.addImage(Image2, 'PNG', 12,25, 17, 10);
+      newPdf.addImage(Image3, 'JPG', 175, 5, 22, 12);
+      newPdf.addImage(Image4, 'JPG', 175, 20, 20, 14);
+    
+      newPdf.setFontSize(20);
+      newPdf.setFont("calibri-bold", "normal");
+      newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',45, 15);
+      newPdf.setFontSize(10);
+      newPdf.setFont("calibri-regular", "normal");
+      newPdf.text('(An Autonomous Institution)', 85, 20);
+      newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 43, 25);
+      newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);
+      
+    
+    
+    newPdf.setFontSize(12);
+    newPdf.setFont("calibri-bold", "normal");
+    // newPdf.rect(10, 40, 20, 7);
+    // newPdf.text(`${data.event_organizer}`, 15, 45);///Department
+    centerTextInsideBox(newPdf,`${data.dept}`,10,40);
+    newPdf.rect(80, 40, 50, 7);
+    newPdf.text('EVENT PROPOSAL', 90, 45);
+    newPdf.rect(180, 40, 20, 10).stroke();
+    newPdf.text(`${data.acd_yr}`, 183, 46);
+    // centerTextInsideBox(newPdf,`${data.acd_yr}`,170,40);
+    
+    
+    
+    newPdf.setFont("calibri-regular","normal")
+    newPdf.rect(10, 55, 10, 20).stroke();
+    newPdf.text('1.', 12, 65);
+    newPdf.rect(20, 55, 90, 20).stroke();
+    newPdf.text('Nature of the Event:\nConference/Technical Symposium/Workshop/\nSeminar/Guest/Lecture/FDP/Any other',22, 61);
+    newPdf.rect(110, 55, 90, 20).stroke();
+    newPdf.text(`${data.sub_report}`, 113, 66);//Nature of the Event
+    
+    
+    newPdf.rect(10, 75, 10, 10).stroke();
+    newPdf.text('2.', 12, 81);
+    newPdf.rect(20, 75, 90, 10).stroke();
+    newPdf.text('Title of the event',22, 81);
+    newPdf.rect(110, 75, 90, 10).stroke(); 
+    const event_title = `${data.event_title}`; 
+const title = newPdf.splitTextToSize(event_title, 80);
+    
+    if(event_title.length <=60)
+    {
+      newPdf.text(event_title, 113, 81);
+    }
+    else{
+    newPdf.setFontSize(10);
+    const title = newPdf.splitTextToSize(event_title, 80);
+    newPdf.text(title, 113, 74);///Title of the Event
+    }
+    
+    
+    
+    
+    newPdf.setFontSize(12);
+    newPdf.rect(10, 85, 10, 10).stroke();
+    newPdf.text('3.', 12, 91);
+    newPdf.rect(20, 85, 90, 10).stroke();
+    newPdf.text('Organized by',22, 91);
+    newPdf.rect(110, 85, 90, 10).stroke();
+    newPdf.text(`${data.event_organizer}`, 113, 91);//Event Organizer
+    
+    
+    
+    newPdf.rect(10, 95, 10, 10).stroke();
+    newPdf.text('4.', 12, 101);
+    newPdf.rect(20, 95, 90, 10).stroke();
+    newPdf.text('Collaboration/Sponsoring Agency',22, 101);
+    newPdf.rect(110, 95, 90, 10).stroke();
+    newPdf.text(`${data.event_sponsor}`, 113, 101);//Sponsor Name
+    
+    
+    newPdf.rect(10, 105, 10, 10).stroke();
+    newPdf.text('5.', 12, 111);
+    newPdf.rect(20, 105, 90, 10).stroke();
+    newPdf.text('Date of the Event Planned',22, 111);
+    newPdf.rect(110, 105, 90, 10).stroke();
+    newPdf.text(date, 113, 111);//Event Date
+    
+    newPdf.rect(10, 115, 10, 10).stroke();
+    newPdf.text('6.', 12, 121);
+    newPdf.rect(20, 115, 90, 10).stroke();
+    newPdf.text('Venue',22, 121);
+    newPdf.rect(110, 115, 90, 10).stroke();
+    newPdf.text(`${data.event_venue}`, 113, 121);
+    
+    
+    newPdf.rect(10, 125, 10, 50).stroke();
+    newPdf.text('7.', 12, 149);
+    newPdf.rect(20, 125, 90, 50).stroke();
+    newPdf.text('Details of the Guest',22, 149);
+    
+    newPdf.rect(110, 125, 23, 10).stroke();
+    newPdf.text('Name', 111, 131);
+    newPdf.rect(133, 125,67, 10).stroke();
+    newPdf.text(`${data.guest_name}`, 135, 131);///Name of the Guest 
+    newPdf.rect(110, 135, 23, 10).stroke();
+    newPdf.text('Designation', 111, 141);
+    newPdf.rect(133, 135,67, 10).stroke();
+    newPdf.text(`${data.guest_designation }`, 135, 141);///Guest Designation
+    newPdf.rect(110, 145, 23, 10).stroke();
+    newPdf.text('Address', 111, 151);
+    newPdf.rect(133, 145,67, 10).stroke();
+    
+    const address1 = `${data.guest_address}`;
+    if(address1.length >=40)
+    {
+    //////////////////////////////////text//////////////////////////////
+    const x = 133;
+    let y = 145;
+    const address1 = `${data.guest_address}`;
+    const contentWidth = newPdf.getStringUnitWidth(address1) * 12; // Initial font size: 12
+    const contentHeight = newPdf.getTextDimensions(address1, { fontSize: 10}).h;
+    
+    // Determine font size to fit within specified dimensions
+    const maxWidth = 100; // Adjust based on your requirements
+    const maxHeight = 100; // Adjust based on your requirements
+    const fontSize = Math.min(10, (maxWidth / contentWidth) * 35, (maxHeight / contentHeight) * 35);
+     // Adjust the width as needed
+    // Set font size and add text to the PDF
+    newPdf.setFontSize(fontSize);
+    
+    console.log(contentHeight);
+    
+    const textLines = newPdf.splitTextToSize(address1, 60);
+    newPdf.rect(x , y , maxWidth-33  , maxHeight - 90);
+    newPdf.text(x+2, y+4, textLines);
+    }
+    else{
+      newPdf.setFontSize(12);
+      newPdf.text(`${data.guest_address}`, 135, 151);
+    }
+    
+    
+    newPdf.setFontSize(12);
+    newPdf.rect(110, 155, 23, 10).stroke();
+    newPdf.text('Contact No', 111, 161);
+    newPdf.rect(133, 155,67, 10).stroke();
+    newPdf.text(`${data.guest_phone_number}`, 135, 161);//Contact no
+    newPdf.rect(110, 165, 23, 10).stroke();
+    newPdf.text('Mail-id', 111, 171);
+    newPdf.rect(133, 165,67, 10).stroke();
+    newPdf.text(`${data.guest_email}`, 135, 171);/////Guest Mail id
+    
+    newPdf.rect(10, 175, 10, 30).stroke();
+    newPdf.text('8.', 12, 190);
+    newPdf.rect(20, 175, 90, 30).stroke();
+    newPdf.text('Total Participants expected',22, 190);
+    newPdf.setFontSize(10);
+    newPdf.rect(110, 175, 23, 10).stroke();
+    newPdf.text('MEC Students', 110.7, 182);
+    newPdf.rect(133, 175,67, 10).stroke();
+    newPdf.text(`${data.student_count}`, 135, 181);//Count of the Student
+    
+    newPdf.rect(110, 185, 23, 10).stroke();
+    newPdf.text('MEC Faculty', 110.7, 192);
+    newPdf.rect(133, 185,67, 10).stroke();
+    newPdf.text(`${data.faculty_count}`, 135, 191);//COunt of the Faculty
+    
+    newPdf.rect(110, 195, 23, 10).stroke();
+    newPdf.text('Others', 110.7, 201);
+    newPdf.rect(133, 195,67, 10).stroke();
+    newPdf.text(`${data.others_count}`, 135, 201);//Count of Others
+    newPdf.setFontSize(12);
+    newPdf.rect(10, 205, 10, 10).stroke();
+    newPdf.text('9.', 12, 211);
+    newPdf.rect(20, 205, 90, 10).stroke();
+    newPdf.text('Proposed Budget',22, 211);
+    newPdf.rect(110, 205, 90, 10).stroke();
+    newPdf.text(`\u20B9  ${data.event_budget}`, 113, 211);//Event Budget
+    
+    
+    
+    newPdf.rect(10, 215, 10, 10).stroke();
+    newPdf.text('10.', 12, 220);
+    newPdf.rect(20, 215, 180, 10).stroke();
+    newPdf.text('Co-ordinator of the Event',22, 220);
+    
+    newPdf.rect(10, 225, 80, 5).stroke();
+    newPdf.text('Name', 38, 229);
+    
+    newPdf.rect(90, 225, 60, 5).stroke();
+    newPdf.text('Designation', 108, 229);
+    
+    newPdf.rect(150, 225, 50, 5).stroke();
+    newPdf.text('Phone Number', 163, 229);
+    let dataArray = data.event_coordinator.split(",");
+    
+    // Extract only the names from the array
+    let namesArray = dataArray.map(item => {
+        // Split each item in the dataArray using '-' as the separator
+        let parts = item.split("-");
+        // Return the second part of the split (which contains the name)
+        return parts[1];
+    });
+    let xx=230;
+    for(let i=0;i<namesArray.length;i++){
+      newPdf.rect(10, xx+i*10, 80, 10).stroke();
+      newPdf.text(`${namesArray[i]}`, 14, xx+i*10+6);
+      // const fetchFacParticulars=async()=>{
+      //   try{ 
+      //     const temp=await axios.get(`http://10.167.1.2:1234/ecr/getFacultyParticulars/${namesArray[i]}`);
+      //     // console.log(temp.data.rows[0])
+      //     setFacPart(temp.data.rows[0])
+      //   }
+      //   catch(e){
+      //     console.log(e);
+      //     return null;
+         
+      //   }
+      // }
+      // fetchFacParticulars()
+      const temp=await axios.get(`http://10.167.1.2:1234/ecr/getFacultyParticulars/${namesArray[i]}`);
+    
+      if(temp.data.rows[0].designation){
+        newPdf.rect(90, xx+i*10, 60, 10).stroke();  
+        newPdf.text(`${JSON.stringify(temp.data.rows[0].designation)}`, 95, xx+i*10+6
+        );
+        newPdf.rect(150, xx+i*10, 50, 10).stroke();
+      newPdf.text(`${temp.data.rows[0].phone_number}`, 165, xx+i*10+6);
+      }
+      else{
+        newPdf.rect(90, xx+i*10, 60, 10).stroke();
+        newPdf.text('', 95, xx+i*10+6);
+        newPdf.rect(150, xx+i*10, 50, 10).stroke();
+        newPdf.text('', 165, xx+i*10+6);
+      }
+       
+      
+    
+      
+    //Designation of coordinator
+    }
+      
+    
+    
+    
+    
+    
+    // newPdf.rect(90, 240, 60, 10).stroke();
+    // newPdf.text('', 95, 246);//Designation of coordinator
+    
+    // newPdf.rect(150, 240, 50, 10).stroke();
+    // newPdf.text('', 165, 246);//Phone Number of coordinator
+    
+    
+    
+    // newPdf.rect(90, 250, 60, 10).stroke();
+    // newPdf.text('', 95, 256);//Designation of coordinator
+    
+    // newPdf.rect(150, 250, 50, 10).stroke();
+    // newPdf.text('', 165, 256);//Phone Number of coordinator
+    
+    
+    
+    try{
+        
+      newPdf.addImage(hod, 'JPEG', 15, 275, 15, 10);
+      newPdf.addImage(princi, 'JPEG', 150, 277, 25, 10);
+    }
+    catch(e){
+      console.log(e);
+    }
+    
+    
+    
+    
+    newPdf.setFont("calibri-bold","normal");
+    
+    newPdf.text('HoD', 15, 290);
+    
+    newPdf.text('Principal', 155, 290);
+  
+      // newPdf.addPage();
     // Generate a data URI for the PDF
     const pdfDataUri = newPdf.output('datauristring');
 
@@ -1284,156 +1387,280 @@ newPdf.text('Principal', 155, 290);
 
       } 
       
-      
+      const [selectedFile, setSelectedFile] = useState(null);
+
 
       const handleDownload1= async (table) => {
         try {
+          const doc = new jsPDF();
+          const generateCenteredText = (doc,text,fontsize,y,font,style,color)=>{
+            doc.setFontSize(fontsize);
+            const textwidth = (doc.getStringUnitWidth(text) * doc.internal.getFontSize())/2.83465;
+            const textcenter = (doc.internal.pageSize.width-textwidth)/2;
+            doc.setFont(font,style);
+            doc.setTextColor(color[0],color[1],color[2]);
+            doc.text(text,textcenter,y);
+          }
+
+          const centerTextInsideBox = (newPdf,word,rectxaxis,rectyaxis)=>{
+                const text = word;
+            var textwidth = newPdf.getTextDimensions(text).w;
+            var textheight = newPdf.getTextDimensions(text).h;
+            var rectWidth = textwidth + 5; // Adding some padding for better visibility
+            var rectHeight = textheight + 5;
+            var rectX = rectxaxis;
+            var rectY = rectyaxis;
+            newPdf.rect(rectX, rectY, rectWidth, rectHeight);
+            newPdf.text(word, rectX + rectWidth / 2, rectY + rectHeight / 2, { align: "center", baseline: "middle" });
+          }
           
+        
+          const handleFileChange = (event) => {
+            const file = event.target.files[0];
+            setSelectedFile(file);
+          };
           
-          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}/${table}`);
+          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
+          for (let key in data) {
+            if (data.hasOwnProperty(key) && (data[key] === null || data[key] === undefined || data[key] === '' )) {
+              // Set the value to 0 if it's null, empty, or NaN
+              data[key] = 0;
+            }
+          }
         //   var atten = `/Project_images/attendence.jpg`;
           const picture1 = `/Project_Images/${data.event_photo_1}.jpg`;
-          const picture2 = `/Project_Images/${data.event_photo_2}.jpg`;
-    
+          const picture2 = `/Project_Images/${data.event_photo_2_id}.jpg`;
+          const coordi = `/Project_Images/${data.coordinator_emp_id}.jpg`;
+          const hod = `/Project_Images/${data.lvl_1_proposal_sign}.jpg`;
+          const princi = `/Project_Images/${data.lvl_2_proposal_sign}.jpg`;
+       
+          let date;
+           const parts = `${data.event_date}`.split("-");
+           if(parts.length === 3){
+            date = `${parts[2]}-${parts[1]}-${parts[0]}`
+           }
+           console.log(date);
+
+      
+     
           const newPdf = new jsPDF();
          
-          const POs = `${data.event_po}`;
+          const POs = `${data.event_po}`;//
         //   console.log(data.event_po);
-          let arr=POs.split(",");
+        let arr = POs.replace(/\s/g, '').split(",");
         
            arr=arr.sort();
-        //    alert(arr[1]);
+        //    alert(arr[1]);c
            let pdfDocument;
+
            try{
             const pdfUrl = `/Pdf/${data.pdf}`;
             const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
-          const pdfData = pdfResponse.data;
+            const pdfData = pdfResponse.data;
     
          pdfDocument = await getDocument({ data: pdfData }).promise;
            }catch(e){
             console.log(e)
            }
 
-          const generateCenteredText = (doc,text,fontsize,y,font,style,color)=>{
-            newPdf.setFontSize(fontsize);
-            const textwidth = (newPdf.getStringUnitWidth(text) * newPdf.internal.getFontSize())/2.83465;
-            const textcenter = (newPdf.internal.pageSize.width-textwidth)/2;
-            newPdf.setFont(font,style);
-            newPdf.setTextColor(color[0],color[1],color[2]);
-            newPdf.text(text,textcenter,y);
-          }
+           let pdfDocument1;
+           
+           try{
+            const pdfUrl = `/requestMail/${data.reqMail}`;
+            const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
+            const pdfData = pdfResponse.data;
     
+         pdfDocument1 = await getDocument({ data: pdfData }).promise;
+           }catch(e){
+            console.log(e)
+           }
+
+           let pdfDocument2;
+           
+           try{
+            const pdfUrl = `/acceptMail/${data.accMail}`;
+            const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
+            const pdfData = pdfResponse.data;
     
-    //////////////////////////////////////////////// First Page ///////////////////////////
-    newPdf.addImage(Image, 'PNG', 10, 3, 20, 20);
-      newPdf.addImage(Image2, 'PNG', 12,23, 15, 15);
-      newPdf.addImage(Image3, 'JPG', 175, 3, 20, 15);
-      newPdf.addImage(Image4, 'JPG', 175, 20, 20, 15);
-      
-      newPdf.setFontSize(18);
-      newPdf.setFont("times", "bold");
-      newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
-      newPdf.setFontSize(10);
-      newPdf.setFont("times", "");
-      newPdf.text('(An Autonomous Institution)', 80, 20);
-      newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
-      newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
-      // newPdf.rect(10,40,20,7);
-      // newPdf.text('hello',15,45);
-      newPdf.setFontSize(12);
-      newPdf.setFont("times", "bold");
-      newPdf.rect(10, 40, 20, 7);
-      newPdf.text(`${data.event_organizer}`, 15, 45);//Department
-      newPdf.rect(70, 40, 65, 7);
-      newPdf.text('EVENT COMPLETION REPORT', 71  , 45);
+         pdfDocument2 = await getDocument({ data: pdfData }).promise;
+           }catch(e){
+            console.log(e)
+           }
 
-newPdf.rect(170, 40, 30, 7);
-newPdf.text(`   ${data.acd_yr}`, 173, 45);//Academic year
+           let pdfDocument3;
+           
+           try{
+            const pdfUrl = `/resPerson/${data.resPerson}`;
+            const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
+            const pdfData = pdfResponse.data;
+    
+         pdfDocument3 = await getDocument({ data: pdfData }).promise;
+           }catch(e){
+            console.log(e)
+           }
 
-newPdf.setFont("times","")
+           let pdfDocument4;
+           
+           try{
+            const pdfUrl = `/partiFeedback/${data.particiFeedback}`;
+            const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
+            const pdfData = pdfResponse.data;
+    
+         pdfDocument4 = await getDocument({ data: pdfData }).promise;
+           }catch(e){
+            console.log(e)
+           }
+
+           let pdfDocument5;
+           
+           try{
+            const pdfUrl = `/resProfile/${data.resProfile}`;
+            const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
+            const pdfData = pdfResponse.data;
+    
+         pdfDocument5 = await getDocument({ data: pdfData }).promise;
+           }catch(e){
+            console.log(e)
+           }
+
+           let pdfDocument6;
+           
+           try{
+            const pdfUrl = `/ppt/${data.ppt}`;
+            const pdfResponse = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
+            const pdfData = pdfResponse.data;
+    
+         pdfDocument6 = await getDocument({ data: pdfData }).promise;
+           }catch(e){
+            console.log(e)
+           }
+
+        
+          jsPDF.API.events.push(["addFonts", callAddFont]);
+          jsPDF.API.events.push(["addFonts", callAddBoldFont]);
+          newPdf.setFont("calibri-regular","normal");
+               
+    ////////////////////////////////////////////////////////
+newPdf.addImage(Image, 'PNG', 10, 3, 20, 20);
+newPdf.addImage(Image2, 'PNG', 12,25, 17, 10);
+newPdf.addImage(Image3, 'JPG', 175, 5, 22, 12);
+newPdf.addImage(Image4, 'JPG', 175, 20, 20, 14);
+newPdf.setFontSize(20);
+newPdf.setFont("calibri-bold", "normal");
+newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',45, 15);
 newPdf.setFontSize(10);
-newPdf.rect(10, 55, 10, 15).stroke();
-newPdf.text('1.', 12, 65);
-newPdf.rect(20, 55, 90, 15).stroke();
-newPdf.text('Nature of the Event:\nConference/Technical Symposium/Workshop/\nSeminar/Guest/Lecture/FDP/Any other',22, 61);
-newPdf.rect(110, 55, 90, 15).stroke();
-newPdf.text(`${data.sub_report}`, 113, 65);///Nature of the Event 
+newPdf.setFont("calibri-regular", "normal");
+newPdf.text('(An Autonomous Institution)', 85, 20);
+newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 43, 25);
+newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);
+newPdf.setFontSize(12);
+newPdf.setFont("calibri-bold", "normal");
+centerTextInsideBox(newPdf,`${data.dept}`,10,40);
+centerTextInsideBox(newPdf,'EVENT COMPLETION REPORT',80,40);
+// centerTextInsideBox(newPdf,`${data.acd_yr}`,170,40);
+
+newPdf.rect(180, 40, 20, 10).stroke();
+newPdf.text(`${data.acd_yr}`, 183, 46);
+newPdf.setFont("calibri-regular","normal")
 newPdf.setFontSize(11);
+newPdf.rect(10, 55, 10, 15).stroke();
+newPdf.text('1.', 13, 63);
+newPdf.rect(20, 55, 90, 15).stroke();
+newPdf.text('Nature of the Event:\nConference/Technical Symposium/Workshop/\nSeminar/Guest/Lecture/FDP/Any other',22, 59.5);
+newPdf.rect(110, 55, 90, 15).stroke();
+newPdf.setFontSize(11);
+newPdf.text(`${data.sub_report}`, 113, 64);///Nature of the Event 
+newPdf.setFontSize(12);
 
 
 newPdf.rect(10, 70, 10, 10).stroke();
-newPdf.text('2.', 12, 78);
+newPdf.text('2.', 13, 76.5);
 newPdf.rect(20, 70, 90, 10).stroke();
-newPdf.text('Title of the event',22, 78);
+newPdf.text('Title of the event',22, 76.5);
 newPdf.rect(110, 70, 90, 10).stroke();
-
 const event_title = `${data.event_title}`; 
 const title = newPdf.splitTextToSize(event_title, 80);
-newPdf.text(title, 113, 74);///Title of the Event
 
+
+if(event_title.length <=60)
+{
+  newPdf.text(event_title, 113, 76);
+}
+else{
+newPdf.setFontSize(10);
+const title = newPdf.splitTextToSize(event_title, 80);
+newPdf.text(title, 113, 74);///Title of the Event
+}
+
+
+newPdf.setFontSize(12);
 
 newPdf.rect(10, 80, 10, 10).stroke();
-newPdf.text('3.', 12, 88);
+newPdf.text('3.', 13, 86.5);
 newPdf.rect(20, 80, 90, 10).stroke();
-newPdf.text('Organized by',22, 88);
+newPdf.text('Organized by',22, 86.5);
 newPdf.rect(110, 80, 90, 10).stroke();
-newPdf.text(`${data.event_organizer}`, 113, 88);//Event Organizer
+newPdf.text(`${data.event_organizer}`, 113, 86.5);//Event Organizer
 
 
 
 newPdf.rect(10, 90, 10, 10).stroke();
-newPdf.text('4.', 12, 98);
+newPdf.text('4.', 13, 96.5);
 newPdf.rect(20, 90, 90, 10).stroke();
-newPdf.text('Collaboration/Sponsoring Agency',22, 98);
+newPdf.text('Collaboration/Sponsoring Agency',22, 96.5);
 newPdf.rect(110, 90, 90, 10).stroke();
-newPdf.text(`${data.event_sponsor}`, 113, 98);///Event Sponsor
+newPdf.text(`${data.event_sponsor}`, 113, 96.5);///Event Sponsor
 
 
 newPdf.rect(10, 100, 10, 10).stroke();
-newPdf.text('5.', 12, 108);
+newPdf.text('5.', 13, 106.5);
 newPdf.rect(20, 100, 90, 10).stroke();
-newPdf.text('Date of the Event Planned',22, 108);
+newPdf.text('Date of the Event Planned',22, 106.5);
 newPdf.rect(110, 100, 90, 10).stroke();
-newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`, 113, 108);////Date of the Event 
+newPdf.text(date, 113, 106.5);////Date of the Event 
 
 newPdf.rect(10, 110, 10, 10).stroke();
-newPdf.text('6.', 12, 118);
+newPdf.text('6.', 13, 116.5);
 newPdf.rect(20, 110, 90, 10).stroke();
-newPdf.text('Venue',22, 118);
+newPdf.text('Venue',22, 116.5);
 newPdf.rect(110, 110, 90, 10).stroke();
-newPdf.text(`${data.event_venue}`, 113, 118);//////Event Venue
+newPdf.text(`${data.event_venue}`, 113, 116.5);//////Event Venue
 
 
 newPdf.rect(10, 120, 10, 50).stroke();
-newPdf.text('7.', 12, 145);
+newPdf.text('7.', 13, 145);
 newPdf.rect(20, 120, 90, 50).stroke();
 newPdf.text('Details of the Guest',22, 145);
 
 newPdf.rect(110, 120, 23, 10).stroke();
-newPdf.text('Name', 111, 128);
+newPdf.text('Name', 111, 126.5);
 newPdf.rect(133, 120,67, 10).stroke();
-newPdf.text(`${data.guest_name}`, 135, 128);//Name of the Guest
+newPdf.text(`${data.guest_name}`, 135, 126.5);//Name of the Guest
 newPdf.rect(110, 130, 23, 10).stroke();
-newPdf.text('Designation', 111, 138);
+newPdf.text('Designation', 111, 136.5);
 newPdf.rect(133, 130,67, 10).stroke();
-newPdf.text(`${data.guest_designation}`, 135, 138);//////Designation
+newPdf.text(`${data.guest_designation}`, 135, 136.5);//////Designation
 newPdf.rect(110, 140, 23, 10).stroke();
 
-newPdf.text('Address', 111, 148);
+newPdf.text('Address', 111, 146.5);
 
+const address = `${data.guest_address}`;
+
+if(address.length >=40)
+{
 //////////////////////////////////text//////////////////////////////
 const x = 133;
 let y = 140;
 const address = `${data.guest_address}`;
 const contentWidth = newPdf.getStringUnitWidth(address) * 12; // Initial font size: 12
-const contentHeight = newPdf.getTextDimensions(address, { fontSize: 12 }).h;
+const contentHeight = newPdf.getTextDimensions(address, { fontSize: 10}).h;
 
 // Determine font size to fit within specified dimensions
 const maxWidth = 100; // Adjust based on your requirements
 const maxHeight = 100; // Adjust based on your requirements
-const fontSize = Math.min(12, (maxWidth / contentWidth) * 35, (maxHeight / contentHeight) * 35);
+const fontSize = Math.min(10, (maxWidth / contentWidth) * 35, (maxHeight / contentHeight) * 35);
  // Adjust the width as needed
 // Set font size and add text to the PDF
 newPdf.setFontSize(fontSize);
@@ -1442,52 +1669,62 @@ console.log(contentHeight);
 
 const textLines = newPdf.splitTextToSize(address, 60);
 newPdf.rect(x , y , maxWidth-33  , maxHeight - 90);
-newPdf.text(x+2, y+5, textLines);
+newPdf.text(x+2, y+4, textLines);
+}
+else{
+  newPdf.setFontSize(12);
+  newPdf.rect(133, 140,67, 10).stroke();
+  newPdf.text(`${data.guest_address}`, 135, 146.5);
+}
+
 // newPdf.rect(133, 140,67, 10).stroke();
 // newPdf.text(textLines,135, 145);/////Address
 newPdf.setFontSize(12);
 newPdf.rect(110, 150, 23, 10).stroke();
-newPdf.text('Contact No', 111, 158);
+newPdf.text('Contact No', 111, 156.5);
 newPdf.rect(133, 150,67, 10).stroke();
-newPdf.text(`${data.guest_phone_number}`, 135, 158);
+newPdf.text(`${data.guest_phone_number}`, 135, 156.5);//
 newPdf.rect(110, 160, 23, 10).stroke();
-newPdf.text('Mail-id', 111, 168);
+newPdf.text('Mail-id', 111, 166.5);
 newPdf.rect(133, 160,67, 10).stroke();
-newPdf.text(`${data.guest_email}`, 135, 168);
+newPdf.text(`${data.guest_email}`, 135, 166.5);
 
 newPdf.rect(10, 170, 10, 21).stroke();
-newPdf.text('8.', 12, 180);
+newPdf.text('8.', 13, 182);
 newPdf.rect(20, 170, 90, 21).stroke();
-newPdf.text('Total Participants expected',22, 180);
+newPdf.text('Total Participants expected',22, 182);
 
 newPdf.setFontSize(10);
 newPdf.rect(110, 170, 23, 7).stroke();
-newPdf.text('MEC Students', 110.5, 175);
+newPdf.text('MEC Students', 111, 175);
 newPdf.rect(133, 170,67, 7).stroke();
 newPdf.text(`${data.student_count}`, 135, 175);
 
 newPdf.rect(110, 177, 23, 7).stroke();
-newPdf.text('MEC Faculty', 110.5, 182);
+newPdf.text('MEC Faculty', 111, 182);
 newPdf.rect(133, 177,67, 7).stroke();
 newPdf.text(`${data.faculty_count}`, 135, 182);
 
 newPdf.rect(110, 184, 23, 7).stroke();
-newPdf.text('Others', 110.5, 189);
+newPdf.text('Others', 111, 189);
+
+
+
 newPdf.rect(133, 184,67, 7).stroke();
 newPdf.text(`${data.others_count}`, 135, 189);
 
 newPdf.setFontSize(11);
 newPdf.rect(10, 191, 10, 10).stroke();
-newPdf.text('9.', 12, 200);
+newPdf.text('9.', 13, 197.5);
 newPdf.rect(20, 191, 90, 10).stroke();
-newPdf.text('Proposed Budget\n (Attach Details in Annexure)',22, 195 );
+newPdf.text('Proposed Budget\n(Attach Details in Annexure)',22, 195 );
 newPdf.rect(110, 191, 90, 10).stroke();
-newPdf.text(`${data.event_budget}`, 113, 199);////Event Budget
+newPdf.text(`\u20B9 ${data.event_budget}`, 113, 197.5);////Event Budget
 
 newPdf.rect(10, 201, 100, 50).stroke();
-newPdf.addImage(picture1,"JPEG",17,205,85,45);
+newPdf.addImage(picture1,"JPEG",15,205,90,40);
 newPdf.rect(110, 201, 90, 50).stroke();
-newPdf.addImage(picture2,"JPEG",112,205,85,45);
+newPdf.addImage(picture2,"JPEG",115,205,80,40);
 
 newPdf.rect(10, 251, 190, 7).stroke();
 newPdf.text('POs and PSOs Mapping',90,255)
@@ -1518,42 +1755,73 @@ newPdf.text('PO11',132,264);
 newPdf.rect(142, 258, 12, 9).stroke()
 newPdf.text('PO12',144,264);
 newPdf.rect(154, 258, 15, 9).stroke()
-newPdf.text('PSO1',156,264);
+newPdf.text('PSO1',157,264);
 newPdf.rect(169, 258, 15, 9).stroke()
-newPdf.text('PSO2',171,264);
+newPdf.text('PSO2',172,264);
 newPdf.rect(184, 258, 16, 9).stroke()
-newPdf.text('PSO3',186,264);
+newPdf.text('PSO3',187,264);
 let x1=0;
 let y1=0;
 let j=0;
 // let size=arr.length();
-for(let i=0;i<12;i++){
-  let k=i+1;
-  let temp='PO'+k.toString();
-  if(i==0)
-  {
-    x1=x1+10;
-    y1=y1+13;
+
+// for(let i=0;i<12;i++){
+//   let k=i+1;
+//   let temp='PO'+k.toString();
+//   if(i==0)
+//   {
+//     x1=x1+10;
+//     y1=y1+13;
     
-  }
-  else{
-    x1=x1+12;
-    y1=y1+12;
+//   }
+//   else{
+//     x1=x1+12;
+//     y1=y1+12;
    
+//   }
+//   console.log(arr[j]+'-----'+temp);
+//   if(arr[j]==temp)
+//   {
+//     newPdf.rect(x1,267,12,9).stroke();
+//     newPdf.setFontSize(13)
+//     newPdf.text("X",y1+1,273);
+//     j++;
+//   }
+//   else{
+//     newPdf.rect(x1,267,12,9).stroke();
+//     newPdf.text('',y1+1,273);
+//   }
+// }
+// let j = 0; // Initialize j outside the loop
+console.log(arr)
+
+for (let i = 0; i < 12; i++) {
+  let temp = 'PO' + (i + 1).toString();
+  console.log(arr.includes(temp));
+
+  let found = arr.includes(temp);
+
+  if (i == 0) {
+    x1 = x1 + 10;
+    y1 = y1 + 13;
+  } else {
+    x1 = x1 + 12;
+    y1 = y1 + 12;
   }
-  console.log(arr[j]+'-----'+temp);
-  if(arr[j]===temp)
-  {
-    newPdf.rect(x1,267,12,9).stroke();
-    newPdf.setFontSize(13)
-    newPdf.text("X",y1,273);
-    j++;
-  }
-  else{
-    newPdf.rect(x1,267,12,9).stroke();
-    newPdf.text('',y1,273);
+
+  // console.log(arr[i]+ '-----' + temp);
+
+  if (found) {
+    newPdf.rect(x1, 267, 12, 9).stroke();
+    newPdf.setFontSize(13);
+    newPdf.text("X", y1 + 1, 273);
+  } else {
+    newPdf.rect(x1, 267, 12, 9).stroke();
+    newPdf.text('', y1 + 1, 273);
   }
 }
+
+
 
 // let j1=0;
 
@@ -1586,12 +1854,25 @@ newPdf.rect(169, 267, 15, 9).stroke();
 newPdf.rect(184, 267, 16, 9).stroke();
 
 
-newPdf.setFont("times");
-newPdf.setFontSize(8);
 
 // newPdf.text('* Attach enclosures', 15, 280);
-newPdf.setFont("times","bold");
+newPdf.setFont("calibri-bold","normal");
 newPdf.setFontSize(11);
+newPdf.addImage(coordi, 'JPEG', 13, 283, 25, 10);
+
+try{
+    
+
+    
+  newPdf.addImage(princi, 'JPEG', 163, 283, 25, 10);
+
+  newPdf.addImage(hod, 'JPEG', 100, 280, 15, 10);
+
+}
+catch(e){
+  console.log(e);
+}
+
 newPdf.text('HoD', 100, 295);
 newPdf.text('Event Coordinator(s)', 10, 295);
 newPdf.text('Principal', 170, 295);
@@ -1601,30 +1882,30 @@ newPdf.text('Principal', 170, 295);
 
 newPdf.addPage();
 newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
-newPdf.addImage(Image2, 'PNG', 173, 7, 25, 25);
-newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
-newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
+newPdf.addImage(Image2, 'PNG', 173, 9, 25, 19);
+
+newPdf.setFontSize(20);
+newPdf.setFont("calibri-bold", "normal");
+newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',45, 15);
 newPdf.setFontSize(10);
-newPdf.setFont("times", "");
-newPdf.text('(An Autonomous Institution)', 80, 20);
-newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
-newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
+newPdf.setFont("calibri-regular", "normal");
+newPdf.text('(An Autonomous Institution)', 85, 20);
+newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 43, 25);
+newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);
 
  
 newPdf.setFontSize(13);
-newPdf.setFont('times', 'bold');
+newPdf.setFont('calibri-bold', "normal");
 newPdf.text("ECR-Enclosures", 90, 40);
 newPdf.text("Name of the Event:", 10, 50);
-newPdf.setFont('times', '');
-let arr1=data.sub_report.split('-');
-
-newPdf.text(`${arr1.reverse()}`, 50, 50); //name of the event
-newPdf.setFont('times', 'bold');
+newPdf.setFont('calibri-regular', "normal");
+newPdf.text(`${data.event_title}`, 50, 50); //name of the event
+newPdf.setFont('calibri-bold', 'normal');
 newPdf.text("Date of the Event Conducted:", 10, 57);
-newPdf.setFont('times', '');
-newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`, 70, 57); //Date
+newPdf.setFont("calibri-regular", "normal");
+newPdf.text(date, 70, 57); //Date
 
+newPdf.setFont("calibri-bold", "normal");
 newPdf.rect(10, 65, 10, 10).stroke();
 newPdf.text('S.no', 11, 71);
 newPdf.rect(20, 65, 90, 10).stroke();
@@ -1632,7 +1913,7 @@ newPdf.text('Description', 50, 71);
 newPdf.rect(110, 65, 90, 10).stroke();
 newPdf.text('Please tick Enclosure', 140, 71);
 
-newPdf.setFont('times', '');
+newPdf.setFont('calibri-regular', 'normal');
 newPdf.rect(10, 75, 10, 10).stroke();
 newPdf.text('1.', 13, 81);
 newPdf.rect(20, 75, 90, 10).stroke();
@@ -1752,45 +2033,57 @@ newPdf.rect(20, 235, 90, 10).stroke();
 newPdf.text('One PPT slide about the program', 22, 241);
 newPdf.rect(110, 235, 90, 10).stroke();
 newPdf.text('', 155, 241);
+newPdf.addImage(coordi, 'JPEG', 15, 255, 25, 10);
 
-newPdf.setFont('times', 'bold');
+try{
+    
+  newPdf.addImage(hod, 'JPEG', 155, 255, 15, 10);
+}
+catch(e){
+  console.log(e);
+}
+
+newPdf.setFont('calibri-bold', 'normal');
 newPdf.text('Event Coordinator', 20, 267);
 newPdf.text('HoD', 160, 267);
 ///////////////////////////////////////////Event Proposal //////////////////////////////
 newPdf.addPage();
       newPdf.addImage(Image, 'PNG', 10, 3, 20, 20);
-  newPdf.addImage(Image2, 'PNG', 12,23, 15, 15);
-  newPdf.addImage(Image3, 'JPG', 175, 3, 20, 15);
-newPdf.addImage(Image4, 'JPG', 175, 20, 20, 15);
+  newPdf.addImage(Image2, 'PNG', 12,25, 17, 10);
+  newPdf.addImage(Image3, 'JPG', 175, 5, 22, 12);
+  newPdf.addImage(Image4, 'JPG', 175, 20, 20, 14);
 
-newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
-newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
-newPdf.setFontSize(10);
-newPdf.setFont("times", "");
-newPdf.text('(An Autonomous Institution)', 80, 20);
-newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
-newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
+  newPdf.setFontSize(20);
+  newPdf.setFont("calibri-bold", "normal");
+  newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',45, 15);
+  newPdf.setFontSize(10);
+  newPdf.setFont("calibri-regular", "normal");
+  newPdf.text('(An Autonomous Institution)', 85, 20);
+  newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 43, 25);
+  newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);
+  
 
 
 newPdf.setFontSize(12);
-newPdf.setFont("times", "bold");
-newPdf.rect(10, 40, 20, 7);
-newPdf.text(`${data.event_organizer}`, 15, 45);///Department
-
+newPdf.setFont("calibri-bold", "normal");
+// newPdf.rect(10, 40, 20, 7);
+// newPdf.text(`${data.event_organizer}`, 15, 45);///Department
+centerTextInsideBox(newPdf,`${data.dept}`,10,40);
 newPdf.rect(80, 40, 50, 7);
-newPdf.text('EVENT PROPOSAL', 85, 45);
+newPdf.text('EVENT PROPOSAL', 90, 45);
+newPdf.rect(180, 40, 20, 10).stroke();
+newPdf.text(`${data.acd_yr}`, 183, 46);
+// centerTextInsideBox(newPdf,`${data.acd_yr}`,170,40);
 
-newPdf.rect(170, 40, 30, 7);
-newPdf.text(`${data.acd_yr}`, 173, 45);//academic year
 
-newPdf.setFont("times","")
+
+newPdf.setFont("calibri-regular","normal")
 newPdf.rect(10, 55, 10, 20).stroke();
 newPdf.text('1.', 12, 65);
 newPdf.rect(20, 55, 90, 20).stroke();
 newPdf.text('Nature of the Event:\nConference/Technical Symposium/Workshop/\nSeminar/Guest/Lecture/FDP/Any other',22, 61);
 newPdf.rect(110, 55, 90, 20).stroke();
-newPdf.text(`${data.sub_report}`, 113, 65);//Nature of the Event
+newPdf.text(`${data.sub_report}`, 113, 66);//Nature of the Event
 
 
 newPdf.rect(10, 75, 10, 10).stroke();
@@ -1798,9 +2091,21 @@ newPdf.text('2.', 12, 81);
 newPdf.rect(20, 75, 90, 10).stroke();
 newPdf.text('Title of the event',22, 81);
 newPdf.rect(110, 75, 90, 10).stroke();
-newPdf.text(`${data.event_title}`, 113, 81);//Event Title
+
+if(event_title.length <=60)
+{
+  newPdf.text(event_title, 113, 81);
+}
+else{
+newPdf.setFontSize(10);
+const title = newPdf.splitTextToSize(event_title, 80);
+newPdf.text(title, 113, 74);///Title of the Event
+}
 
 
+
+
+newPdf.setFontSize(12);
 newPdf.rect(10, 85, 10, 10).stroke();
 newPdf.text('3.', 12, 91);
 newPdf.rect(20, 85, 90, 10).stroke();
@@ -1823,7 +2128,7 @@ newPdf.text('5.', 12, 111);
 newPdf.rect(20, 105, 90, 10).stroke();
 newPdf.text('Date of the Event Planned',22, 111);
 newPdf.rect(110, 105, 90, 10).stroke();
-newPdf.text(`${data.proposal_date}`, 113, 111);//Event Date
+newPdf.text(date, 113, 111);//Event Date
 
 newPdf.rect(10, 115, 10, 10).stroke();
 newPdf.text('6.', 12, 121);
@@ -1834,9 +2139,9 @@ newPdf.text(`${data.event_venue}`, 113, 121);
 
 
 newPdf.rect(10, 125, 10, 50).stroke();
-newPdf.text('7.', 12, 141);
+newPdf.text('7.', 12, 149);
 newPdf.rect(20, 125, 90, 50).stroke();
-newPdf.text('Details of the Guest',22, 141);
+newPdf.text('Details of the Guest',22, 149);
 
 newPdf.rect(110, 125, 23, 10).stroke();
 newPdf.text('Name', 111, 131);
@@ -1849,11 +2154,42 @@ newPdf.text(`${data.guest_designation }`, 135, 141);///Guest Designation
 newPdf.rect(110, 145, 23, 10).stroke();
 newPdf.text('Address', 111, 151);
 newPdf.rect(133, 145,67, 10).stroke();
-newPdf.text(textLines, 135, 149);//Guest Address
+
+const address1 = `${data.guest_address}`;
+if(address1.length >=40)
+{
+//////////////////////////////////text//////////////////////////////
+const x = 133;
+let y = 145;
+const address1 = `${data.guest_address}`;
+const contentWidth = newPdf.getStringUnitWidth(address1) * 12; // Initial font size: 12
+const contentHeight = newPdf.getTextDimensions(address1, { fontSize: 10}).h;
+
+// Determine font size to fit within specified dimensions
+const maxWidth = 100; // Adjust based on your requirements
+const maxHeight = 100; // Adjust based on your requirements
+const fontSize = Math.min(10, (maxWidth / contentWidth) * 35, (maxHeight / contentHeight) * 35);
+ // Adjust the width as needed
+// Set font size and add text to the PDF
+newPdf.setFontSize(fontSize);
+
+console.log(contentHeight);
+
+const textLines = newPdf.splitTextToSize(address1, 60);
+newPdf.rect(x , y , maxWidth-33  , maxHeight - 90);
+newPdf.text(x+2, y+4, textLines);
+}
+else{
+  newPdf.setFontSize(12);
+  newPdf.text(`${data.guest_address}`, 135, 151);
+}
+
+
+newPdf.setFontSize(12);
 newPdf.rect(110, 155, 23, 10).stroke();
 newPdf.text('Contact No', 111, 161);
 newPdf.rect(133, 155,67, 10).stroke();
-newPdf.text(`${data.guest_mobile_number}`, 135, 161);//Contact no
+newPdf.text(`${data.guest_phone_number}`, 135, 161);//Contact no
 newPdf.rect(110, 165, 23, 10).stroke();
 newPdf.text('Mail-id', 111, 171);
 newPdf.rect(133, 165,67, 10).stroke();
@@ -1863,28 +2199,28 @@ newPdf.rect(10, 175, 10, 30).stroke();
 newPdf.text('8.', 12, 190);
 newPdf.rect(20, 175, 90, 30).stroke();
 newPdf.text('Total Participants expected',22, 190);
-
+newPdf.setFontSize(10);
 newPdf.rect(110, 175, 23, 10).stroke();
-newPdf.text('MEC\nStudents', 110.5, 179);
+newPdf.text('MEC Students', 110.7, 182);
 newPdf.rect(133, 175,67, 10).stroke();
 newPdf.text(`${data.student_count}`, 135, 181);//Count of the Student
 
 newPdf.rect(110, 185, 23, 10).stroke();
-newPdf.text('MEC\nFaculty', 110.5, 189);
+newPdf.text('MEC Faculty', 110.7, 192);
 newPdf.rect(133, 185,67, 10).stroke();
 newPdf.text(`${data.faculty_count}`, 135, 191);//COunt of the Faculty
 
 newPdf.rect(110, 195, 23, 10).stroke();
-newPdf.text('Others', 110.5, 201);
+newPdf.text('Others', 110.7, 201);
 newPdf.rect(133, 195,67, 10).stroke();
 newPdf.text(`${data.others_count}`, 135, 201);//Count of Others
-
+newPdf.setFontSize(12);
 newPdf.rect(10, 205, 10, 10).stroke();
 newPdf.text('9.', 12, 211);
 newPdf.rect(20, 205, 90, 10).stroke();
 newPdf.text('Proposed Budget',22, 211);
 newPdf.rect(110, 205, 90, 10).stroke();
-newPdf.text(`${data.event_budget}`, 113, 211);//Event Budget
+newPdf.text(`\u20B9  ${data.event_budget}`, 113, 211);//Event Budget
 
 
 
@@ -1893,52 +2229,444 @@ newPdf.text('10.', 12, 220);
 newPdf.rect(20, 215, 180, 10).stroke();
 newPdf.text('Co-ordinator of the Event',22, 220);
 
-newPdf.rect(10, 225, 70, 5).stroke();
-newPdf.text('Name', 35, 229);
+newPdf.rect(10, 225, 80, 5).stroke();
+newPdf.text('Name', 38, 229);
 
-newPdf.rect(80, 225, 60, 5).stroke();
-newPdf.text('Designation', 100, 229);
+newPdf.rect(90, 225, 60, 5).stroke();
+newPdf.text('Designation', 108, 229);
 
-newPdf.rect(140, 225, 60, 5).stroke();
-newPdf.text('Phone Number', 155, 229);
+newPdf.rect(150, 225, 50, 5).stroke();
+newPdf.text('Phone Number', 163, 229);
+let dataArray = data.event_coordinator.split(",");
 
-newPdf.rect(10, 230, 70, 10).stroke();
-newPdf.text(`${data.faculty_name}`, 12, 235);//coordinator Name
+// Extract only the names from the array
+let namesArray = dataArray.map(item => {
+    // Split each item in the dataArray using '-' as the separator
+    let parts = item.split("-");
+    // Return the second part of the split (which contains the name)
+    return parts[1];
+});
+let xx=230;
+for(let i=0;i<namesArray.length;i++){
+  newPdf.rect(10, xx+i*10, 80, 10).stroke();
+  newPdf.text(`${namesArray[i]}`, 14, xx+i*10+6);
+  // const fetchFacParticulars=async()=>{
+  //   try{ 
+  //     const temp=await axios.get(`http://10.167.1.2:1234/ecr/getFacultyParticulars/${namesArray[i]}`);
+  //     // console.log(temp.data.rows[0])
+  //     setFacPart(temp.data.rows[0])
+  //   }
+  //   catch(e){
+  //     console.log(e);
+  //     return null;
+     
+  //   }
+  // }
+  // fetchFacParticulars()
+  const temp=await axios.get(`http://10.167.1.2:1234/ecr/getFacultyParticulars/${namesArray[i]}`);
 
-newPdf.rect(80, 230, 60, 10).stroke();
-newPdf.text(` ${data.designation}`, 83, 235);//coordinator Desgination
+  if(temp.data.rows[0].designation){
+    newPdf.rect(90, xx+i*10, 60, 10).stroke();  
+    newPdf.text(`${JSON.stringify(temp.data.rows[0].designation)}`, 95, xx+i*10+6
+    );
+    newPdf.rect(150, xx+i*10, 50, 10).stroke();
+  newPdf.text(`${temp.data.rows[0].phone_number}`, 165, xx+i*10+6);
+  }
+  else{
+    newPdf.rect(90, xx+i*10, 60, 10).stroke();
+    newPdf.text('', 95, xx+i*10+6);
+    newPdf.rect(150, xx+i*10, 50, 10).stroke();
+    newPdf.text('', 165, xx+i*10+6);
+  }
+   
+  
 
-newPdf.rect(140, 230, 60, 10).stroke();
-newPdf.text(``, 142, 235);//coordinator Phone_num
-
-newPdf.rect(10, 240, 70, 10).stroke();
-newPdf.text('', 35, 229);//coordinator Name
-
-newPdf.rect(80, 240, 60, 10).stroke();
-newPdf.text('', 100, 229);//cordinator  Desgination
-
-newPdf.rect(140, 240, 60, 10).stroke();
-newPdf.text('', 155, 229);//coordinator Phone_num
-
-newPdf.rect(10, 250, 70, 10).stroke();
-newPdf.text('', 35, 229);//coordinator Name
-
-newPdf.rect(80, 250, 60, 10).stroke();
-newPdf.text('', 100, 229);//coordinator Desgination
-
-newPdf.rect(140, 250, 60, 10).stroke();
-newPdf.text('', 155, 229);//coordinator 
+  
+//Designation of coordinator
+}
+  
 
 
-// newPdf.rect(140, 230, 60, 35).stroke();newPdf.setFont("times","bold");
+
+
+
+// newPdf.rect(90, 240, 60, 10).stroke();
+// newPdf.text('', 95, 246);//Designation of coordinator
+
+// newPdf.rect(150, 240, 50, 10).stroke();
+// newPdf.text('', 165, 246);//Phone Number of coordinator
+
+
+
+// newPdf.rect(90, 250, 60, 10).stroke();
+// newPdf.text('', 95, 256);//Designation of coordinator
+
+// newPdf.rect(150, 250, 50, 10).stroke();
+// newPdf.text('', 165, 256);//Phone Number of coordinator
+
+
+
+try{
+    
+  newPdf.addImage(hod, 'JPEG', 15, 275, 15, 10);
+  newPdf.addImage(princi, 'JPEG', 150, 277, 25, 10);
+}
+catch(e){
+  console.log(e);
+}
+
+
+
+
+newPdf.setFont("calibri-bold","normal");
 
 newPdf.text('HoD', 15, 290);
 
 newPdf.text('Principal', 155, 290);
 
-      
-     try{
+///////////////////////////////////reqmail////////////////////////////////////////////
+try{ 
+  // Add pages from the original PDF
 
+  for (let pageNumber = 1; pageNumber <= pdfDocument1.numPages; pageNumber++) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const pdfWidth = page.view[2];
+    const pdfHeight = page.view[3];
+
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = pdfWidth;
+    canvas.height = pdfHeight;
+
+    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    try{newPdf.addPage();
+    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+    }catch(error){
+      console.error(error);
+    }
+  }
+}
+catch(e){
+  console.log(e);
+}
+
+///////////////////////////////////////accMail//////////////////////////////////////
+try{ 
+  // Add pages from the original PDF
+  for (let pageNumber = 1; pageNumber <= pdfDocument2.numPages; pageNumber++) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const pdfWidth = page.view[2];
+    const pdfHeight = page.view[3];
+
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = pdfWidth;
+    canvas.height = pdfHeight;
+
+    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    try{newPdf.addPage();
+    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+    }catch(error){
+      console.error(error);
+    }
+  }
+}
+catch(e){
+  console.log(e);
+}
+/////////////////////////////////////resProfile////////////////////////// /////////////
+try{ 
+  // Add pages from the original PDF
+  for (let pageNumber = 1; pageNumber <= pdfDocument5.numPages; pageNumber++) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const pdfWidth = page.view[2];
+    const pdfHeight = page.view[3];
+
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = pdfWidth;
+    canvas.height = pdfHeight;
+
+    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    try{newPdf.addPage();
+    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+    }catch(error){
+      console.error(error);
+    }
+  }
+}
+catch(e){
+  console.log(e);
+}
+    
+      // newPdf.addPage();
+      /////////////////////////////////////////////// BUDGET PROPOSAL //////////////////////////
+      newPdf.addPage();
+      newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
+      newPdf.addImage(Image2, 'PNG', 173, 9, 25, 19);
+      
+      newPdf.setFontSize(20);
+      newPdf.setFont("calibri-bold", "normal");
+      newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',45, 15);
+      newPdf.setFontSize(10);
+      newPdf.setFont("calibri-regular", "normal");
+      newPdf.text('(An Autonomous Institution)', 85, 20);
+      newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 43, 25);
+      newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);
+newPdf.setFont("calibri-bold", "normal");
+// newPdf.setFontSize(12);
+// newPdf.text('Budget Proposal', 100, 45);
+generateCenteredText(newPdf,'Budget Proposal',12,45,'calibri-bold','normal',[0,0,0]);
+newPdf.setFontSize(12);
+newPdf.text('Date of the Event:', 15, 60);
+newPdf.setFont("calibri-regular", "normal"); 
+newPdf.text(date,50, 60);
+newPdf.setFont("calibri-regular", "normal"); 
+newPdf.setFontSize(10);
+newPdf.text('To the Management through Principal', 15, 67);
+newPdf.setFontSize(12);
+newPdf.setFont("calibri-bold", "normal");
+newPdf.text('Total Paticipants:', 15, 90);
+newPdf.setFont("calibri-regular", "normal");
+newPdf.text(`${data.student_count}`, 49, 90);
+
+newPdf.setFont("calibri-bold", "normal");
+newPdf.rect(15, 100, 15, 12).stroke();
+newPdf.text('S.no', 17, 106);
+newPdf.rect(30, 100, 125, 12).stroke();
+newPdf.text('Details', 75, 106);
+newPdf.rect(155, 100, 45, 12).stroke();
+newPdf.text('Cost (in Rs)', 157, 106);
+newPdf.setFont("calibri-regular", "normal");
+newPdf.rect(15, 112, 15, 12).stroke();
+newPdf.text('1.', 19, 120);
+newPdf.rect(30, 112, 125, 12).stroke();
+newPdf.text('Overall Budget', 35, 120);
+newPdf.rect(155, 112, 45, 12).stroke();
+newPdf.text(`\u20B9  ${data.event_budget}`, 157, 120);// budget amount
+newPdf.rect(15, 124, 15, 12).stroke();
+newPdf.text('', 19, 132);
+newPdf.rect(30, 124, 125, 12).stroke();
+newPdf.text('Total', 35, 132);
+newPdf.rect(155, 124, 45, 12).stroke();
+newPdf.text(`\u20B9  ${data.event_budget}`, 157, 132);// total budget amount
+newPdf.rect(15, 136, 185, 12).stroke();
+newPdf.setFont("calibri-bold", "normal");
+newPdf.text('In Words:', 19, 144);
+newPdf.setFont("calibri-regular", "normal");
+newPdf.text(`${test(data.event_budget)+' only'}`,37,144);//In words budget
+newPdf.setFontSize(12);
+newPdf.setFont('calibri-bold','normal');
+newPdf.addImage(coordi, 'JPEG', 10, 220, 25, 10);
+
+
+try{
+    
+  newPdf.addImage(hod, 'JPEG', 100, 220, 15, 10);
+  newPdf.addImage(princi, 'JPEG', 167, 220, 25, 10);
+}
+catch(e){
+  console.log(e);
+}
+
+
+newPdf.text('Event Coordinator(s)', 15, 234);
+newPdf.text('HoD', 100, 234);
+newPdf.text('Principal', 167, 234);
+
+/////////////////////////////////////////////////EventPlanner/////////////////////////////////////////////
+
+newPdf.addPage();
+newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
+newPdf.addImage(Image2, 'PNG', 173, 9, 25, 19);
+
+newPdf.setFontSize(20);
+newPdf.setFont("calibri-bold", "normal");
+newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',45, 15);
+newPdf.setFontSize(10);
+newPdf.setFont("calibri-regular", "normal");
+newPdf.text('(An Autonomous Institution)', 85, 20);
+newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 43, 25);
+newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);;
+
+newPdf.setFontSize(13);
+newPdf.setFont('calibri-regular', 'normal');
+generateCenteredText(newPdf,'Event Planner',15,40,'calibri-bold','normal',[0,0,0]);
+
+generateCenteredText(newPdf,`Department of ${data.department}`,18,50,'calibri-bold','normal',[0,0,0]);
+newPdf.setFontSize(14);
+newPdf.setFont('calibri-bold', 'normal');
+newPdf.rect(15,58,60,10).stroke();
+newPdf.text('Event Date: ',21,65);
+newPdf.setFont('calibri-regular', 'normal');
+newPdf.text(date,47,65);////Event Date
+newPdf.setFont('calibri-bold', 'normal'); 
+// centerTextInsideBox(newPdf,`${data.acd_yr}`,175,58);///Academic Year
+
+newPdf.rect(175, 58, 25, 10).stroke();
+newPdf.text(`${data.acd_yr}`, 179, 65);
+
+
+
+newPdf.setFont('calibri-regular', 'normal');
+var plan = '\nThis is to inform the Faculty member that,the following committees have been formed for smooth conductance of '+`${data.sub_report}`+' has organize by our Department of '+`${data.department}`+' and ,the commitee member are requested to carry out their resposibilities to perfection.';
+const planner = newPdf.splitTextToSize(plan,150);
+newPdf.text(planner,30,75);
+newPdf.setFont('calibri-bold', 'normal');
+newPdf.rect(15,110,15,12).stroke()
+newPdf.text('S.NO',17,117)
+newPdf.rect(30,110,70,12).stroke();
+newPdf.text('Name of the committee',40,117)
+newPdf.rect(100,110,60,12).stroke()
+newPdf.text('In charge(s)',110,117)
+newPdf.rect(160,110,40,12).stroke()
+newPdf.text('Remark',170,117)
+newPdf.setFont('calibri-regular', 'normal');
+newPdf.rect(15,122,15,15).stroke()
+newPdf.text('1',19,129)
+newPdf.rect(30,122,70,15).stroke()
+newPdf.text('Organization Secretary',34,130)
+
+
+try{
+  const names = data.event_organizing_secretary.split(',').map(entry => {
+    const [code, name] = entry.split('-');
+    return { name };
+  });
+  
+  const fontsize = 12;
+  const textX = 105;
+  let textY = 128;
+
+  names.forEach(entry => {
+  
+    if(names.length==1){
+      newPdf.text(entry.name, textX, 130);
+      textY += 5;
+    }
+    else{
+  newPdf.text(entry.name, textX, textY);
+    textY += 5;
+    } // Move to the next line
+  });
+ 
+  const textx = 105;
+  let texty = 143;
+  names.forEach(entry => {
+  
+    if(names.length==1){
+      newPdf.text(entry.name, textx, 146);
+      
+    }
+    else{
+  newPdf.text(entry.name, textx, texty);
+    texty += 5;
+    } // Move to the next line
+  });
+
+
+
+
+}
+catch(e){
+  console.log(e);
+}
+
+
+
+newPdf.rect(100,122,60,15).stroke()
+// newPdf.text(`${data.event_organizing_secretary}`,103,130)//////Event Organization seretary
+newPdf.rect(160,122,40,32).stroke()
+newPdf.text('',163,130)//event_organizing_secretary
+
+newPdf.rect(15,137,15,17).stroke()
+newPdf.text('2',19,144)
+newPdf.rect(30,137,70,17).stroke()
+newPdf.text('Permission & Report Preparation \nInvitation Flux Designing',33,143)
+newPdf.rect(100,137,60,17).stroke()
+// newPdf.text(`${data.event_organizing_secretary}`,103,146)////Event Report Preparation
+
+
+
+
+newPdf.setFont('calibri-bold', 'normal');
+newPdf.addImage(coordi, 'JPEG', 30, 205, 25, 10);
+
+try{
+    
+  newPdf.addImage(hod, 'JPEG', 170, 205, 15, 10);
+
+}
+catch(e){
+  console.log(e);
+}
+newPdf.text('Coordinator',30,220)
+newPdf.text('HoD',170,220)
+
+
+//////////////////////////////////////////////// Invitation ////////////////////////////////////////
+newPdf.addPage();
+newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
+newPdf.addImage(Image2, 'PNG', 173, 9, 25, 19);
+
+newPdf.setFontSize(20);
+newPdf.setFont("calibri-bold", "normal");
+newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',45, 15);
+newPdf.setFontSize(10);
+newPdf.setFont("calibri-regular", "normal");
+newPdf.text('(An Autonomous Institution)', 85, 20);
+newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 43, 25);
+newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);
+    generateCenteredText(newPdf,`Department of ${data.department}`,15,45,'calibri-regular','normal',[254,0,102]);
+    generateCenteredText(newPdf,'in Association with',12,51,'calibri-regular','normal',[151, 92, 203]);
+    generateCenteredText(newPdf,'',15,55,'calibri-regular','normal',[151, 92, 203]);
+    generateCenteredText(newPdf,'The Management, Principal, Faculty and Students Cardially Invite you to the',14,65,'calibri-regular','normal',[0, 0, 255]);
+    generateCenteredText(newPdf,`${data.sub_report}`,16,75,'calibri-regular','normal',[150, 6, 6]);
+    generateCenteredText(newPdf,'On',14,81,'calibri-regular','normal',[202, 37, 197]);
+    generateCenteredText(newPdf,`${data.event_title}`,17,88,'calibri-regular','normal',[202, 37, 197]);
+    generateCenteredText(newPdf,'Resource Person',16,95,'calibri-regular','normal',[150,6,6]);
+    generateCenteredText(newPdf,`${data.guest_name}`,17,105,'calibri-regular','normal',[0, 0, 153]);
+    generateCenteredText(newPdf,`${data.guest_designation}`,15,112,'calibri-regular','normal',[0, 102, 0]);
+    generateCenteredText(newPdf,'Dr.K.Gunasekaran',17,125,'calibri-regular','normal',[0, 0, 153]);/////Secretary
+    generateCenteredText(newPdf,'Secretary & Managing Trustee ',15,132,'calibri-regular','normal',[0, 102, 0]);
+    generateCenteredText(newPdf,'Muthayammal Educational Trust and Research Foundation ',15,138,'calibri-regular','normal',[0, 102, 0]);
+    generateCenteredText(newPdf,'will preside over the function',15,144,'calibri-regular','normal',[0, 102, 0]);
+    generateCenteredText(newPdf,'Dr.M. Madheshwaran',17,157,'calibri-regular','normal',[0, 0, 153]);/////Principal
+    generateCenteredText(newPdf,'Principal',15,164,'calibri-regular','normal',[0, 102, 0]);
+    generateCenteredText(newPdf,'Muthayammal Engineering College',15,170,'calibri-regular','normal',[0, 102, 0]);
+    generateCenteredText(newPdf,'will feliciate the function',15,176,'calibri-regular','normal',[0, 102, 0]);
+    const t=data.event_organizing_secretary.split("-");
+    generateCenteredText(newPdf,`${t[1]}`,17,190,'calibri-regular','normal',[0, 0, 153]);/////HoD
+    generateCenteredText(newPdf,'HoD - '+`${data.dept}`,15,197,'calibri-regular','normal',[0, 102, 0]);
+    generateCenteredText(newPdf,'Will Welcome The Gathering',15,203,'calibri-regular','normal',[0, 102, 0]);
+    generateCenteredText(newPdf,'Time: '+`${data.event_time}`,12,220,'calibri-regular','normal',[180, 0, 0]);//////Time of the Event
+    
+    newPdf.setFont('calibri-regular','normal');
+    newPdf.setFontSize(12);
+    newPdf.setTextColor(180, 0, 0);
+    newPdf.text('Date:',15,220);
+    newPdf.text(date,26,220);////// Date of the Event
+    newPdf.text('Venue:',150,220);////////Venue
+    const venue = `${data.event_venue}`;
+    const venueline = doc.splitTextToSize(venue, 50);//////////////Venue Variable store
+    newPdf.text(165,220,venueline);
+    //////////////// Last Left Green wordings /////
+    newPdf.setFont('calibri-regular','normal');
+    newPdf.setFontSize(14);
+    newPdf.setTextColor(0,102,0);
+    newPdf.text('',15,245);
+    newPdf.text('HoD - '+`${data.dept}`,15,250);//hod dept
+    newPdf.text('Co-Ordinator',15,255);
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    try{ 
       // Add pages from the original PDF
       for (let pageNumber = 1; pageNumber <= pdfDocument.numPages; pageNumber++) {
         const page = await pdfDocument.getPage(pageNumber);
@@ -1953,259 +2681,134 @@ newPdf.text('Principal', 155, 290);
         await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
 
         const imageDataUrl = canvas.toDataURL('image/jpeg');
-        newPdf.addPage();
+        try{newPdf.addPage();
         newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+        }catch(error){
+          console.error(error);
+        }
       }
     }
     catch(e){
-        console.log(e)
+      console.log(e);
     }
-      /////////////////////////////////////////////// BUDGET PROPOSAL //////////////////////////
-newPdf.addPage();
-newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
-newPdf.addImage(Image2, 'PNG', 173, 7, 25, 25);
-newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
-newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
-newPdf.setFontSize(10);
-newPdf.setFont("times", "");
-newPdf.text('(An Autonomous Institution)', 80, 20);
-newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
-newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
-newPdf.setFont("times", "bold");
-newPdf.setFontSize(19);
-newPdf.text('Budget Proposal', 80, 45);
-newPdf.setFontSize(18);
-newPdf.text('Date of the Event:', 15, 60);
-newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,67, 60);
-newPdf.setFont("times", ""); 
-newPdf.setFontSize(10);
-newPdf.text('To the Management through Principle', 15, 70);
-newPdf.setFontSize(15);
-newPdf.setFont("times", "bold");
-newPdf.text('Total Paticipants:', 15, 90);
-newPdf.text(`${data.student_count}`, 58, 90);
+/////////////////////////////////////Participant feedback///////////////////////////////
 
-newPdf.rect(15, 100, 15, 12).stroke();
-newPdf.text('S.no', 17, 106);
-newPdf.rect(30, 100, 125, 12).stroke();
-newPdf.text('Details', 60, 106);
-newPdf.rect(155, 100, 45, 12).stroke();
-newPdf.text('Cost (in Rs)', 157, 106);
-newPdf.setFont("times", "");
-newPdf.rect(15, 112, 15, 12).stroke();
-newPdf.text('1.', 19, 120);
-newPdf.rect(30, 112, 125, 12).stroke();
-newPdf.text('Overall Budget', 35, 120);
-newPdf.rect(155, 112, 45, 12).stroke();
-newPdf.text(`${data.event_budget}`, 157, 120);// budget amount
-newPdf.rect(15, 124, 15, 12).stroke();
-newPdf.text('', 19, 132);
-newPdf.rect(30, 124, 125, 12).stroke();
-newPdf.text('Total', 35, 132);
-newPdf.rect(155, 124, 45, 12).stroke();
-newPdf.text(`${data.event_budget}`, 157, 132);// total budget amount
-newPdf.rect(15, 136, 185, 12).stroke();
-newPdf.text('In Words:', 19, 144);
-newPdf.text(`${test(data.event_budget)+' only'}`,45,144);//In words budget
-newPdf.setFontSize(12);
-newPdf.setFont('times','bold');
-newPdf.text('Event Coordinator(s)', 15, 234);
-newPdf.text('HOD', 90, 234);
-newPdf.text('Principal', 167, 234);
+try{ 
+  // Add pages from the original PDF
+  for (let pageNumber = 1; pageNumber <= pdfDocument4.numPages; pageNumber++) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const pdfWidth = page.view[2];
+    const pdfHeight = page.view[3];
 
-/////////////////////////////////////////////////EventPlanner/////////////////////////////////////////////
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = pdfWidth;
+    canvas.height = pdfHeight;
 
-newPdf.addPage();
-newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
-newPdf.addImage(Image2, 'PNG', 173, 7, 25, 25);
-newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
-newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
-newPdf.setFontSize(10);
-newPdf.setFont("times", "");
-newPdf.text('(An Autonomous Institution)', 80, 20);
-newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
-newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
+    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
 
-newPdf.setFontSize(13);
-newPdf.setFont('times', 'bold');
-newPdf.text('Event Planner',83,45 );
-newPdf.setFontSize(14);
-var Dept = `DEPARTMENT OF ${data.event_organizer}`
-const textWidth = newPdf.getStringUnitWidth(Dept) ;
-var pageWidth = newPdf.internal.pageSize.getWidth();
-const centerX = (pageWidth - textWidth) / 2;
-// Set text at the calculated center position
-// pdf.text(centerX, 50, text);
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    try{newPdf.addPage();
+    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+    }catch(error){
+      console.error(error);
+    }
+  }
+}
+catch(e){
+  console.log(e);
+}
 
-let roundedValue = Math.round(pageWidth); // Result: 4
-console.log(roundedValue);
-console.log(textWidth);
-console.log(centerX);
-// newPdf.text(Dept,centerX,54);//dept full name
-newPdf.setFont('times', 'roman');
-newPdf.rect(8,58,50,10).stroke();
-newPdf.text('Event Date:',10,65);
-newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,35,65);////Event Date 
-newPdf.rect(165,58,30,10);
-newPdf.text(`${data.acd_yr}`,170,65);///Academic Year
+/////////////////////////////////////////Resource Person Feedback///////////////////////
+try{ 
+  // Add pages from the original PDF
+  for (let pageNumber = 1; pageNumber <= pdfDocument3.numPages; pageNumber++) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const pdfWidth = page.view[2];
+    const pdfHeight = page.view[3];
 
- 
-var plan = '\tThis is to inform the Faculty member that,the following committees have been formed for smooth conductance of '+`${data.event_name}`+' has organize by our Department of '+`${data.event_organizer}`+' and ,the commitee member are requested to carry out their resposibilities to perfection.';
-const planner = newPdf.splitTextToSize(plan,150);
-newPdf.text(planner,30,75);
-newPdf.rect(15,110,15,12).stroke()
-newPdf.text('S.NO',17,117)
-newPdf.rect(30,110,70,12).stroke();
-newPdf.text('Name of the committee',40,117)
-newPdf.rect(100,110,60,12).stroke()
-newPdf.text('In charge(s)',110,117)
-newPdf.rect(160,110,40,12).stroke()
-newPdf.text('Remark',170,117)
-newPdf.rect(15,122,15,15).stroke()
-newPdf.text('1',19,129)
-newPdf.rect(30,122,70,15).stroke()
-newPdf.text('Organization Secretary',34,130)
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = pdfWidth;
+    canvas.height = pdfHeight;
 
-newPdf.rect(100,122,60,15).stroke()
-newPdf.text(`${data.event_organizing_secretary.split('-')[1]}`,103,130)//////Event Organization seretary
-newPdf.rect(160,122,40,32).stroke()
-newPdf.text('',163,130)
+    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
 
-newPdf.rect(15,137,15,17).stroke()
-newPdf.text('2',19,144)
-newPdf.rect(30,137,70,17).stroke()
-newPdf.text('permission & Report Preparation \nInvitation Flux Designing',33,143)
-newPdf.rect(100,137,60,17).stroke()
-newPdf.text(`${data.event_organizing_secretary.split('-')[1]}`,102,146)////Event Report Preparation
-
-newPdf.setFont('times', 'bold');
-newPdf.text('Coordinated',30,220)
-newPdf.text('HOD',170,220)
-
-//////////////////////////////////////////////// Invitation ////////////////////////////////////////
-newPdf.addPage();
-newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
-    newPdf.addImage(Image2, 'PNG', 173, 7, 25, 25);
-    newPdf.setFontSize(18);
-    newPdf.setFont("times", "bold");
-    newPdf.setTextColor(0, 32, 96);
-    newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
-    newPdf.setFontSize(10);
-    newPdf.setFont("times", "");
-    newPdf.text('(An Autonomous Institution)', 80, 20);
-    newPdf.setTextColor(0,0,0);
-    newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
-    newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
-    generateCenteredText(newPdf,'Department of Electrical and Communication Engineering',15,45,'times','bold',[254,0,102]);
-    generateCenteredText(newPdf,'in Association with',12,50,'times','bolditalic',[151, 92, 203]);
-    generateCenteredText(newPdf,'Computer Society of India(CSI)',15,55,'times','bold',[151, 92, 203]);
-    generateCenteredText(newPdf,'The Management, Principal, Faculty and Students Cardially Invite you to the',14,65,'times','bolditalic',[0, 0, 255]);
-    generateCenteredText(newPdf,`${data.sub_report}`,16,75,'times','bold',[150, 6, 6]);
-    generateCenteredText(newPdf,'On',14,80,'times','regular',[202, 37, 197]);
-    generateCenteredText(newPdf,`${data.event_title}`,17,85,'times','bold',[202, 37, 197]);
-    generateCenteredText(newPdf,'Resource Person',16,95,'times','bold',[150,6,6]);
-    generateCenteredText(newPdf,`${data.guest_name}`,17,105,'times','bold',[0, 0, 153]);
-    generateCenteredText(newPdf,'Student',15,112,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Dr.K.Gunasekaran',17,125,'times','bold',[0, 0, 153]);/////Secretary
-    generateCenteredText(newPdf,'Secretary & Managing Trustee ',15,132,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Muthayammal Educational Trust and Research Foundation ',15,138,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'will preside over the function',15,144,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Dr.M. Madheshwaran',17,157,'times','bold',[0, 0, 153]);/////Principal
-    generateCenteredText(newPdf,'Principal',15,164,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Muthayammal Engineering College',15,170,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'will feliciate the function',15,176,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Dr.G. Kavitha',17,190,'times','bold',[0, 0, 153]);/////HOD
-    generateCenteredText(newPdf,'HoD-CSE',15,197,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Will Welcome The Gathering',15,203,'times','bolditalic',[0, 102, 0]);
-    generateCenteredText(newPdf,'Time: 10:00 AM to 4:30 PM',12,220,'times','bolditalic',[180, 0, 0]);//////Time of the Event
-    newPdf.setFont('times','bolditalic');
-    newPdf.setFontSize(12);
-    newPdf.setTextColor(180, 0, 0);
-    newPdf.text('Date:',15,220);
-    newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,30,220);////// Date of the Event
-    newPdf.text('Venue:',150,220);////////Venue
-    const venue = `${data.event_venue}`;
-    const venueline = newPdf.splitTextToSize(venue, 50);//////////////Venue Variable store
-    newPdf.text(165,220,venueline);
-    //////////////// Last Left Green wordings /////
-    newPdf.setFont('times','bolditalic');
-    newPdf.setFontSize(14);
-    newPdf.setTextColor(0,102,0);
-    newPdf.text('Dr. G.Kavitha, Professor & Head',15,245);
-    newPdf.text('Dr. G.Kavitha',15,250);
-    newPdf.text('Co-Ordinator',15,255);
-    newPdf.setTextColor(0, 0, 0);
-
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    try{newPdf.addPage();
+    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+    }catch(error){
+      console.error(error);
+    }
+  }
+}
+catch(e){
+  console.log(e);
+}
 ////////////////////////////////////////Event photos///////////////////////////////////
-
+newPdf.setTextColor(0,0,0);
 newPdf.addPage();
 newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
-newPdf.addImage(Image2, 'PNG', 173, 7, 25, 25);
+newPdf.addImage(Image2, 'PNG', 173, 9, 25, 19);
 
-newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
-newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
+newPdf.setFontSize(20);
+newPdf.setFont("calibri-bold", "normal");
+newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',45, 15);
 newPdf.setFontSize(10);
-newPdf.setFont("times", "");
-newPdf.text('(An Autonomous Institution)', 80, 20);
-newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
-newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
+newPdf.setFont("calibri-regular", "normal");
+newPdf.text('(An Autonomous Institution)', 85, 20);
+newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 43, 25);
+newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);
 
 newPdf.setFontSize(12);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri-bold", "normal");
+centerTextInsideBox(newPdf,`${data.dept}`,10,40);
+// centerTextInsideBox(newPdf,`${data.event_title}`,55,40);
+generateCenteredText(newPdf,`${data.event_title}`,12,47,'calibri-bold','normal',[0, 0, 0])
+centerTextInsideBox(newPdf,`${data.acd_yr}`,180,40);
 
-newPdf.rect(10,40,25,10)
-newPdf.text(`${data.event_organizer}`,17.5, 46); //department
+generateCenteredText(newPdf,'Event Photos',15,65,'calibri-bold','normal',[0, 0, 0]);
 
-newPdf.rect(60,40,75,10)
-newPdf.text(`${data.event_title}`,65, 46);//topic
-
-newPdf.rect(165,40,25,10)
-newPdf.text(    `${data.acd_yr}`,168.5, 46);//academic year
-
-newPdf.setFontSize(15)
-newPdf.text("Event Photos",85,65,'center')
-
-newPdf.rect(10,90,95,105)
-newPdf.addImage(picture2,"JPEG",15,103,83,80);
-newPdf.rect(105,90,95,105)
-newPdf.addImage(picture1,"JPEG",110,103,83,80);
+newPdf.rect(10,90,95,95)
+newPdf.addImage(picture2,"JPEG",15,107,85,60);
+newPdf.rect(105,90,95,95)
+newPdf.addImage(picture1,"JPEG",110,107,85,60);
 
 ////////////////////////////////////////Budget Utilized//////////////////////////////////
 
 
 newPdf.addPage();
 newPdf.addImage(Image, 'PNG', 10, 7, 25, 25);
-newPdf.addImage(Image2, 'PNG', 173, 7, 25, 25);
+newPdf.addImage(Image2, 'PNG', 173, 9, 25, 19);
 
-newPdf.setFontSize(18);
-newPdf.setFont("times", "bold");
-newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',35, 15);
+newPdf.setFontSize(20);
+newPdf.setFont("calibri-bold", "normal");
+  newPdf.text('MUTHAYAMMAL ENGINEERING COLLEGE',45, 15);
 newPdf.setFontSize(10);
-newPdf.setFont("times", "");
-newPdf.text('(An Autonomous Institution)', 80, 20);
-newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 35, 25);
-newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 65, 30);
+newPdf.setFont("calibri-regular", "normal");
+newPdf.text('(An Autonomous Institution)', 85, 20);
+newPdf.text('(Approved by AICTE, New Delhi, Accredited by NAAC & Affiliated to Anna University)', 43, 25);
+newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);
 
-newPdf.setFont("times", "bold");
-newPdf.setFontSize(19);
-newPdf.text('Budget Utilized', 80, 45);
-newPdf.setFontSize(18);
+newPdf.setFont("calibri-regular", "normal");
+newPdf.setFontSize(12);
+generateCenteredText(newPdf,'Budget Utilized',12,45,'calibri-bold','normal',[0,0,0]);
+newPdf.setFontSize(12);
 newPdf.text('Date of the Event:', 15, 60);
-newPdf.setFont("times","");
-newPdf.text(`${data.event_date.split('-')[2]+'-'+data.event_date.split('-')[1]+'-'+data.event_date.split('-')[0]}`,65, 60);//date
+newPdf.setFont("calibri-regular","normal");
+newPdf.text(date,50, 60);//date
 
-newPdf.setFont("times", "");
-newPdf.setFontSize(15);
-newPdf.text('To the Management through Principle', 15, 70);
-newPdf.setFont("times", "bold");
+newPdf.setFont("calibri-regular", "normal");
+newPdf.setFontSize(10);
+newPdf.text('To the Management through Principal', 15, 65);
+newPdf.setFont("calibri-regular", "normal");
+newPdf.setFontSize(12);
+newPdf.setFont("calibri-bold", "normal");
 newPdf.text('Total Paticipants:', 15, 90);
-newPdf.text(`${data.student_count}`, 58, 90);
-newPdf.setFont("times","");
-newPdf.text('',57, 90);
-newPdf.setFont("times", "bold");
+newPdf.text(`${data.student_count}`, 50, 90);
+// ////newPdf.setFont("calibri-regular","");
+// newPdf.text('',57, 90);
+newPdf.setFont("calibri-bold", "normal");
 newPdf.rect(15, 100, 15, 12).stroke();
 newPdf.text('S.no', 17, 108);
 newPdf.rect(30, 100, 125, 12).stroke();
@@ -2213,13 +2816,15 @@ newPdf.text('Details', 80, 108);
 newPdf.rect(155, 100, 45, 12).stroke();
 newPdf.text('Cost (in Rs)', 165, 108);
 
-newPdf.setFont("times", "");
+newPdf.setFont("calibri-regular", "normal");
 newPdf.rect(15, 112, 15, 12).stroke();
 newPdf.text('1', 19, 120);
 newPdf.rect(30, 112, 125, 12).stroke();
 newPdf.text('Overall Budget', 35, 120);
 newPdf.rect(155, 112, 45, 12).stroke();
-newPdf.text(`${data.event_budget_utilized}`, 157, 120); // budget
+// var rupees = "U+20B9";
+// console.log('\u20B9');
+newPdf.text(`\u20B9  ${data.event_budget_utilized}`, 157, 120); // budget
 
 
 newPdf.rect(15, 124, 15, 12).stroke();
@@ -2227,23 +2832,60 @@ newPdf.text('', 19, 132);
 newPdf.rect(30, 124, 125, 12).stroke();
 newPdf.text('Total', 35, 132);
 newPdf.rect(155, 124, 45, 12).stroke();
-newPdf.text(`${data.event_budget_utilized}`, 157, 132); //total budget
+newPdf.text(`\u20B9  ${data.event_budget_utilized}`, 157, 132); //total budget
 newPdf.rect(15, 136, 185, 12).stroke();
-newPdf.text('In Words', 19, 144);
-newPdf.text(`${test(data.event_budget)+' only'}`,45,144);//In words budget
+newPdf.setFont("calibri-bold", "normal");
+newPdf.text('In Words:', 19, 144);
+newPdf.setFont("calibri-regular", "normal");
+newPdf.text(`${test(data.event_budget)+' only'}`,37,144);//In words budget
 
-newPdf.setFont("times","bold");
+newPdf.setFont("calibri-bold","normal");
+newPdf.addImage(coordi, 'JPEG', 10, 220, 25, 10);
+
+
+try{
+    
+  newPdf.addImage(hod, 'JPEG', 100, 220, 15, 10);
+  newPdf.addImage(princi, 'JPEG', 167, 220, 25, 10);
+
+}
+catch(e){
+  console.log(e);
+}
 newPdf.text('Event Coordinator(s)', 15, 234);
-newPdf.text('HOD', 100, 234);
+newPdf.text('HoD', 100, 234);
 newPdf.text('Principal', 167, 234);
-    
-    ////////////////////////////////////////////////////////    
-    
+
+//////////////////////////////////////////PPT////////////////////////////////////
       
     
+try{ 
+  // Add pages from the original PDF
+  for (let pageNumber = 1; pageNumber <= pdfDocument6.numPages; pageNumber++) {
+    const page = await pdfDocument.getPage(pageNumber);
+    const pdfWidth = page.view[2];
+    const pdfHeight = page.view[3];
+
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    canvas.width = pdfWidth;
+    canvas.height = pdfHeight;
+
+    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+
+    const imageDataUrl = canvas.toDataURL('image/jpeg');
+    try{newPdf.addPage();
+    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+    }catch(error){
+      console.error(error);
+    }
+  }
+}
+catch(e){
+  console.log(e);
+}
     
-    
-    
+   
 
         // Generate a data URI for the PDF
         const pdfDataUri = newPdf.output('datauristring');

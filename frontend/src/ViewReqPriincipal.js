@@ -91,7 +91,7 @@ export const ViewReqPrincipal = () => {
 
     const [year, setYear] = useState([])
     const Acad = async () => {
-        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -116,7 +116,7 @@ export const ViewReqPrincipal = () => {
     let [facs, setFacs] = useState([])
 
     const Faculty = async (fid) => {
-        const t = await axios.get(`http://localhost:1234/ecrFilter/getFacultiesList/${fid}
+        const t = await axios.get(`http://10.167.1.2:1234/ecrFilter/getFacultiesList/${fid}
             `)
         // alert(t)
         // alert(JSON.stringify(t.data.result))
@@ -247,7 +247,7 @@ export const ViewReqPrincipal = () => {
     console.log(filter)
 
     const GetCurrAcd = async () => {
-        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         const temp = t.data.result
         let valueYr = 0
@@ -279,7 +279,7 @@ export const ViewReqPrincipal = () => {
         // alert(JSON.stringify(filter))
         try {
             // alert("hi")
-            const filteredRecords = await axios.post("http://localhost:1234/cfilter/filterReportsWithParticulars/1001", filter)
+            const filteredRecords = await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticulars/1001", filter)
             // alert(filteredRecords.data)
             setAllvalues(filteredRecords.data)
         }
@@ -311,7 +311,7 @@ export const ViewReqPrincipal = () => {
    
   const handleDownload = async (table) => {
     try {
-      const res = await axios.get(`http://localhost:1234/seminar/data/${id}/${table}`);
+      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
@@ -714,7 +714,7 @@ newPdf.text('Principal', 155, 290);
         try {
          
          
-          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}/${table}`);
+          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
         //   var atten = `/Project_images/attendence.jpg`;
@@ -1832,7 +1832,7 @@ newPdf.text('Principal', 167, 234);
                         <h1 className="recent-Articles">Requests</h1>
                     </div>
                     <table className="table table-stripped text-nowrap">
-                        <thead>
+                        {/* <thead>
                             <tr>
                                 <th>Report ID</th><tH>Title</tH><th>Major Type</th><th>Sub Type</th><th>Co-ordinator</th>
                                 <th>Action</th><th>Event</th>
@@ -1926,7 +1926,7 @@ newPdf.text('Principal', 167, 234);
                             )
 
                             }
-                        </tbody>
+                        </tbody> */}
                     </table>
 
 

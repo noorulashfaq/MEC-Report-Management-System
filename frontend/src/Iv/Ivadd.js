@@ -13,7 +13,7 @@ const Ivadd=()=>{
   const [option, setOptions] = useState([]);
 
   useEffect(()=>{
-    axios.get('http://localhost:1234/seminar/find')
+    axios.get('http://10.167.1.2:1234/seminar/find')
         .then((response) => {
         //   console.log(response);
           setOptions(response.data.rows);
@@ -184,7 +184,7 @@ const Ivadd=()=>{
         console.log(typeof(data))
         try{
             console.log(data)
-            info = await axios.post(`http://localhost:1234/iv/proposeIV`,data)
+            info = await axios.post(`http://10.167.1.2:1234/iv/proposeIV`,data)
         }
         catch(err){
             console.log(err)

@@ -25,7 +25,7 @@ export const Add=()=>{
         fillPorposals()
        
      
-      axios.get('http://localhost:1234/seminar/find')
+      axios.get('http://10.167.1.2:1234/seminar/find')
         .then((response) => {
         //   console.log(response);
           setOptions(response.data.rows);
@@ -454,7 +454,7 @@ const [showInput, setShowInput] = useState(false);
     newPdf.text('Nature of the Event:\nConference/Technical Symposium/Workshop/\nSeminar/Guest/Lecture/FDP/Any other',22, 61);
     newPdf.rect(110, 55, 90, 20).stroke();
 try{
-    const found=await axios.get(`http://localhost:1234/seminar/proposalSub/${data.event_name}`)
+    const found=await axios.get(`http://10.167.1.2:1234/seminar/proposalSub/${data.event_name}`)
    
     newPdf.text(`${found.data.rows[0].sub_report}`, 113, 65);//Nature of the Event
 

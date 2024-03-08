@@ -1,5 +1,5 @@
 ###
-POST http://localhost:1234/iv/proposeIV
+POST http://10.167.1.2:1234/iv/proposeIV
 Content-Type: application/json
 
 {
@@ -50,14 +50,14 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:1234/iv/fetchIv
+GET http://10.167.1.2:1234/iv/fetchIv
 
 ###
 
 
 
 ###
-# POST http://localhost:1234/iv/report
+# POST http://10.167.1.2:1234/iv/report
 # Content-Type: application/json
 
 # {
@@ -110,12 +110,12 @@ GET http://localhost:1234/iv/fetchIv
 ###
 
 
-GET http://localhost:1234/iv/ivtour
+GET http://10.167.1.2:1234/iv/ivtour
 
 ###
 
 ###
-PUT http://localhost:1234/iv/update/RPT5014
+PUT http://10.167.1.2:1234/iv/update/RPT5014
 Content-Type: application/json
 
 {

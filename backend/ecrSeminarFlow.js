@@ -4458,7 +4458,8 @@ route.get('/data/:report_id/:table', (req, res) => {
     ON faculties.faculty_desig = designation.designation_id
     INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name
     INNER JOIN predefined_academic_year AS acd ON seminar.acdyr_id=acd.acd_yr_id
-  INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id where report_id=?`;
+  INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id 
+  INNER JOIN data_dept AS dept ON seminar.dept_id=dept.dept_id where report_id=?`;
     
   base.query(sql,[report_id], (err, results) => {
       if (err) throw err;
