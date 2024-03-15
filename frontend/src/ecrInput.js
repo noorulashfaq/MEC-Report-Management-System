@@ -43,7 +43,7 @@ const Validate=()=>{
  })
 //  alert(finalArr)
 }
-console.log(finalArr)
+// console.log(finalArr)
 
 
 const [loading, setLoading] = useState(false);
@@ -56,26 +56,61 @@ const [resPerson,setResPerson]=useState(null);
 const [partiFeedback,setPartiFeedback]=useState(null);
 const [resProfile,setResProfile]=useState(null);
 
-const CheckRollWithDb=async(roll)=>{
-try{
- const temp=await axios.get(`http://10.167.1.2:1234/seminar/compare/${roll}`)
- if((temp.data.results[0].number)!=0){
- if(!(finalArr.includes(roll))){
- setFinalArr(prevArr => [
- ...prevArr,
- roll
- ]);
- }
- console.log(roll+" found")
- }
- else{
- console.log(roll+" not found")
- }
-}catch (error) {
- console.error("Error fetching data:", error);
-}
+// const CheckRollWithDb=async(roll)=>{
+// try{
+//  const temp=await axios.get(`http://10.167.1.2:1234/seminar/compare/${roll}`)
+// //  alert(JSON.stringify(temp.data.results[0].number))
+//  if((temp.data.results[0].number)!=0){
+//   alert(finalArr.includes(roll))
+//     if(!(finalArr.includes(roll))){
+//       setFinalArr(prevArr => [
+//         ...prevArr,
+//         roll
+//       ]);
+//       alert(roll+" found")
+//     }
+//       alert(JSON.stringify(finalArr))
+//     }
+//   else{
+//     alert(roll+" not found")
+//     }
+// }catch (error) {
+//  console.error("Error fetching data:", error);
+// }
  
-}
+// }
+
+const CheckRollWithDb = async (roll) => {
+  try {
+    const temp = await axios.get(`http://10.167.1.2:1234/seminar/compare/${roll}`);
+
+    // console.log("Response from server:", temp.data);
+
+    if (temp.data.results[0].number !== 0) {
+      // console.log("finalArr before update:", finalArr);
+
+      if (!finalArr.includes(roll)) {
+        setFinalArr(prevArr => [...prevArr, roll]);
+        // alert("Roll added to finalArr:", roll);
+      }
+
+      // alert(JSON.stringify(finalArr));
+    } else {
+      console.log("Roll not found:", roll);
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+
+  setFormData((old) => {
+    alert(finalArr)
+    return {
+    ...old,
+    participants_list: finalArr
+    }
+    })
+    alert(JSON.stringify(formData))
+};
 
  const [selectedOptions, setSelectedOptions] = useState([]);
  const [option, setOptions] = useState([]);
@@ -110,10 +145,9 @@ try{
  "event_date_from":"",
  "event_date_to":"",
  "event_organizing_secretary":"",
- "participants_list":"",
  "event_time":"",
  "event_description":"",
- "event_budget_utilized":"",
+ "event_budget_utilized":0,
  "pdf":"",
  "reqMail":"",
  "accMail":"",

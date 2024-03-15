@@ -1611,12 +1611,12 @@ newPdf.rect(184, 267, 16, 9).stroke();
 // newPdf.text('* Attach enclosures', 15, 280);
 newPdf.setFont("calibri-bold","normal");
 newPdf.setFontSize(11);
-newPdf.addImage(coordi, 'JPEG', 13, 283, 25, 10);
+
 
 try{
     
 
-    
+  newPdf.addImage(coordi, 'JPEG', 13, 283, 25, 10);
   newPdf.addImage(princi, 'JPEG', 163, 283, 25, 10);
 
   newPdf.addImage(hod, 'JPEG', 100, 280, 15, 10);
@@ -1786,11 +1786,14 @@ newPdf.rect(20, 235, 90, 10).stroke();
 newPdf.text('One PPT slide about the program', 22, 241);
 newPdf.rect(110, 235, 90, 10).stroke();
 newPdf.text('', 155, 241);
-newPdf.addImage(coordi, 'JPEG', 15, 255, 25, 10);
+
 
 try{
+
+  newPdf.addImage(coordi, 'JPEG', 15, 255, 25, 10);
     
-  newPdf.addImage(hod, 'JPEG', 155, 255, 15, 10);
+newPdf.addImage(hod, 'JPEG', 155, 255, 15, 10);
+
 }
 catch(e){
   console.log(e);
@@ -2217,13 +2220,14 @@ newPdf.setFont("calibri-regular", "normal");
 newPdf.text(`${test(data.event_budget)+' only'}`,37,144);//In words budget
 newPdf.setFontSize(12);
 newPdf.setFont('calibri-bold','normal');
-newPdf.addImage(coordi, 'JPEG', 10, 220, 25, 10);
+
 
 
 try{
     
   newPdf.addImage(hod, 'JPEG', 100, 220, 15, 10);
   newPdf.addImage(princi, 'JPEG', 167, 220, 25, 10);
+  newPdf.addImage(coordi, 'JPEG', 10, 220, 25, 10);
 }
 catch(e){
   console.log(e);
@@ -2350,11 +2354,12 @@ newPdf.rect(100,137,60,17).stroke()
 
 
 newPdf.setFont('calibri-bold', 'normal');
-newPdf.addImage(coordi, 'JPEG', 30, 205, 25, 10);
+
 
 try{
     
   newPdf.addImage(hod, 'JPEG', 170, 205, 15, 10);
+  newPdf.addImage(coordi, 'JPEG', 30, 205, 25, 10);
 
 }
 catch(e){
@@ -2594,11 +2599,12 @@ newPdf.setFont("calibri-regular", "normal");
 newPdf.text(`${test(data.event_budget)+' only'}`,37,144);//In words budget
 
 newPdf.setFont("calibri-bold","normal");
-newPdf.addImage(coordi, 'JPEG', 10, 220, 25, 10);
+
 
 
 try{
     
+  newPdf.addImage(coordi, 'JPEG', 10, 220, 25, 10);
   newPdf.addImage(hod, 'JPEG', 100, 220, 15, 10);
   newPdf.addImage(princi, 'JPEG', 167, 220, 25, 10);
 

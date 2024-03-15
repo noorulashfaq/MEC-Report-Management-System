@@ -41,8 +41,9 @@ export const onPropose=async(obj)=>{
 export const onComplete=async(obj,report_id,table)=>{
    
     try{
-        // alert(JSON.stringify(obj));
-        // alert(table+','+report_id)
+        alert(JSON.stringify(obj));
+        
+      
     const returned = await axios.put(`${url}/seminar/ecrCompletion/${table}/${report_id}`,obj)
     return returned.data
     }

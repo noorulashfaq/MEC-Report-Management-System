@@ -704,32 +704,7 @@ catch(e){
  
 
 
-
- <label for="major_id">Major Type : </label>
- {/* <Select
- className="form-group"
-        isMulti
-        id="event_coordinator"
-        name="event_coordinator"
-        options={options}
-        value={selectedOptions}
-        onChange={handleChange}
-        isSearchable
-        placeholder="Select options..."
-        closeMenuOnSelect={false}
-      /> */}
- <Select
- className="form-group"
-
-        id="major_id"
-        name="major_id"
-        options={major_}
-        value={selected}
-          onChange={handle}
-        isSearchable
-        placeholder="Select option..."
-        closeMenuOnSelect={true}
-      />
+{/*  */}
     <label for="major_id">Major Type :</label>
     <select  name="major_id" value={seminar.major_id} onChange={infoCollect} >
     <option value="">Select Major Type .......</option>
