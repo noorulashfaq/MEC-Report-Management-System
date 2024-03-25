@@ -185,8 +185,11 @@ const CheckRollWithDb = async (roll) => {
  }
 
  const submit=async()=>{
- 
- 
+//   const report=JSON.parse(sessionStorage.getItem("report_id"))
+//   const temp=await onTable(report.report_id,report.event_name)
+//  if(temp.event_photo_1==null){
+// alert("Please upload Documents First ")
+//  }
  // alert(Data.report_id)
  try{
  const temp = await onComplete1(formData,Data.report_id,Data.event_name)
@@ -200,9 +203,19 @@ const CheckRollWithDb = async (roll) => {
  window.location.assign("/ecr")
  }
  const [Data, setData] = useState('');
+ const[isChecked,setIsChecked]=useState(false);
+
+//  const report=JSON.parse(sessionStorage.getItem("report_id"))
+// const temp=await onTable(report.report_id,report.event_name)
+ 
+//  if(temp.event_description==""){
+//   setIsChecked(true)
+//  }
  
  useEffect(() =>{
  handlereport();
+
+ 
  
  },[])
  const handlereport = async() => {
@@ -979,8 +992,10 @@ try{
  const resPro=(e)=>{
   setResProfile(e.target.files[0])
  }
-
+ 
+ 
  const pdfUpload = async () => {
+  
    try {
      // Show loading screen
      setLoading(true);
@@ -1226,7 +1241,9 @@ console.log(formData);
 <textarea  id="event_description" name="event_description" value={formData.event_description} onChange={handleInputChange}></textarea><br />
 
  </div>
- <input type="submit" id="ecrsubmit-btn" onClick={submit} value="Submit" style={{marginLeft:'40%'}}/>
+ {Data.event_description==""&&
+ <input type="submit" id="ecrsubmit-btn" onClick={submit} value="Submit" style={{marginLeft:'40%'}} />
+}
 
  </>
  

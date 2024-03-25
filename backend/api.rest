@@ -123,22 +123,18 @@ GET http://localhost:1234/ecrWorkshop/loadforCompletion/1
 GET http://localhost:1234/ecr/getFacultyParticulars/Noorul
 
 ### Faculty is updating the completion report
-PUT  http://localhost:1234/seminar/ecrCompletion/data_management_seminar/RPT5013
+###
+PUT  http://localhost:1234/seminar/ecrCompletion1/data_management_seminar/RPT5013
 Content-Type: application/json
 
 {
-    "completion_date":"",
- "event_photo_1":"",
- "event_photo_2":"",
- "event_photo_3":"",
- "event_photo_4":"",
- "event_photo_5":"",
+   
  "event_po":"",
  "event_date_from":"",
  "event_date_to":"",
  "event_organizing_secretary":"",
  "event_time":"",
- "event_description":"",
+ "event_description":"sada",
  "event_budget_utilized":"",
  "pdf":"",
  "reqMail":"",
@@ -146,7 +142,8 @@ Content-Type: application/json
  "resPerson":"",
  "particiFeedback":"",
  "resProfile":"",
- "ppt":""
+ "ppt":"",
+ "report_completion_status":0
 }
 ###
 

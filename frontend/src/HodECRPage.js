@@ -4040,7 +4040,7 @@ border: 'none', // Remove the border
 
                                   </>
                                   :
-                                  (data.report_completion_status===0 && data.lvl_1_completion_sign==null)?
+                                  (data.report_completion_status===0 ||data.report_completion_status===null && data.lvl_1_completion_sign==null)?
 
                                   <>
                                  <td>
@@ -4059,18 +4059,24 @@ border: 'none', // Remove the border
                           <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
                           </td>
                           <td >
-                          <button type="button"style={{justifyContent:'center',
+                          <button type="button" style={{justifyContent:'center',backgroundColor:'red',
+justifyItems:'center',marginTop:'10px', width:'130px'}} onClick={async () => {
+
+}} className="btn btn-success col-4">Pending</button></td>
+                          {/* <td > */}
+                          {/* <button type="button"style={{justifyContent:'center',
 justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
 
 accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
 }} className="btn btn-success col-4"  >Accept</button>
 <button type="button" style={{justifyContent:'center',
-justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
+justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td> */}
 
 
-                                  <td><button
+             
+<td><button
 style={{
-backgroundColor: '#f29b44', // Background color
+backgroundColor: '#0000ff', // Background color
 color: 'white', // Text color
 width: '90%', // Button width
 justifyContent:'center',
@@ -4080,11 +4086,11 @@ padding: '10px', // Padding
 borderRadius: '5px', // Border radius
 cursor: 'pointer', // Cursor style
 border: 'none', // Remove the border
-}}
-type="button" onClick={async()=>{
+}} type="button" onClick={async()=>{
                                                   // alert(val.workshop_id+" "+val.dept_id)
-                                                 ecrf(data.report_id,data.event_name);
-                                              }} >View ECR</button></td>
+                                                  pdfAccept(data.report_id,data.event_name);
+                                                 
+                                              }} >View Proposal</button></td>
                                   </>
                                  
                                   :

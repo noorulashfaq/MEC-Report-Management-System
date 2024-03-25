@@ -1145,9 +1145,12 @@ const title = newPdf.splitTextToSize(event_title, 80);
 
       const handleDownload1= async (table) => {
         try {
+
           const doc = new jsPDF();
           const generateCenteredText = (doc,text,fontsize,y,font,style,color)=>{
+        
             doc.setFontSize(fontsize);
+
             const textwidth = (doc.getStringUnitWidth(text) * doc.internal.getFontSize())/2.83465;
             const textcenter = (doc.internal.pageSize.width-textwidth)/2;
             doc.setFont(font,style);
@@ -1159,7 +1162,7 @@ const title = newPdf.splitTextToSize(event_title, 80);
                 const text = word;
             var textwidth = newPdf.getTextDimensions(text).w;
             var textheight = newPdf.getTextDimensions(text).h;
-            var rectWidth = textwidth + 5; // Adding some padding for better visibility
+            var rectWidth = textwidth + 5; 
             var rectHeight = textheight + 5;
             var rectX = rectxaxis;
             var rectY = rectyaxis;
@@ -2082,38 +2085,44 @@ newPdf.text('HoD', 15, 290);
 newPdf.text('Principal', 155, 290);
 
 ///////////////////////////////////reqmail////////////////////////////////////////////
-try{ 
-  // Add pages from the original PDF
+  try{ 
+    // Add pages from the original PDF
 
-  for (let pageNumber = 1; pageNumber <= pdfDocument1.numPages; pageNumber++) {
-    const page = await pdfDocument.getPage(pageNumber);
-    const pdfWidth = page.view[2];
-    const pdfHeight = page.view[3];
+    for (let pageNumber = 1; pageNumber <= pdfDocument1.numPages; pageNumber++) {
+      const page = await pdfDocument1.getPage(pageNumber);
+      const pdfWidth = page.view[2];
+      const pdfHeight = page.view[3];
 
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-    canvas.width = pdfWidth;
-    canvas.height = pdfHeight;
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = pdfWidth;
+      canvas.height = pdfHeight;
 
-    await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
+      await page.render({ canvasContext: context, viewport: page.getViewport({ scale: 1 }) }).promise;
 
-    const imageDataUrl = canvas.toDataURL('image/jpeg');
-    try{newPdf.addPage();
-    newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
-    }catch(error){
-      console.error(error);
+      const imageDataUrl = canvas.toDataURL('image/jpeg');
+      try{newPdf.addPage();
+      newPdf.addImage(imageDataUrl, 'JPEG', 5, 0, 200, 300);
+      }catch(error){
+        console.error(error);
+      }
     }
   }
-}
-catch(e){
-  console.log(e);
-}
+  catch(e){
+    console.log(e);
+  }
+
+
+
+
+
+
 
 ///////////////////////////////////////accMail//////////////////////////////////////
 try{ 
   // Add pages from the original PDF
   for (let pageNumber = 1; pageNumber <= pdfDocument2.numPages; pageNumber++) {
-    const page = await pdfDocument.getPage(pageNumber);
+    const page = await pdfDocument2.getPage(pageNumber);
     const pdfWidth = page.view[2];
     const pdfHeight = page.view[3];
 
@@ -2139,7 +2148,7 @@ catch(e){
 try{ 
   // Add pages from the original PDF
   for (let pageNumber = 1; pageNumber <= pdfDocument5.numPages; pageNumber++) {
-    const page = await pdfDocument.getPage(pageNumber);
+    const page = await pdfDocument5.getPage(pageNumber);
     const pdfWidth = page.view[2];
     const pdfHeight = page.view[3];
 
@@ -2291,7 +2300,6 @@ newPdf.text('1',19,129)
 newPdf.rect(30,122,70,15).stroke()
 newPdf.text('Organization Secretary',34,130)
 
-
 try{
   const names = data.event_organizing_secretary.split(',').map(entry => {
     const [code, name] = entry.split('-');
@@ -2423,7 +2431,7 @@ newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);
     newPdf.text('HoD - '+`${data.dept}`,15,250);//hod dept
     newPdf.text('Co-Ordinator',15,255);
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////Atten///////////////////////////////////////////////////
 
     try{ 
       // Add pages from the original PDF
@@ -2455,7 +2463,7 @@ newPdf.text('Rasipuram - 637 408, Namakkal Dist., Tamil Nadu', 70, 30);
 try{ 
   // Add pages from the original PDF
   for (let pageNumber = 1; pageNumber <= pdfDocument4.numPages; pageNumber++) {
-    const page = await pdfDocument.getPage(pageNumber);
+    const page = await pdfDocument4.getPage(pageNumber);
     const pdfWidth = page.view[2];
     const pdfHeight = page.view[3];
 
@@ -2482,7 +2490,7 @@ catch(e){
 try{ 
   // Add pages from the original PDF
   for (let pageNumber = 1; pageNumber <= pdfDocument3.numPages; pageNumber++) {
-    const page = await pdfDocument.getPage(pageNumber);
+    const page = await pdfDocument3.getPage(pageNumber);
     const pdfWidth = page.view[2];
     const pdfHeight = page.view[3];
 
@@ -2622,7 +2630,7 @@ newPdf.text('Principal', 167, 234);
 try{ 
   // Add pages from the original PDF
   for (let pageNumber = 1; pageNumber <= pdfDocument6.numPages; pageNumber++) {
-    const page = await pdfDocument.getPage(pageNumber);
+    const page = await pdfDocument6.getPage(pageNumber);
     const pdfWidth = page.view[2];
     const pdfHeight = page.view[3];
 
@@ -2644,23 +2652,30 @@ try{
 catch(e){
   console.log(e);
 }
-    
-   
+const pdfDataUri = newPdf.output('datauristring');
+const newWindow = window.open();
+if (newWindow) {
+  newWindow.document.write(`<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`);
+} else {
+  console.error('Failed to open new window.');
+}
 
-        // Generate a data URI for the PDF
-        const pdfDataUri = newPdf.output('datauristring');
+        // // Generate a data URI for the PDF
+        // const pdfDataUri = newPdf.output('datauristring');
     
-        // Open the PDF in a new tab or window
-        const newWindow = window.open();
-        newWindow.document.write(`<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`);
+        // // Open the PDF in a new tab or window
+        // const newWindow = window.open();
+        // newWindow.document.write(`<iframe width='100%' height='100%' src='${pdfDataUri}'></iframe>`);
       
       }
           
          catch (err) {
           console.error(err);
         }
+        setLoading(false)
       }
       const ecrf=async(report_id,table)=>{
+        setLoading(true)
         const temp=await onTable(report_id,table)
     if(temp.report_id){
         sessionStorage.setItem("report_id",JSON.stringify(temp))
@@ -3552,7 +3567,7 @@ border: 'none', // Remove the border
                                               }} >View Proposal</button></td>
                                   </>
                                   :
-                                  (data.report_proposal_status===1 && data.report_completion_status===0 ) ? 
+                                  (data.report_proposal_status===1 && data.report_completion_status===null ) ? 
                                   <>
                                   
                                   <td>
@@ -3595,7 +3610,7 @@ border: 'none', // Remove the border
                                               }} >View Proposal</button></td>
                                   </>
                                   :
-                                  (data.report_completion_status===0 ) ?
+                                  (data.report_completion_status===null ) ?
                                   <>
                                   <td>
                           <tr className='hodECR' style={{border:'none',fontSize:'small'}}>
@@ -3668,15 +3683,19 @@ border: 'none', // Remove the border
                           <tr className='hodECR' style={{border:'none',fontSize:'small'}}> HOD : 🕒Pending</tr> 
                           <tr className='hodECR' style={{border:'none',fontSize:'small'}}>Principal : 🕒Pending</tr>
                           </td>
-                          <td >
+                          {/* <td >
                           <button type="button"style={{justifyContent:'center',
 justifyItems:'center',marginTop:'10px', width:'80px'}} onClick={async () => {
 
 accept(data.event_name, data.dept_id, data.report_id, data.final_proposal_status, data.report_proposal_status, data.report_completion_status);
 }} className="btn btn-success col-4"  >Accept</button>
 <button type="button" style={{justifyContent:'center',
-justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td>
+justifyItems:'center',marginTop:'10px', width:'80px',marginLeft:'20px'}} className="btn btn-dark col-4">Reject</button></td> */}
+<td >
+                          <button type="button" style={{justifyContent:'center',backgroundColor:'red',
+justifyItems:'center',marginTop:'10px', width:'130px'}} onClick={async () => {
 
+}} className="btn btn-success col-4">Pending</button></td>
 
                                   <td><button
 style={{

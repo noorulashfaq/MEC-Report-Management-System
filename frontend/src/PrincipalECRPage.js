@@ -3417,7 +3417,7 @@ catch(e){
                                                     }} >View Proposal</button></td>
                                         </>
                                         :
-                                        (data.report_proposal_status===1 && data.report_completion_status===0 ) ? 
+                                        (data.report_proposal_status===1 && data.report_completion_status===null ) ? 
                                         <>
                                         
                                         <td>
@@ -3785,7 +3785,7 @@ style={{
                                                   }} >View Proposal</button></td>
                                       </>
                                       :
-                                      (data.report_proposal_status===2 && data.report_completion_status==0 &&data.event_organizer==null ) ?
+                                      (data.report_proposal_status===2 && data.report_completion_status==null &&data.event_organizer==null ) ?
                                       <>
                                       <td>
                               <tr className='hodECR' style={{border:'none',fontSize:'small'}}>

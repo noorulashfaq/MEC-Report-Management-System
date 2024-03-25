@@ -51,7 +51,25 @@ head {
   display: flex;
   justify-content: space-between;
 }
+#ecrsubmit-btn {
+  /* Add your regular button styles here */
+  /* For example: */
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
+/* Style when the button is disabled */
+#ecrsubmit-btn[disabled] {
+  /* Add your disabled button styles here */
+  /* For example: */
+  background-color: #ddd;
+  color: #666;
+  cursor: not-allowed;
+}
 .dept_name {
   font-size: 30px;
   color: red;

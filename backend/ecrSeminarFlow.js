@@ -559,7 +559,7 @@ route.get('/authorities/:deptId',async(req,res)=>{
 route.post('/ecrProposal/:tableName',async(req,res)=>{
     // receive the request from client
     const{proposal_date,event_name,event_title,event_organizer,event_sponsor,event_date,event_venue,guest_name,guest_designation,guest_address,guest_phone_number,guest_email,student_count,faculty_count,others_count,event_budget,event_coordinator,coordinator_emp_id,coordinator_phone_number,coordinator_designation,event_date_from,event_date_to,acdyr_id,dept_id,sem_id}=req.body
-    sql=`insert into ${req.params.tableName}(proposal_date,event_name,event_title,event_organizer,event_sponsor,event_date,event_venue,guest_name,guest_designation,guest_address,guest_phone_number,guest_email,student_count,faculty_count,others_count,event_budget,event_coordinator,coordinator_emp_id,coordinator_phone_number,coordinator_designation,event_date_from,event_date_to,acdyr_id,dept_id,sem_id,report_proposal_status,final_proposal_status,report_completion_status,final_completion_status,final_report_status) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,0,0,0,0)`
+    sql=`insert into ${req.params.tableName}(proposal_date,event_name,event_title,event_organizer,event_sponsor,event_date,event_venue,guest_name,guest_designation,guest_address,guest_phone_number,guest_email,student_count,faculty_count,others_count,event_budget,event_coordinator,coordinator_emp_id,coordinator_phone_number,coordinator_designation,event_date_from,event_date_to,acdyr_id,dept_id,sem_id,report_proposal_status,final_proposal_status,final_completion_status,final_report_status) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,0,0,0,0)`
         base.query(sql,[proposal_date,event_name,event_title,event_organizer,event_sponsor,event_date,event_venue,guest_name,guest_designation,guest_address,guest_phone_number,guest_email,student_count,faculty_count,others_count,event_budget,event_coordinator,coordinator_emp_id,coordinator_phone_number,coordinator_designation,event_date_from,event_date_to,acdyr_id,dept_id,sem_id],(err,ack)=>{
             if(err){
                 res.status(500).json({error:err.message})
@@ -617,7 +617,7 @@ route.get('/loadforlevel1/:deptId/:empId', async (req, res) => {
 
         let resultArr = [];
         for (let i = 0; i < rows.length; i++) {
-            sql = `select * from ${rows[i].data_table_name} AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id   where report_proposal_status=0 and final_proposal_status=0 and lvl_1_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0`;
+            sql = `select * from ${rows[i].data_table_name} AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id   where report_proposal_status=0 and final_proposal_status=0 and lvl_1_proposal_sign is null  and final_completion_status=0 and final_report_status=0`;
 
             const resultRows = await new Promise((resolve, reject) => {
                 base.query(sql, (err, rows) => {
@@ -664,7 +664,7 @@ route.get('/loadforlevel1/:deptId/:empId', async (req, res) => {
 
         let resultArr = [];
         for (let i = 0; i < rows.length; i++) {
-            sql = `select * from ${rows[i].data_table_name}  AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id  where report_proposal_status=0 and final_proposal_status=0 and lvl_1_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`;
+            sql = `select * from ${rows[i].data_table_name}  AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id  where report_proposal_status=0 and final_proposal_status=0 and lvl_1_proposal_sign is null  and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`;
             const resultRows = await new Promise((resolve, reject) => {
                 base.query(sql, (err, rows) => {
                     if (err) {
@@ -709,7 +709,7 @@ route.put('/acknowledgelevel1/:tableName/:deptId/:empId/:report_id',async(req,re
         console.log("Hello"+rows[0].report_lvl2)
         if(rows[0].report_lvl2==null){
             console.log("HEY")
-            let sql=`select report_id from ${req.params.tableName} where report_proposal_status=0 and final_proposal_status=0 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
+            let sql=`select report_id from ${req.params.tableName} where report_proposal_status=0 and final_proposal_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
             base.query(sql,[rId],(err,row)=>{
             if(err){
                 res.status(500).json({error:err.message})
@@ -740,7 +740,7 @@ route.put('/acknowledgelevel1/:tableName/:deptId/:empId/:report_id',async(req,re
             // console.log(rows[0][1].column_value.includes(eId))
             // if(rows[0][1].column_value.includes(eId)){
                 console.log("In")
-                sql=`update ${req.params.tableName} set lvl_1_proposal_sign=?, report_proposal_status=report_proposal_status+1, final_proposal_status=final_proposal_status+1 where report_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
+                sql=`update ${req.params.tableName} set lvl_1_proposal_sign=?, report_proposal_status=report_proposal_status+1, final_proposal_status=final_proposal_status+1 where report_proposal_status=1 and final_completion_status=0 and final_report_status=0 and report_id=?`
                 base.query(sql,[eId,rId],(err,result)=>{
                     if(err){
                         console.log("111")
@@ -792,7 +792,7 @@ route.put('/acknowledgelevel1/:tableName/:deptId/:empId/:report_id',async(req,re
         //     //upto this
         //     console.log(rows[0][0].column_value)
         //     if(rows[0][0].column_value.includes(eId)){
-                sql=`update ${req.params.tableName} set lvl_1_proposal_sign=?, report_proposal_status=report_proposal_status+1 where report_proposal_status=0 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and final_proposal_status=0 and report_id=?`
+                sql=`update ${req.params.tableName} set lvl_1_proposal_sign=?, report_proposal_status=report_proposal_status+1 where report_proposal_status=0  and final_completion_status=0 and final_report_status=0 and final_proposal_status=0 and report_id=?`
                 base.query(sql,[eId,rId],(err,result)=>{
                     if(err){
                         res.status(500).json({error:err.message})
@@ -827,7 +827,7 @@ route.put('/acknowledgelevel1/:tableName/:deptId/:empId/:report_id',async(req,re
         console.log("Hello"+rows[0].report_lvl2)
         if(rows[0].report_lvl2==null){
             console.log("HEY")
-            let sql=`select report_id from ${req.params.tableName} where dept_id=? and report_proposal_status=0 and final_proposal_status=0 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
+            let sql=`select report_id from ${req.params.tableName} where dept_id=? and report_proposal_status=0 and final_proposal_status=0  and final_completion_status=0 and final_report_status=0 and report_id=?`
             base.query(sql,[dId,rId],(err,row)=>{
             if(err){
                 res.status(500).json({error:err.message})
@@ -858,7 +858,7 @@ route.put('/acknowledgelevel1/:tableName/:deptId/:empId/:report_id',async(req,re
             // console.log(rows[0][1].column_value.includes(eId))
             // if(rows[0][1].column_value.includes(eId)){
                 console.log("In")
-                sql=`update ${req.params.tableName} set lvl_1_proposal_sign=?, report_proposal_status=report_proposal_status+1, final_proposal_status=final_proposal_status+1 where dept_id=? and report_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
+                sql=`update ${req.params.tableName} set lvl_1_proposal_sign=?, report_proposal_status=report_proposal_status+1, final_proposal_status=final_proposal_status+1 where dept_id=? and report_proposal_status=1  and final_completion_status=0 and final_report_status=0 and report_id=?`
                 base.query(sql,[eId,dId,rId],(err,result)=>{
                     if(err){
                         console.log("111")
@@ -910,7 +910,7 @@ route.put('/acknowledgelevel1/:tableName/:deptId/:empId/:report_id',async(req,re
         //     //upto this
         //     console.log(rows[0][0].column_value)
         //     if(rows[0][0].column_value.includes(eId)){
-                sql=`update ${req.params.tableName} set lvl_1_proposal_sign=?, report_proposal_status=report_proposal_status+1 where dept_id=? and report_proposal_status=0 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and final_proposal_status=0 and report_id=?`
+                sql=`update ${req.params.tableName} set lvl_1_proposal_sign=?, report_proposal_status=report_proposal_status+1 where dept_id=? and report_proposal_status=0  and final_completion_status=0 and final_report_status=0 and final_proposal_status=0 and report_id=?`
                 base.query(sql,[eId,dId,rId],(err,result)=>{
                     if(err){
                         res.status(500).json({error:err.message})
@@ -1011,7 +1011,7 @@ route.get('/loadforlevel2/:deptId/:empId', async (req, res) => {
         }
 
         for (let i = 0; i < rows.length; i++) {
-            sql = `select * from ${rows[i].data_table_name}  AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id   where report_proposal_status=1 and lvl_2_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0`;
+            sql = `select * from ${rows[i].data_table_name}  AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id   where report_proposal_status=1 and lvl_2_proposal_sign is null  and final_completion_status=0 and final_report_status=0`;
 
             const resultRows = await new Promise((resolve, reject) => {
                 base.query(sql, (err, rows) => {
@@ -1056,7 +1056,7 @@ route.get('/loadforlevel2/:deptId/:empId', async (req, res) => {
         }
 
         for (let i = 0; i < rows.length; i++) {
-            sql = `select * from ${rows[i].data_table_name}  AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id   where report_proposal_status=1 and lvl_2_proposal_sign is null and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`;
+            sql = `select * from ${rows[i].data_table_name}  AS seminar INNER JOIN data_sub_report_type AS sub_report_type ON seminar.event_name = sub_report_type.table_name INNER JOIN data_major_report_type AS major_report_type ON sub_report_type.major_report_id = major_report_type.major_report_id   where report_proposal_status=1 and lvl_2_proposal_sign is null  and final_completion_status=0 and final_report_status=0 and dept_id=${dId}`;
 
             const resultRows = await new Promise((resolve, reject) => {
                 base.query(sql, (err, rows) => {
@@ -1101,7 +1101,7 @@ route.post('/acknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,r
         console.log("Hello"+rows[0].report_lvl3)
         if(rows[0].report_lvl3==null){
             console.log("HEY")
-            let sql=`select report_id from ${req.params.tableName} where report_proposal_status=1 and final_proposal_status=0 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
+            let sql=`select report_id from ${req.params.tableName} where report_proposal_status=1 and final_proposal_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
             base.query(sql,[rId],(err,row)=>{
             if(err){
                 res.status(500).json({error:err.message})
@@ -1132,7 +1132,7 @@ route.post('/acknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,r
             // console.log(rows[0][1].column_value.includes(eId))
             // if(rows[0][1].column_value.includes(eId)){
                 console.log("In")
-                sql=`update ${req.params.tableName} set lvl_2_proposal_sign=?, report_proposal_status=report_proposal_status+1, final_proposal_status=final_proposal_status+1 where report_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
+                sql=`update ${req.params.tableName} set lvl_2_proposal_sign=?, report_proposal_status=report_proposal_status+1, final_proposal_status=final_proposal_status+1 where report_proposal_status=1  and final_completion_status=0 and final_report_status=0 and report_id=?`
                 base.query(sql,[eId,rId],(err,result)=>{
                     if(err){
                         console.log("111")
@@ -1184,7 +1184,7 @@ route.post('/acknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,r
         //     //upto this
         //     console.log(rows[0][0].column_value)
         //     if(rows[0][0].column_value.includes(eId)){
-                sql=`update ${req.params.tableName} set lvl_2_proposal_sign=?, report_proposal_status=report_proposal_status+1 where report_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and final_proposal_status=0 and report_id=?`
+                sql=`update ${req.params.tableName} set lvl_2_proposal_sign=?, report_proposal_status=report_proposal_status+1 where report_proposal_status=1 and final_completion_status=0 and final_report_status=0 and final_proposal_status=0 and report_id=?`
                 base.query(sql,[eId,rId],(err,result)=>{
                     if(err){
                         res.status(500).json({error:err.message})
@@ -1219,7 +1219,7 @@ route.post('/acknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,r
         console.log("Hello"+rows[0].report_lvl3)
         if(rows[0].report_lvl3==null){
             // console.log("HEY")
-            let sql=`select report_id from ${req.params.tableName} where dept_id=? and report_proposal_status=1 and final_proposal_status=0 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
+            let sql=`select report_id from ${req.params.tableName} where dept_id=? and report_proposal_status=1 and final_proposal_status=0  and final_completion_status=0 and final_report_status=0 and report_id=?`
             base.query(sql,[dId,rId],(err,row)=>{
             if(err){
                 res.status(500).json({error:err.message})
@@ -1250,7 +1250,7 @@ route.post('/acknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,r
             // console.log(rows[0][1].column_value.includes(eId))
             // if(rows[0][1].column_value.includes(eId)){
                 console.log("In")
-                sql=`update ${req.params.tableName} set lvl_2_proposal_sign=?, report_proposal_status=report_proposal_status+1, final_proposal_status=final_proposal_status+1 where dept_id=? and report_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and report_id=?`
+                sql=`update ${req.params.tableName} set lvl_2_proposal_sign=?, report_proposal_status=report_proposal_status+1, final_proposal_status=final_proposal_status+1 where dept_id=? and report_proposal_status=1  and final_completion_status=0 and final_report_status=0 and report_id=?`
                 base.query(sql,[eId,dId,rId],(err,result)=>{
                     if(err){
                         console.log("111")
@@ -1302,7 +1302,7 @@ route.post('/acknowledgelevel2/:tableName/:deptId/:empId/:report_id',async(req,r
         //     //upto this
         //     console.log(rows[0][0].column_value)
         //     if(rows[0][0].column_value.includes(eId)){
-                sql=`update ${req.params.tableName} set lvl_2_proposal_sign=?, report_proposal_status=report_proposal_status+1 where dept_id=? and report_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0 and final_proposal_status=0 and report_id=?`
+                sql=`update ${req.params.tableName} set lvl_2_proposal_sign=?, report_proposal_status=report_proposal_status+1 where dept_id=? and report_proposal_status=1  and final_completion_status=0 and final_report_status=0 and final_proposal_status=0 and report_id=?`
                 base.query(sql,[eId,dId,rId],(err,result)=>{
                     if(err){
                         res.status(500).json({error:err.message})
@@ -2375,7 +2375,7 @@ route.get('/loadecrCompletion/:deptId/:tableName',async(req,res)=>{
 route.put('/ecrCompletion/:tableName/:report_id',async(req,res)=>{
     // receive the request from client
     const{event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date,reqMail,accMail,resPerson,particiFeedback,resProfile,ppt}=req.body
-    sql=`update ${req.params.tableName} set event_photo_1=?, event_photo_2=?, event_po=?, pdf=?, event_date_from=?, event_date_to=?, event_organizing_secretary=?, event_time=?, event_description=?, event_budget_utilized=? , completion_date=?,reqMail=?,accMail=?,resPerson=?,particiFeedback=?,resProfile=?,ppt=? where report_id=? and final_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0`
+    sql=`update ${req.params.tableName} set event_photo_1=?, event_photo_2=?, event_po=?, pdf=?, event_date_from=?, event_date_to=?, event_organizing_secretary=?, event_time=?, event_description=?, event_budget_utilized=? , completion_date=?,reqMail=?,accMail=?,resPerson=?,particiFeedback=?,resProfile=?,ppt=? where report_id=? and final_proposal_status=1 and final_completion_status=0 and final_report_status=0`
         base.query(sql,[event_photo_1,event_photo_2,event_po,pdf,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date,reqMail,accMail,resPerson,particiFeedback,resProfile,ppt,req.params.report_id],(err,ack)=>{
             if(err){
                 res.status(500).json({error:err.message})
@@ -2387,7 +2387,7 @@ route.put('/ecrCompletion/:tableName/:report_id',async(req,res)=>{
 route.put('/ecrCompletion1/:tableName/:report_id',async(req,res)=>{
     // receive the request from client
     const{event_po,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date}=req.body
-    sql=`update ${req.params.tableName} set  event_po=?,  event_date_from=?, event_date_to=?, event_organizing_secretary=?, event_time=?, event_description=?, event_budget_utilized=? , completion_date=? where report_id=? and final_proposal_status=1 and report_completion_status=0 and final_completion_status=0 and final_report_status=0`
+    sql=`update ${req.params.tableName} set  event_po=?,  event_date_from=?, event_date_to=?, event_organizing_secretary=?, event_time=?, event_description=?, event_budget_utilized=? , completion_date=?,report_completion_status=0 where report_id=? and final_proposal_status=1  and final_completion_status=0 and final_report_status=0`
         base.query(sql,[event_po,event_date_from,event_date_to,event_organizing_secretary,event_time,event_description,event_budget_utilized,completion_date,req.params.report_id],(err,ack)=>{
             if(err){
                 res.status(500).json({error:err.message})
