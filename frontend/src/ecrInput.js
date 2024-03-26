@@ -972,24 +972,83 @@ try{
 
 
  const handleFilePdf = (e) => {
+  
+ const file = e.target.files[0];
+
+ 
+ if (file && file.size > 2 * 1024 * 1024) {
+ alert("Please choose a pdf with a size below 2MB.");
+ e.target.value = null; // Reset the file input
+ return;
+ }
+ 
+ 
    setSelectedFilePdf(e.target.files[0]);
  };
  const reqMail=(e)=>{
+  const file = e.target.files[0];
+
+ 
+  if (file && file.size > 2 * 1024 * 1024) {
+  alert("Please choose a pdf with a size below 2MB.");
+  e.target.value = null; // Reset the file input
+  return;
+  }
   setRequestMail(e.target.files[0])
  }
  const accMail=(e)=>{
+  const file = e.target.files[0];
+
+ 
+  if (file && file.size > 2 * 1024 * 1024) {
+  alert("Please choose a pdf with a size below 2MB.");
+  e.target.value = null; // Reset the file input
+  return;
+  }
   setAcceptMail(e.target.files[0])
  }
  const hand=(e)=>{
+  const file = e.target.files[0];
+
+ 
+  if (file && file.size > 2 * 1024 * 1024) {
+  alert("Please choose a pdf with a size below 2MB.");
+  e.target.value = null; // Reset the file input
+  return;
+  }
   setPpt(e.target.files[0])
  }
  const resPer=(e)=>{
+  const file = e.target.files[0];
+
+ 
+  if (file && file.size > 2 * 1024 * 1024) {
+  alert("Please choose a pdf with a size below 2MB.");
+  e.target.value = null; // Reset the file input
+  return;
+  }
   setResPerson(e.target.files[0])
  }
  const partFeed=(e)=>{
+  const file = e.target.files[0];
+
+ 
+  if (file && file.size > 2 * 1024 * 1024) {
+  alert("Please choose a pdf with a size below 2MB.");
+  e.target.value = null; // Reset the file input
+  return;
+  }
   setPartiFeedback(e.target.files[0])
  }
  const resPro=(e)=>{
+  const file = e.target.files[0];
+
+ 
+  if (file && file.size > 2 * 1024 * 1024) {
+  alert("Please choose a pdf with a size below 2MB.");
+  e.target.value = null; // Reset the file input
+  return;
+  }
   setResProfile(e.target.files[0])
  }
  
