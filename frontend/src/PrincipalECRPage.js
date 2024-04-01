@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 //import Img6001 from'./6001.jpeg';
-// localhost
+// 10.167.1.2
 export const PrincipalECRPage=()=>{
 
 //////////////////////////////////////
@@ -86,7 +86,7 @@ export const PrincipalECRPage=()=>{
 },[])
 
 const fetchFac=async(dId)=>{
-  await axios.get(`http://localhost:1234/seminar/findFacWithDept/${dId}`)
+  await axios.get(`http://10.167.1.2:1234/seminar/findFacWithDept/${dId}`)
           .then((response) => {
           console.log(response);
           setEmp(response.data.rows);
@@ -97,7 +97,7 @@ const fetchFac=async(dId)=>{
 
   const[dept,setDept]=useState([])
   const fetchDept=async()=>{
-      const t = await axios.get("http://localhost:1234/ecrFilter/getDeptList")
+      const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getDeptList")
       // alert(JSON.stringify(t.data.result))
       setDept(t.data.result)
   }
@@ -124,7 +124,7 @@ const[allvalues,setAllvalues]=useState([]);
         // console.log(allvalues)
 
 const GetCurrAcd=async()=>{
-    const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+    const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
     // alert(JSON.stringify(t.data.result))
     const temp=t.data.result
     let valueYr=0
@@ -160,7 +160,7 @@ const [totalPages, setTotalPages] = useState(1);
           const empId = logged.faculty_id;
           
           // Fetch data from backend API
-          const response = await axios.get(`http://localhost:1234/seminar/principalecr/${empId}?page=${page}`);
+          const response = await axios.get(`http://10.167.1.2:1234/seminar/principalecr/${empId}?page=${page}`);
       
          
           if (response.status === 200) {
@@ -212,7 +212,7 @@ const onClickFilter=async()=>{
   // alert(JSON.stringify(filter))
   try{
       // alert("hi")
-      const filteredRecords=await axios.post("http://localhost:1234/cfilter/filterReportsWithParticular/1001",filter)
+      const filteredRecords=await axios.post("http://10.167.1.2:1234/cfilter/filterReportsWithParticular/1001",filter)
       console.log(filteredRecords.data)
       setCurrentRecords(filteredRecords.data.resultArray)
   }
@@ -293,7 +293,7 @@ let [subs,setSubs]=useState([])
 
     const[year,setYear]=useState([])
     const Acad=async()=>{
-        const t = await axios.get("http://localhost:1234/ecrFilter/getAcdYrList")
+        const t = await axios.get("http://10.167.1.2:1234/ecrFilter/getAcdYrList")
         // alert(JSON.stringify(t.data.result))
         setYear(t.data.result)
     }
@@ -1118,7 +1118,7 @@ const viewPdf1=async(report_id)=>{
 
   const handleDownload = async (table) => {
     try {
-      const res = await axios.get(`http://localhost:1234/seminar/data/${id}/${table}`);
+      const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id}/${table}`);
       // console.log("hai");
       const data = res.data;
       //var sign = 'D:\\React\\Muthayammal\\MuthayammalAutomation\\MineEcrWorkshopModules\\react-seminar-client\\src\\'+`${data.lvl_1_proposal_sign}`+'.jpeg';
@@ -1377,7 +1377,7 @@ const title = newPdf.splitTextToSize(event_title, 80);
       newPdf.text(`${namesArray[i]}`, 14, xx+i*10+6);
       // const fetchFacParticulars=async()=>{
       //   try{ 
-      //     const temp=await axios.get(`http://localhost:1234/ecr/getFacultyParticulars/${namesArray[i]}`);
+      //     const temp=await axios.get(`http://10.167.1.2:1234/ecr/getFacultyParticulars/${namesArray[i]}`);
       //     // console.log(temp.data.rows[0])
       //     setFacPart(temp.data.rows[0])
       //   }
@@ -1388,7 +1388,7 @@ const title = newPdf.splitTextToSize(event_title, 80);
       //   }
       // }
       // fetchFacParticulars()
-      const temp=await axios.get(`http://localhost:1234/ecr/getFacultyParticulars/${namesArray[i]}`);
+      const temp=await axios.get(`http://10.167.1.2:1234/ecr/getFacultyParticulars/${namesArray[i]}`);
     
       if(temp.data.rows[0].designation){
         newPdf.rect(90, xx+i*10, 60, 10).stroke();  
@@ -1539,7 +1539,7 @@ const title = newPdf.splitTextToSize(event_title, 80);
             setSelectedFile(file);
           };
           
-          const res = await axios.get(`http://localhost:1234/seminar/data/${id1}/${table}`);
+          const res = await axios.get(`http://10.167.1.2:1234/seminar/data/${id1}/${table}`);
           // console.log("hai");
           const data = res.data;
           for (let key in data) {
@@ -2371,7 +2371,7 @@ for(let i=0;i<namesArray.length;i++){
   newPdf.text(`${namesArray[i]}`, 14, xx+i*10+6);
   // const fetchFacParticulars=async()=>{
   //   try{ 
-  //     const temp=await axios.get(`http://localhost:1234/ecr/getFacultyParticulars/${namesArray[i]}`);
+  //     const temp=await axios.get(`http://10.167.1.2:1234/ecr/getFacultyParticulars/${namesArray[i]}`);
   //     // console.log(temp.data.rows[0])
   //     setFacPart(temp.data.rows[0])
   //   }
@@ -2382,7 +2382,7 @@ for(let i=0;i<namesArray.length;i++){
   //   }
   // }
   // fetchFacParticulars()
-  const temp=await axios.get(`http://localhost:1234/ecr/getFacultyParticulars/${namesArray[i]}`);
+  const temp=await axios.get(`http://10.167.1.2:1234/ecr/getFacultyParticulars/${namesArray[i]}`);
 
   if(temp.data.rows[0].designation){
     newPdf.rect(90, xx+i*10, 60, 10).stroke();  
